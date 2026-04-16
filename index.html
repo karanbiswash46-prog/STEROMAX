@@ -3,89 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="dns-prefetch" href="//steromax.4meplayer.com">
     <title>Stero Max Pro - Elite Streaming</title>
     <style>
-        :root { --primary: #00d2ff; --bg: #000000; --card: #121212; --text: #ffffff; --gold: #ffcc00; }
+        :root { --primary: #00d2ff; --bg: #000000; --card: #151515; --text: #ffffff; --gold: #ffcc00; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 30px; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 90px; overflow-x: hidden; }
 
-        header { background: #111; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
-        .logo { color: var(--primary); font-size: 22px; font-weight: 900; }
+        header { background: rgba(17, 17, 17, 0.9); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); }
+        .logo { color: var(--primary); font-size: 22px; font-weight: 900; letter-spacing: 1px; }
 
-        /* Home UI Slider with Text */
-        .slider-wrapper { position: relative; width: 95%; height: 210px; overflow: hidden; border-radius: 15px; margin: 15px auto; border: 1px solid #333; }
-        .hero-slide { min-width: 100%; height: 100%; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 20px; position: relative; cursor: pointer; }
-        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(transparent, rgba(0,0,0,0.9)); }
+        .slider-wrapper { position: relative; width: 95%; height: 210px; overflow-x: auto; display: flex; scroll-snap-type: x mandatory; gap: 10px; margin: 15px auto; border-radius: 15px; scrollbar-width: none; scroll-behavior: smooth; }
+        .slider-wrapper::-webkit-scrollbar { display: none; }
+        .hero-slide { min-width: 100%; height: 100%; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 20px; position: relative; scroll-snap-align: start; border-radius: 15px; }
+        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(transparent, rgba(0,0,0,0.95)); border-radius: 15px; }
         .slide-content { position: relative; z-index: 10; }
-        .trending-tag { background: red; color: white; font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 5px; }
+        
+        .tag-red { background: #ff0000; color: white; font-size: 10px; font-weight: bold; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+        .tag-blue { background: #0066ff; color: white; font-size: 10px; font-weight: bold; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
 
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; }
-        .movie-card { background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid #222; text-align: center; }
-        .movie-card img { width: 100%; height: 130px; object-fit: cover; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 15px; }
+        .movie-card { background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid #252525; }
+        .movie-card img { width: 100%; height: 135px; object-fit: cover; }
+        .movie-info { padding: 6px; text-align: center; }
+        .movie-info p { margin: 0; font-size: 10px; color: #eee; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Details Modal */
-        .player { display: none; position: fixed; inset: 0; background: #050505; z-index: 5000; flex-direction: column; overflow-y: auto; }
-        .video-box { width: 100%; aspect-ratio: 16 / 9; background: #000; position: relative; }
-        .close-info { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.6); border-radius: 50%; width: 40px; height: 40px; text-align:center; line-height:40px; color:white; z-index: 6000; font-weight:bold; cursor: pointer; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(15, 15, 15, 0.98); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; backdrop-filter: blur(15px); z-index: 2000; height: 75px; }
+        .nav-item { color: #888; font-size: 24px; text-align: center; cursor: pointer; flex: 1; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item span { display: block; font-size: 12px; margin-top: 4px; font-weight: 700; }
 
-        .p-content { padding: 20px; }
-        .watch-btn { width: 100%; padding: 16px; background: #ff9900; border: none; border-radius: 30px; font-weight: 900; font-size: 16px; margin-bottom: 20px; color: #000; cursor: pointer; }
+        .side-menu { position: fixed; top: 0; right: -100%; width: 75%; height: 100%; background: rgba(10, 10, 10, 0.98); z-index: 3000; transition: 0.4s; padding: 30px; border-left: 1px solid #333; }
+        .side-menu.active { right: 0; }
+        .menu-header { font-size: 22px; font-weight: bold; border-bottom: 1px solid #222; padding-bottom: 15px; margin-bottom: 20px; color: var(--primary); }
+        .menu-item { padding: 18px 0; font-size: 16px; border-bottom: 1px solid #111; display: flex; align-items: center; gap: 15px; color: #ccc; }
 
-        .tabs { display: flex; gap: 20px; border-bottom: 1px solid #222; margin-bottom: 15px; overflow-x: auto; scrollbar-width: none; }
+        .player { display: none; position: fixed; inset: 0; background: #000; z-index: 5000; flex-direction: column; overflow-y: auto; }
+        .video-box { width: 100%; aspect-ratio: 16 / 9; background: #000; position: relative; overflow: hidden; }
+        
+        video::-webkit-media-controls { display:none !important; }
+        .screen-tag { position: absolute; top: 15px; right: 15px; padding: 5px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; color: white; z-index: 6001; text-transform: uppercase; letter-spacing: 1px; }
+
+        .close-info { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); border-radius: 50%; width: 40px; height: 40px; text-align:center; line-height:40px; color:white; z-index: 6000; font-weight:bold; }
+        .watch-btn { width: 90%; margin: 0 auto 20px auto; padding: 15px; background: var(--gold); border: none; border-radius: 8px; font-weight: 900; font-size: 14px; color: #000; display: block; }
+
+        .tabs { display: flex; gap: 20px; border-bottom: 1px solid #222; margin-bottom: 15px; padding: 0 20px; overflow-x: auto; scrollbar-width: none; }
         .tab { padding: 10px 0; font-weight: bold; font-size: 14px; color: #666; cursor: pointer; white-space: nowrap; }
         .tab.active { color: white; border-bottom: 3px solid var(--primary); }
-        .tab-content { display: none; font-size: 14px; color: #bbb; line-height: 1.5; }
+        .tab-content { display: none; padding: 0 20px; }
         .tab-content.active { display: block; }
 
-        /* Comments UI Fixed */
-        .comment-box { display: flex; gap: 10px; margin-bottom: 20px; }
-        .comment-box input { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #111; color: white; outline: none; }
-        .comment-box button { background: var(--primary); border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; color: #000; }
+        #trailer-poster { width: 100%; height: 250px; border-radius: 12px; background-size: contain; background-repeat: no-repeat; background-position: center; background-color: #000; border: 1px solid #333; }
 
-        /* FULLSCREEN CINEMATIC PLAYER FIX */
         .fs-player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 9999; }
-        .fs-header { width: 100%; padding: 15px; display: flex; justify-content: flex-end; position: absolute; top: 0; z-index: 10005; }
-        .close-fs { background: rgba(255, 255, 255, 0.1); border-radius: 50%; width: 45px; height: 45px; text-align: center; line-height: 45px; color: white; font-size: 24px; font-weight: bold; cursor: pointer; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); }
-        
-        .fs-video-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #000; }
-        iframe { width: 100vw; height: 56.25vw; max-height: 100vh; max-width: 100vw; border: none; background: #000; }
-
+        .close-fs { position: absolute; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; width: 45px; height: 45px; text-align: center; line-height: 45px; color: white; font-size: 24px; z-index: 10006; backdrop-filter: blur(10px); }
+        iframe { width: 100vw; height: 56.25vw; max-height: 100vh; border: none; }
         @media (orientation: landscape) { iframe { width: 100vw; height: 100vh; } }
     </style>
 </head>
 <body>
 
     <header>
-        <div style="background:var(--gold); color:black; font-size:10px; font-weight:900; padding:5px 12px; border-radius:5px;">⭐ ELITE</div>
+        <div style="background:var(--gold); color:black; font-size:10px; font-weight:900; padding:4px 10px; border-radius:4px;">⭐ ELITE</div>
         <div class="logo">STEROMAX</div>
-        <div style="font-size: 20px;">⚙️</div>
+        <div style="font-size: 24px; cursor: pointer;" onclick="toggleMenu()">⚙️</div>
     </header>
 
+    <div id="sideMenu" class="side-menu">
+        <div style="text-align: right; font-size: 30px;" onclick="toggleMenu()">✕</div>
+        <div class="menu-header">Account Settings</div>
+        <div class="menu-item">👤 Profile Details</div>
+        <div class="menu-item">📥 My Downloads</div>
+        <div class="menu-item">💎 SteroMax Premium</div>
+        <div class="menu-item">🌙 Dark Mode: ON</div>
+        <div class="menu-item" style="color: #ff4444;">🚪 Logout</div>
+    </div>
+
     <div id="home">
-        <div class="slider-wrapper">
-            <div class="hero-slide" onclick="playMovie(3)" style="background-image: url('https://i.postimg.cc/HsGfn83z/filters-quality(95)format(webp).jpg');">
-                <div class="slide-overlay"></div>
-                <div class="slide-content">
-                    <span class="trending-tag">🔥 TRENDING</span>
-                    <p style="font-size:18px; font-weight:bold; margin:0;">Demon Slayer S1</p>
-                </div>
-            </div>
-        </div>
-        <h3 style="margin-left: 15px;">Must Watch</h3>
+        <div class="slider-wrapper" id="main-slider"></div>
+        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px;">Must Watch</h3>
         <div class="grid" id="movie-grid"></div>
     </div>
 
     <div id="playerModal" class="player">
         <div class="close-info" onclick="closeInfoPage()">✕</div>
         <div class="video-box">
-            <video id="introVideo" playsinline autoplay controls style="width:100%; height:100%;">
+            <div id="screen-tag" class="screen-tag"></div>
+            <video id="introVideo" playsinline autoplay loop style="width:100%; height:100%; object-fit: cover;">
                 <source src="" id="introSource" type="video/mp4">
             </video>
         </div>
         <div class="p-content">
-            <h2 id="p-title"></h2>
-            <button class="watch-btn" id="movieBtn">▶ WATCH FULL MOVIE</button>
+            <h2 id="p-title" style="margin:0; font-size: 24px; padding: 20px 20px 5px 20px;"></h2>
+            <p id="dynamic-tag" style="color:var(--gold); font-size:12px; margin-bottom:15px; padding: 0 20px;"></p>
+            
+            <button class="watch-btn" id="fullMovieBtn" style="display: none;">▶ WATCH FULL MOVIE</button>
+            
             <div class="tabs">
                 <div class="tab active" onclick="switchTab(0)">Details</div>
                 <div class="tab" id="ep-tab-head" onclick="switchTab(1)">Episodes</div>
@@ -94,121 +106,151 @@
             </div>
 
             <div id="tab-details" class="tab-content active">
-                <p id="movie-desc"></p>
-                <h3 style="color:var(--primary); margin-top:20px;">Recommended for You</h3>
-                <div class="grid" id="sim-grid"></div>
+                <p id="movie-desc" style="color:#bbb; font-size:14px; line-height:1.6;"></p>
+                <h3 style="color:var(--primary); font-size:16px;">Recommended</h3>
+                <div class="grid" id="sim-grid" style="padding:0;"></div>
             </div>
 
             <div id="tab-episodes" class="tab-content"><div id="ep-container"></div></div>
-
-            <div id="tab-comments" class="tab-content">
-                <div class="comment-box">
-                    <input type="text" id="userComment" placeholder="Write a comment...">
-                    <button onclick="addComment()">Post</button>
-                </div>
-                <div id="comments-list"></div>
-            </div>
-
+            <div id="tab-comments" class="tab-content"><div id="comments-list"></div></div>
             <div id="tab-poster" class="tab-content">
-                <div id="trailer-poster" style="width:100%; height:200px; border-radius:12px; background-size:cover; background-position:center; border:1px solid #333;"></div>
-                <div style="margin-top:15px; background:#111; padding:15px; border-radius:10px;">
-                    <p><b>Quality:</b> <span style="color:var(--gold);">4K Ultra HD</span></p>
-                    <p><b>Audio:</b> Hindi / Japanese</p>
-                    <p><b>Status:</b> Completed</p>
-                    <p><b>Studio:</b> SteroMax Elite</p>
-                </div>
+                <div id="trailer-poster"></div>
             </div>
         </div>
     </div>
 
     <div id="fsPlayerModal" class="fs-player-overlay">
-        <div class="fs-header"><div class="close-fs" onclick="closeEpisode()">✕</div></div>
-        <div class="fs-video-container">
+        <div class="close-fs" onclick="closeEpisode()">✕</div>
+        <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
             <iframe id="episodeFrame" src="" allowfullscreen allow="autoplay; fullscreen"></iframe>
         </div>
     </div>
 
+    <div class="bottom-nav">
+        <div class="nav-item active">🏠<span>Home</span></div>
+        <div class="nav-item">🔍<span>Search</span></div>
+        <div class="nav-item">🔥<span>Popular</span></div>
+        <div class="nav-item" onclick="toggleMenu()">👤<span>Profile</span></div>
+    </div>
+
     <script>
-        const movies = [
-            { id: 1, title: "Infinity Castle", type: "movie", img: "https://i.postimg.cc/DwfGrBHM/kv-1.jpg", trailerLink: "https://www.dropbox.com/scl/fi/cmiemscnlidr0iszlal4z/Demon_Slayer__Kimetsu_no_Yaiba_Infinity_Castle___MAIN_TRAILER-1080p.mp4?rlkey=wy1z8i6bjh6janpqk2xaq5a32&raw=1", desc: "The final battle begins at Infinity Castle.", comments: ["Wait is over!", "Epic animation."] },
-            { id: 2, title: "Pushpa 2", type: "movie", img: "https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg", trailerLink: "https://www.dropbox.com/scl/fi/8ml1gt55dbwso60vgvrpg/Pushpa_2_-_The_Rule_Trailer__Hindi____Allu_Arjun___Sukumar___Rashmika_Mandanna___Fahadh_Faasil___DSP-1080p.mp4?rlkey=2b1euqnm0grgktur01br1lv1g&raw=1", desc: "Pushpa Raj returns to rule.", comments: ["Jhukega nahi saala! 🔥"] },
-            { 
-                id: 3, title: "Demon Slayer S1", type: "series", img: "https://i.postimg.cc/HsGfn83z/filters-quality(95)format(webp).jpg", 
-                trailerLink: "https://www.dropbox.com/scl/fi/i2fsl28a3p8r5do86bhwu/Demon_Slayer___OP____Gurenge__by_LiSA_HD-1080p.mp4?rlkey=pe9xi0ivfsg7fx6to2z30qtv9&raw=1",
-                desc: "Tanjiro's journey to save Nezuko begins.",
-                episodes: [{ title: "Episode 1: Cruelty (Hindi Dub)", embed: "https://steromax.4meplayer.com/#6rsmm", thumb: "https://i.postimg.cc/BnXvh3w2/Screenshot-2026-04-15-22-25-36-63-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" }],
-                comments: ["Bhai kya mast dubbing hai!", "VidHide player is very fast."]
-            }
-        ];
-
-        let currentMovie = null;
-        const introVideo = document.getElementById('introVideo');
-
-        function playMovie(id) {
-            currentMovie = movies.find(x => x.id === id);
-            document.getElementById('p-title').innerText = currentMovie.title;
-            document.getElementById('movie-desc').innerText = currentMovie.desc;
-            document.getElementById('trailer-poster').style.backgroundImage = `url('${currentMovie.img}')`;
-            document.getElementById('introSource').src = currentMovie.trailerLink;
-            introVideo.load(); introVideo.play();
-            
-            if(currentMovie.type === "series") {
-                document.getElementById('ep-tab-head').style.display = "block";
-                document.getElementById('movieBtn').style.display = "none";
-                const epList = document.getElementById('ep-container'); epList.innerHTML = '';
-                currentMovie.episodes.forEach((e, i) => {
-                    epList.innerHTML += `<div style="display:flex; align-items:center; gap:12px; background:#111; padding:12px; border-radius:10px; margin-bottom:8px; border:1px solid #222;" onclick="openEpisodeFullscreen(${i})"><div style="width:80px; height:45px; border-radius:5px; overflow:hidden;"><img src="${e.thumb}" style="width:100%;height:100%;object-fit:cover"></div><b>${e.title}</b></div>`;
-                });
-            } else { document.getElementById('ep-tab-head').style.display = "none"; document.getElementById('movieBtn').style.display = "block"; }
-            
-            updateComments();
-            document.getElementById('playerModal').style.display = 'flex';
-            switchTab(0); renderGrid(movies, 'sim-grid'); // Recommended Grid
+    const movies = [
+        { 
+            id: 1, title: "Demon Slayer: Infinity Castle", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", 
+            img: "https://i.postimg.cc/DwfGrBHM/kv-1.jpg", 
+            trailerLink: "https://www.dropbox.com/scl/fi/cmiemscnlidr0iszlal4z/Demon_Slayer__Kimetsu_no_Yaiba_Infinity_Castle___MAIN_TRAILER-1080p.mp4?rlkey=wy1z8i6bjh6janpqk2xaq5a32&raw=1", 
+            desc: "The final battle begins.", detailTag: "Official Trailer / Preview",
+            comments: ["Infinity Castle arc is going to be insane!", "Waiting for the official release."]
+        },
+        { 
+            id: 2, title: "Pushpa 2: The Rule", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", 
+            img: "https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg", 
+            trailerLink: "https://www.dropbox.com/scl/fi/8ml1gt55dbwso60vgvrpg/Pushpa_2_-_The_Rule_Trailer__Hindi____Allu_Arjun___Sukumar___Rashmika_Mandanna___Fahadh_Faasil___DSP-1080p.mp4?rlkey=2b1euqnm0grgktur01br1lv1g&raw=1", 
+            desc: "Pushpa Raj returns.", detailTag: "Official Trailer / Preview",
+            comments: ["Fire hai ye movie! 🔥", "Allu Arjun's swag is unmatched."]
+        },
+        { 
+            id: 3, title: "Demon Slayer Season 1", type: "series", tag: "NEW SERIES", screenTag: "New Series", screenTagColor: "#ff0000", 
+            img: "https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg", 
+            trailerLink: "https://www.dropbox.com/scl/fi/i2fsl28a3p8r5do86bhwu/Demon_Slayer___OP____Gurenge__by_LiSA_HD-1080p.mp4?rlkey=pe9xi0ivfsg7fx6to2z30qtv9&raw=1", 
+            desc: "Tanjiro's journey begins.", detailTag: "New Series / Preview",
+            episodes: [
+                { title: "Episode 1: Cruelty (Hindi)", embed: "https://steromax.4meplayer.com/#6rsmm", thumb: "https://i.postimg.cc/VNjcQ6CW/Screenshot-2026-04-15-22-25-36-63-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" },
+                { title: "Episode 2: The Trainer Sakonji (Hindi)", embed: "https://steromax.4meplayer.com/#8ecyx", thumb: "https://i.postimg.cc/sx5jTc4N/Screenshot-2026-04-16-22-20-03-85-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" }
+            ],
+            comments: ["Bhai Episode 2 ki quality ekdum kadak hai!", "Hindi dubbing is OP 🔥", "Tanjiro is my favorite."]
         }
+    ];
 
-        function openEpisodeFullscreen(i) {
-            introVideo.pause();
-            const elem = document.getElementById("fsPlayerModal");
-            document.getElementById('episodeFrame').src = currentMovie.episodes[i].embed;
-            elem.style.display = 'block';
-
-            if (elem.requestFullscreen) elem.requestFullscreen();
-            if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock("landscape").catch(e => {});
-            }
-        }
-
-        function closeEpisode() { 
-            document.getElementById('episodeFrame').src = ""; 
-            document.getElementById('fsPlayerModal').style.display = 'none'; 
-            if (document.exitFullscreen) document.exitFullscreen().catch(e => {});
-        }
-
-        function addComment() {
-            const input = document.getElementById('userComment');
-            if(input.value.trim() !== "") {
-                currentMovie.comments.unshift(input.value);
-                input.value = "";
-                updateComments();
-            }
-        }
-
-        function updateComments() {
-            const cList = document.getElementById('comments-list'); cList.innerHTML = '';
-            currentMovie.comments.forEach(c => { cList.innerHTML += `<div style="background:#111; padding:12px; border-radius:8px; margin-bottom:10px; border-left:3px solid var(--primary);"><b>User:</b> ${c}</div>`; });
-        }
-
-        function switchTab(idx) { 
-            document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx)); 
-            document.querySelectorAll('.tab-content').forEach((c, i) => c.classList.toggle('active', i === idx)); 
-        }
-
-        function closeInfoPage() { introVideo.pause(); document.getElementById('playerModal').style.display = 'none'; }
-        function renderGrid(data, target) {
-            const grid = document.getElementById(target); grid.innerHTML = '';
-            data.forEach(m => { grid.innerHTML += `<div class="movie-card" onclick="playMovie(${m.id})"><img src="${m.img}"><p style="font-size:9px; margin:5px;">${m.title}</p></div>`; });
-        }
+    function initHome() {
+        const slider = document.getElementById('main-slider');
+        movies.forEach(m => {
+            const tagClass = m.tag === "NEW SERIES" ? "tag-red" : "tag-blue";
+            slider.innerHTML += `<div class="hero-slide" onclick="playMovie(${m.id})" style="background-image: url('${m.img}');"><div class="slide-overlay"></div><div class="slide-content"><span class="${tagClass}">${m.tag}</span><p style="font-size:18px; font-weight:bold; margin:0;">${m.title}</p></div></div>`;
+        });
         renderGrid(movies, 'movie-grid');
-    </script>
+        let slideIndex = 0;
+        setInterval(() => {
+            slideIndex = (slideIndex + 1) % movies.length;
+            slider.scrollTo({ left: slideIndex * slider.offsetWidth, behavior: 'smooth' });
+        }, 4000);
+    }
+
+    function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
+
+    function playMovie(id) {
+        const currentMovie = movies.find(x => x.id === id);
+        document.getElementById('p-title').innerText = currentMovie.title;
+        document.getElementById('dynamic-tag').innerText = currentMovie.detailTag;
+        
+        const sTag = document.getElementById('screen-tag');
+        sTag.innerText = currentMovie.screenTag;
+        sTag.style.background = currentMovie.screenTagColor;
+
+        document.getElementById('movie-desc').innerText = currentMovie.desc;
+        
+        // --- YE LINES FIX KI HAI ---
+        // 1. Poster Tab Update
+        document.getElementById('trailer-poster').style.backgroundImage = `url('${currentMovie.img}')`;
+        
+        // 2. Comments Render
+        const cList = document.getElementById('comments-list'); 
+        cList.innerHTML = '';
+        (currentMovie.comments || []).forEach(c => { 
+            cList.innerHTML += `<div style="background:#111; padding:12px; border-radius:8px; margin-bottom:8px; border-left:3px solid var(--primary); font-size:13px; color:#ccc;"><b>User:</b> ${c}</div>`; 
+        });
+        // ---------------------------
+
+        document.getElementById('introSource').src = currentMovie.trailerLink;
+        const intro = document.getElementById('introVideo');
+        intro.load(); intro.play();
+        
+        const fullBtn = document.getElementById('fullMovieBtn');
+        if(currentMovie.type === "movie") {
+            fullBtn.style.display = "block";
+            document.getElementById('ep-tab-head').style.display = "none";
+        } else {
+            fullBtn.style.display = "none";
+            document.getElementById('ep-tab-head').style.display = "block";
+            const epList = document.getElementById('ep-container'); epList.innerHTML = '';
+            currentMovie.episodes.forEach((e) => {
+                epList.innerHTML += `<div style="display:flex; align-items:center; gap:12px; background:#111; padding:12px; border-radius:10px; margin-bottom:8px; border:1px solid #222;" onclick="openEpisodeFullscreen('${e.embed}')"><div style="width:80px; height:45px; border-radius:5px; overflow:hidden;"><img src="${e.thumb}" style="width:100%;height:100%;object-fit:cover"></div><b>${e.title}</b></div>`;
+            });
+        }
+        document.getElementById('playerModal').style.display = 'flex';
+        switchTab(0); renderGrid(movies, 'sim-grid');
+    }
+
+    function openEpisodeFullscreen(link) {
+        document.getElementById('introVideo').pause();
+        const fsModal = document.getElementById("fsPlayerModal");
+        document.getElementById('episodeFrame').src = link;
+        fsModal.style.display = 'block';
+        if (fsModal.requestFullscreen) fsModal.requestFullscreen();
+        if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(e => {});
+    }
+
+    function closeEpisode() { 
+        document.getElementById('episodeFrame').src = ""; 
+        document.getElementById('fsPlayerModal').style.display = 'none'; 
+        if (document.exitFullscreen) document.exitFullscreen().catch(e => {});
+    }
+
+    function renderGrid(data, target) {
+        const grid = document.getElementById(target); grid.innerHTML = '';
+        data.forEach(m => {
+            grid.innerHTML += `<div class="movie-card" onclick="playMovie(${m.id})"><img src="${m.img}"><div class="movie-info"><p>${m.title}</p></div></div>`;
+        });
+    }
+
+    function switchTab(idx) { 
+        document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx)); 
+        document.querySelectorAll('.tab-content').forEach((c, i) => c.classList.toggle('active', i === idx)); 
+    }
+
+    function closeInfoPage() { document.getElementById('introVideo').pause(); document.getElementById('playerModal').style.display = 'none'; }
+    initHome();
+</script>
+
 </body>
 </html>
