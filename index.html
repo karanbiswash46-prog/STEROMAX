@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Stero Max Pro - Elite Streaming</title>
-      <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json">
 
     <style>
         :root { --primary: #00d2ff; --bg: #000000; --card: #151515; --text: #ffffff; --gold: #ffcc00; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 90px; overflow-x: hidden; }
+        
+        /* FIX: overflow-x: hidden hata diya gaya hai taaki scroll lock na ho */
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 90px; }
+        .main-wrapper { overflow-x: hidden; width: 100%; }
 
         header { background: rgba(17, 17, 17, 0.9); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); }
         .logo { color: var(--primary); font-size: 22px; font-weight: 900; letter-spacing: 1px; }
@@ -52,7 +55,7 @@
         video::-webkit-media-controls { display:none !important; }
         .screen-tag { position: absolute; top: 15px; right: 15px; padding: 5px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; color: white; z-index: 6001; text-transform: uppercase; letter-spacing: 1px; }
 
-        .close-info { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); border-radius: 50%; width: 40px; height: 40px; text-align:center; line-height:40px; color:white; z-index: 6000; font-weight:bold; }
+        .close-info { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); border-radius: 50%; width: 40px; height: 40px; text-align:center; line-height:40px; color:white; z-index: 6000; font-weight:bold; cursor:pointer; }
         .p-content { padding-bottom: 50px; flex-grow: 1; display: flex; flex-direction: column; }
         .watch-btn { width: 90%; margin: 0 auto 20px auto; padding: 15px; background: var(--gold); border: none; border-radius: 8px; font-weight: 900; font-size: 14px; color: #000; display: block; cursor: pointer; }
 
@@ -66,125 +69,64 @@
 
         /* --- FULLSCREEN CSS --- */
         .fs-player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 9999; }
-        .close-fs { position: absolute; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; width: 45px; height: 45px; text-align: center; line-height: 45px; color: white; font-size: 24px; z-index: 10006; backdrop-filter: blur(10px); }
+        .close-fs { position: absolute; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; width: 45px; height: 45px; text-align: center; line-height: 45px; color: white; font-size: 24px; z-index: 10006; backdrop-filter: blur(10px); cursor:pointer;}
         iframe { width: 100vw; height: 56.25vw; max-height: 100vh; border: none; }
         @media (orientation: landscape) { iframe { width: 100vw; height: 100vh; } }
 
         /* --- SPLASH SCREEN & TIMER CSS --- */
         #splashScreen {
-            position: fixed;
-            inset: 0;
-            z-index: 99999;
+            position: fixed; inset: 0; z-index: 99999;
             background-image: url('https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg'); 
-            background-size: cover;
-            background-position: top center;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
-            padding-bottom: 60px;
-            transition: opacity 0.4s ease-out;
+            background-size: cover; background-position: top center;
+            display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+            padding-bottom: 60px; transition: opacity 0.4s ease-out;
         }
+        #splashScreen::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0) 80%); z-index: 1; pointer-events: none; }
+        .splash-click-area { position: absolute; inset: 0; z-index: 5; cursor: pointer; }
+        .splash-top-bar { position: absolute; top: 20px; right: 20px; z-index: 10; }
+        .skip-btn { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 14px; border-radius: 20px; font-size: 14px; backdrop-filter: blur(8px); cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: bold; }
+        .splash-content { position: relative; z-index: 6; text-align: center; animation: slideUp 0.8s ease-out forwards; pointer-events: none; }
+        .splash-logo-text { color: var(--primary); font-size: 38px; font-weight: 900; letter-spacing: 2px; text-shadow: 0 0 20px var(--primary); margin: 0 0 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .splash-elite-badge { background: var(--gold); color: black; font-size: 14px; font-weight: 900; padding: 4px 10px; border-radius: 4px; text-shadow: none; }
+        .splash-loading { color: #ddd; font-size: 14px; font-weight: bold; letter-spacing: 2px; animation: loadingPulse 1.5s infinite; }
 
-        #splashScreen::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0) 80%);
-            z-index: 1;
-            pointer-events: none;
-        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes loadingPulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
-        .splash-click-area {
-            position: absolute;
-            inset: 0;
-            z-index: 5;
-            cursor: pointer;
-        }
-
-        .splash-top-bar {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 10;
-        }
-
-        .skip-btn {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 14px;
-            backdrop-filter: blur(8px);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: bold;
-        }
-
-        .splash-content {
-            position: relative;
-            z-index: 6;
-            text-align: center;
-            animation: slideUp 0.8s ease-out forwards;
-            pointer-events: none;
-        }
-
-        .splash-logo-text {
-            color: var(--primary);
-            font-size: 38px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-shadow: 0 0 20px var(--primary);
-            margin: 0 0 10px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .splash-elite-badge {
-            background: var(--gold);
-            color: black;
-            font-size: 14px;
-            font-weight: 900;
-            padding: 4px 10px;
-            border-radius: 4px;
-            text-shadow: none;
-        }
-
-        .splash-loading {
-            color: #ddd;
-            font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            animation: loadingPulse 1.5s infinite;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes loadingPulse {
-            0% { opacity: 0.4; }
-            50% { opacity: 1; }
-            100% { opacity: 0.4; }
-        }
+        /* --- LOGIN OVERLAY CSS --- */
+        .auth-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(15px); z-index: 100000; display: flex; justify-content: center; align-items: center; }
+        .auth-box { background: rgba(255, 255, 255, 0.07); padding: 40px 30px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1); width: 85%; max-width: 380px; text-align: center; box-shadow: 0 8px 32px rgba(0, 210, 255, 0.2); }
+        .auth-box h2 { color: #00d2ff; margin-bottom: 20px; font-size: 24px; }
+        .auth-box h2 span { color: #ffcc00; }
+        .auth-box input { width: 100%; padding: 14px; margin: 10px 0; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; outline: none; }
+        .auth-box button { width: 100%; padding: 14px; background: #00d2ff; color: black; font-weight: bold; border: none; border-radius: 12px; margin-top: 20px; cursor: pointer; }
+        .toggle-text { color: #888; margin-top: 20px; font-size: 14px; cursor: pointer; }
+        .toggle-text span { color: #00d2ff; text-decoration: underline; }
     </style>
 </head>
 <body>
 
+<div class="main-wrapper">
+    <div id="authOverlay" class="auth-overlay">
+        <div class="auth-box">
+            <h2 class="logo-text">STEROMAX <span>ELITE</span></h2>
+            <div id="authForm">
+                <h3 id="authTitle" style="color:white; margin-bottom:15px;">Login</h3>
+                <input type="email" id="email" placeholder="Email Address">
+                <input type="password" id="password" placeholder="Password">
+                <button id="mainAuthBtn" onclick="handleAuth()">Login</button>
+                <p class="toggle-text" onclick="toggleAuth()">Naya account banana hai? <span>Signup</span></p>
+            </div>
+        </div>
+    </div>
+
     <div id="splashScreen">
         <div class="splash-click-area" onclick="openSplashMovie()"></div>
-
         <div class="splash-top-bar">
             <div class="skip-btn" onclick="forceSkipSplash(event)">
                 Skip <span id="splashTimer">4</span>s ⏭
             </div>
         </div>
-
         <div class="splash-content">
             <h1 class="splash-logo-text">
                 <span class="splash-elite-badge">⭐ ELITE</span>
@@ -220,7 +162,7 @@
         <div class="menu-item">📥 My Downloads</div>
         <div class="menu-item">💎 SteroMax Premium</div>
         <div class="menu-item">🌙 Dark Mode: ON</div>
-        <div class="menu-item" style="color: #ff4444;">🚪 Logout</div>
+        <div class="menu-item" style="color: #ff4444;" onclick="logoutUser()">🚪 Logout</div>
     </div>
 
     <div id="home">
@@ -277,8 +219,7 @@
         <div class="nav-item">🔥<span>Popular</span></div>
         <div class="nav-item" onclick="toggleMenu()">👤<span>Profile</span></div>
     </div>
-
-    <script>
+</div> <script>
     const movies = [
         { 
             id: 1, 
@@ -289,7 +230,7 @@
             screenTagColor: "#0066ff", 
             img: "https://i.postimg.cc/DwfGrBHM/kv-1.jpg", 
             trailerLink: "https://www.dropbox.com/scl/fi/cmiemscnlidr0iszlal4z/Demon_Slayer__Kimetsu_no_Yaiba_Infinity_Castle___MAIN_TRAILER-1080p.mp4?rlkey=wy1z8i6bjh6janpqk2xaq5a32&raw=1", 
-            fullMovieLink: "https://steromax.4meplayer.com/#hn1h5", // <-- NAYA LINK ADD KIYA
+            fullMovieLink: "https://steromax.4meplayer.com/#hn1h5", 
             desc: "The final battle begins.", 
             detailTag: "Official Trailer / Preview",
             comments: ["Infinity Castle arc is going to be insane!", "Waiting for the official release."]
@@ -341,7 +282,6 @@
     ];
 
     function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
-
     function openSearch() { document.getElementById('searchOverlay').style.display = 'flex'; document.getElementById('searchInput').focus(); }
     function closeSearch() { document.getElementById('searchOverlay').style.display = 'none'; document.getElementById('searchInput').value = ''; }
     function quickSearch(t) { document.getElementById('searchInput').value = t; doSearch(); }
@@ -375,7 +315,7 @@
         document.getElementById('dynamic-tag').innerText = currentMovie.detailTag;
         
         const sTag = document.getElementById('screen-tag');
-          sTag.innerText = currentMovie.screenTag;
+        sTag.innerText = currentMovie.screenTag;
         sTag.style.background = currentMovie.screenTagColor;
 
         document.getElementById('movie-desc').innerText = currentMovie.desc;
@@ -395,16 +335,10 @@
         if(currentMovie.type === "movie") {
             fullBtn.style.display = "block";
             document.getElementById('ep-tab-head').style.display = "none";
-            
-            // --- SMART BUTTON LOGIC FOR FULL MOVIE LINK ---
             fullBtn.onclick = function() {
-                if(currentMovie.fullMovieLink) {
-                    openEpisodeFullscreen(currentMovie.fullMovieLink);
-                } else {
-                    alert("Movie is coming soon on SteroMax! 🔥");
-                }
+                if(currentMovie.fullMovieLink) openEpisodeFullscreen(currentMovie.fullMovieLink);
+                else alert("Movie is coming soon on SteroMax! 🔥");
             };
-
         } else {
             fullBtn.style.display = "none";
             document.getElementById('ep-tab-head').style.display = "block";
@@ -451,9 +385,7 @@
 
     function runSplashTimer() {
         initHome(); 
-        
         const timerEl = document.getElementById('splashTimer');
-        
         splashInterval = setInterval(() => {
             splashTime--;
             if(splashTime > 0) {
@@ -464,17 +396,9 @@
         }, 1000);
     }
 
-    function forceSkipSplash(e) {
-        e.stopPropagation(); 
-        removeSplash();
-    }
+    function forceSkipSplash(e) { e.stopPropagation(); removeSplash(); }
 
-    function openSplashMovie() {
-        removeSplash();
-        setTimeout(() => {
-            playMovie(3);
-        }, 300); 
-    }
+    function openSplashMovie() { removeSplash(); setTimeout(() => { playMovie(3); }, 300); }
 
     function removeSplash() {
         clearInterval(splashInterval); 
@@ -482,37 +406,75 @@
         if(splash && splash.style.display !== 'none') {
             splash.style.opacity = '0'; 
             splash.style.pointerEvents = 'none'; 
-            setTimeout(() => { 
-                splash.style.display = 'none'; 
-            }, 400); 
+            setTimeout(() => { splash.style.display = 'none'; }, 400); 
         }
     }
 
     runSplashTimer();
+    </script>
 
-</script>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+      import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  // Tera Configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyDFHIr_2W-jRr97x1HVY9tpyWaI2QqtY9E",
-    authDomain: "stero-max.firebaseapp.com",
-    projectId: "stero-max",
-    storageBucket: "stero-max.firebasestorage.app",
-    messagingSenderId: "101516996592",
-    appId: "1:101516996592:web:7f90b3f4b9805bf74ab735",
-    measurementId: "G-BGN26VB04V"
-  };
+      const firebaseConfig = {
+        apiKey: "AIzaSyDFHIr_2W-jRr97x1HVY9tpyWaI2QqtY9E",
+        authDomain: "stero-max.firebaseapp.com",
+        projectId: "stero-max",
+        storageBucket: "stero-max.firebasestorage.app",
+        messagingSenderId: "101516996592",
+        appId: "1:101516996592:web:7f90b3f4b9805bf74ab735",
+        measurementId: "G-BGN26VB04V"
+      };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
 
-  console.log("SteroMax Firebase Connected! 🔥");
-</script>
+      let isLoginMode = true;
+
+      window.toggleAuth = () => {
+          isLoginMode = !isLoginMode;
+          document.getElementById('authTitle').innerText = isLoginMode ? 'Login' : 'Signup';
+          document.getElementById('mainAuthBtn').innerText = isLoginMode ? 'Login' : 'Signup';
+      };
+
+      window.handleAuth = async () => {
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
+          
+          if(!email || !password) return alert("Bhai, email aur password toh daal de!");
+
+          try {
+              if (isLoginMode) {
+                  await signInWithEmailAndPassword(auth, email, password);
+              } else {
+                  await createUserWithEmailAndPassword(auth, email, password);
+              }
+          } catch (err) {
+              alert("Error: " + err.message);
+          }
+      };
+
+      window.logoutUser = async () => {
+          await signOut(auth);
+          document.getElementById('sideMenu').classList.remove('active');
+          alert("Logged out successfully!");
+          window.location.reload();
+      }
+
+      onAuthStateChanged(auth, (user) => {
+          const overlay = document.getElementById('authOverlay');
+          if (user) {
+              overlay.style.transition = '0.5s';
+              overlay.style.opacity = '0';
+              setTimeout(() => overlay.style.display = 'none', 500);
+          } else {
+              overlay.style.display = 'flex';
+              overlay.style.opacity = '1';
+          }
+      });
+    </script>
 </body>
-            </html>
+    </html>
