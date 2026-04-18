@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Stero Max Pro - Elite Streaming</title>
       <link rel="manifest" href="manifest.json">
+
     <style>
         :root { --primary: #00d2ff; --bg: #000000; --card: #151515; --text: #ffffff; --gold: #ffcc00; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -318,8 +319,9 @@
             desc: "Tanjiro's journey begins.", 
             detailTag: "New Series / Preview",
             episodes: [
-                { title: "Episode 1: Cruelty (Hindi)", embed: "https://steromax.4meplayer.com/#6rsmm", thumb: "https://i.postimg.cc/VNjcQ6CW/Screenshot-2026-04-15-22-25-36-63-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" },
-                { title: "Episode 2: Trainer Sakonji Urokodaki (Hindi)", embed: "https://steromax.4meplayer.com/#8ecyx", thumb: "https://i.postimg.cc/sx5jTc4N/Screenshot-2026-04-16-22-20-03-85-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" }
+                { title: "Episode 1: Cruelty (Hindi)", embed: "https://steromax.4meplayer.com/#6rsmm", thumb: "https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png" },
+                { title: "Episode 2: Trainer Sakonji Urokodaki (Hindi)", embed: "https://steromax.4meplayer.com/#8ecyx", thumb: "https://i.postimg.cc/sx5jTc4N/Screenshot-2026-04-16-22-20-03-85-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" },
+                { title: "Episode 3: Sabito and Makomo (Hindi)", embed: "https://steromax.4meplayer.com/#6rhkf", thumb: "https://i.postimg.cc/mZz5jSFn/IMG-20260418-153418.png" },
             ],
             comments: ["Bhai Episode 2 ki quality ekdum kadak hai!", "Hindi dubbing is OP 🔥", "Tanjiro is my favorite."]
         },
@@ -373,7 +375,7 @@
         document.getElementById('dynamic-tag').innerText = currentMovie.detailTag;
         
         const sTag = document.getElementById('screen-tag');
-            sTag.innerText = currentMovie.screenTag;
+          sTag.innerText = currentMovie.screenTag;
         sTag.style.background = currentMovie.screenTagColor;
 
         document.getElementById('movie-desc').innerText = currentMovie.desc;
@@ -489,6 +491,28 @@
     runSplashTimer();
 
 </script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+  // Tera Configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDFHIr_2W-jRr97x1HVY9tpyWaI2QqtY9E",
+    authDomain: "stero-max.firebaseapp.com",
+    projectId: "stero-max",
+    storageBucket: "stero-max.firebasestorage.app",
+    messagingSenderId: "101516996592",
+    appId: "1:101516996592:web:7f90b3f4b9805bf74ab735",
+    measurementId: "G-BGN26VB04V"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  console.log("SteroMax Firebase Connected! 🔥");
+</script>
 </body>
-</html> 
+            </html>
