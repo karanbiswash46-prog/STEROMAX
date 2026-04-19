@@ -43,7 +43,7 @@
         .nav-item.active { color: var(--primary); }
         .nav-item span { display: block; font-size: 12px; margin-top: 4px; font-weight: 700; }
 
-        /* --- FULL PROFILE PAGE (NEW) --- */
+        /* --- FULL PROFILE PAGE --- */
         #profilePage { display: none; position: fixed; inset: 0; background: #000; z-index: 4000; flex-direction: column; padding: 40px 20px; overflow-y: auto; }
         .profile-header { text-align: center; margin-bottom: 30px; }
         .avatar { width: 100px; height: 100px; background: linear-gradient(45deg, var(--primary), #bc4ed8); border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-size: 40px; border: 4px solid #222; }
@@ -52,7 +52,7 @@
         .detail-label { color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
         .detail-value { color: white; font-size: 16px; font-weight: bold; margin-top: 5px; }
 
-        /* --- SETTINGS MENU (UPDATED) --- */
+        /* --- SETTINGS MENU --- */
         .side-menu { position: fixed; top: 0; right: -100%; width: 85%; height: 100%; background: #0a0a0a; z-index: 5000; transition: 0.4s; padding: 30px; border-left: 1px solid #333; }
         .side-menu.active { right: 0; }
         .menu-header { font-size: 22px; font-weight: bold; border-bottom: 1px solid #222; padding-bottom: 15px; margin-bottom: 20px; color: var(--gold); }
@@ -112,6 +112,13 @@
         .auth-box button { width: 100%; padding: 14px; background: #00d2ff; color: black; font-weight: bold; border: none; border-radius: 12px; margin-top: 20px; cursor: pointer; }
         .toggle-text { color: #ccc; font-size: 13px; cursor: pointer; }
         .toggle-text span { color: #00d2ff; text-decoration: underline; }
+
+        /* --- COMMENTS UI ADDITION --- */
+        .comment-input-area { display: flex; gap: 10px; margin-bottom: 20px; }
+        .comment-input-area input { flex: 1; padding: 12px 15px; border-radius: 12px; border: 1px solid #333; background: #111; color: white; outline: none; }
+        .comment-input-area button { padding: 12px 20px; background: var(--primary); color: black; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .live-comment { background: #111; padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #222; display: flex; gap: 12px; }
+        .c-avatar { width: 35px; height: 35px; background: linear-gradient(45deg, var(--gold), #ff8800); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 16px; flex-shrink: 0; }
     </style>
 </head>
 <body>
@@ -247,7 +254,17 @@
             </div>
 
             <div id="tab-episodes" class="tab-content"><div id="ep-container"></div></div>
-            <div id="tab-comments" class="tab-content"><div id="comments-list"></div></div>
+            
+            <div id="tab-comments" class="tab-content">
+                <div class="comment-input-area">
+                    <input type="text" id="newCommentText" placeholder="Apna opinion share karein...">
+                    <button onclick="postLiveComment()">Post</button>
+                </div>
+                <div id="comments-list">
+                    <p style="color:#666; font-size:13px;">Loading comments...</p>
+                </div>
+            </div>
+
             <div id="tab-poster" class="tab-content">
                 <div id="trailer-poster"></div>
             </div>
@@ -270,20 +287,23 @@
 </div> 
 
 <script>
-    // MOVIE DATA (Tere same to same movies)
+    // Global Variables
+    window.currentUserName = "Elite User"; // Default, Firebase will update it
+    window.currentOpenMovieId = null;
+
+    // MOVIE DATA (Pehle wala)
     const movies = [
         { 
             id: 1, title: "Demon Slayer kimetsu no yaiba: Infinity Castle", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", 
             img: "https://i.postimg.cc/DwfGrBHM/kv-1.jpg", 
             trailerLink: "https://www.dropbox.com/scl/fi/cmiemscnlidr0iszlal4z/Demon_Slayer__Kimetsu_no_Yaiba_Infinity_Castle___MAIN_TRAILER-1080p.mp4?rlkey=wy1z8i6bjh6janpqk2xaq5a32&raw=1", 
-            fullMovieLink: "https://steromax.4meplayer.com/#hn1h5", desc: "The final battle begins.", detailTag: "Official Trailer / Preview",
-            comments: ["Infinity Castle arc is going to be insane!", "Waiting for the official release."]
+            fullMovieLink: "https://steromax.4meplayer.com/#hn1h5", desc: "The final battle begins.", detailTag: "Official Trailer / Preview"
         },
         { 
             id: 2, title: "Pushpa 2: The Rule", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", 
             img: "https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg", 
             trailerLink: "https://www.dropbox.com/scl/fi/8ml1gt55dbwso60vgvrpg/Pushpa_2_-_The_Rule_Trailer__Hindi____Allu_Arjun___Sukumar___Rashmika_Mandanna___Fahadh_Faasil___DSP-1080p.mp4?rlkey=2b1euqnm0grgktur01br1lv1g&raw=1", 
-            desc: "Pushpa Raj returns.", detailTag: "Official Trailer / Preview", comments: ["Fire hai ye movie! 🔥", "Allu Arjun's swag is unmatched."]
+            desc: "Pushpa Raj returns.", detailTag: "Official Trailer / Preview"
         },
         { 
             id: 3, title: "Demon Slayer kimetsu no yaiba Season 1", type: "series", tag: "NEW SERIES", screenTag: "New Series", screenTagColor: "#ff0000", 
@@ -294,14 +314,13 @@
                 { title: "Episode 1: Cruelty (Hindi)", embed: "https://steromax.4meplayer.com/#6rsmm", thumb: "https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png" },
                 { title: "Episode 2: Trainer Sakonji Urokodaki (Hindi)", embed: "https://steromax.4meplayer.com/#8ecyx", thumb: "https://i.postimg.cc/sx5jTc4N/Screenshot-2026-04-16-22-20-03-85-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" },
                 { title: "Episode 3: Sabito and Makomo (Hindi)", embed: "https://steromax.4meplayer.com/#6rhkf", thumb: "https://i.postimg.cc/mZz5jSFn/IMG-20260418-153418.png" }
-            ],
-            comments: ["Bhai Episode 2 ki quality ekdum kadak hai!", "Hindi dubbing is OP 🔥", "Tanjiro is my favorite."]
+            ]
         },
         { 
             id: 4, title: "LEO (Hindi) comingsoon", type: "movie", tag: "ACTION BLOCKBUSTER", screenTag: "Full Movie", screenTagColor: "#ffcc00",
             img: "https://i.postimg.cc/W1rC8nq9/MV5BMDk5ODNj-Nz-Mt-Yz-I5Yy00Nm-I3LWIw-Yzct-MTFj-Zjcw-N2I2Yzk2Xk-Ey-Xk-Fqc-Gc-V1.jpg", 
             trailerLink: "https://www.dropbox.com/scl/fi/otoj18y42qn8l37xx0ttt/LEO__Hindi__Official_Trailer___Thalapathy_Vijay___Sanjay_Dutt___Lokesh_Kanagaraj___Anirudh-1080p.mp4?rlkey=4abh6y0y3yvtnz9i6ei7dz4lq&st=n3rv4m1u&raw=1", 
-            desc: "Thalapathy Vijay is Leo Das.", detailTag: "Action / LCU", comments: ["Badass Maan! 🔥", "Leo Das is a masterpiece!"]
+            desc: "Thalapathy Vijay is Leo Das.", detailTag: "Action / LCU"
         }
     ];
 
@@ -309,8 +328,6 @@
     function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
     function openSearch() { document.getElementById('searchOverlay').style.display = 'flex'; document.getElementById('searchInput').focus(); }
     function closeSearch() { document.getElementById('searchOverlay').style.display = 'none'; document.getElementById('searchInput').value = ''; }
-    
-    // NAYA: Profile open/close functions
     function openProfile() { document.getElementById('profilePage').style.display = 'flex'; }
     function closeProfile() { document.getElementById('profilePage').style.display = 'none'; }
     function goHome() { closeProfile(); closeSearch(); closeInfoPage(); }
@@ -343,6 +360,10 @@
 
     function playMovie(id) {
         const currentMovie = movies.find(x => x.id === id);
+        
+        // NEW: Store current movie globally for comments
+        window.currentOpenMovieId = id;
+
         document.getElementById('p-title').innerText = currentMovie.title;
         document.getElementById('dynamic-tag').innerText = currentMovie.detailTag;
         
@@ -352,10 +373,9 @@
         document.getElementById('movie-desc').innerText = currentMovie.desc;
         document.getElementById('trailer-poster').style.backgroundImage = `url('${currentMovie.img}')`;
         
-        const cList = document.getElementById('comments-list'); cList.innerHTML = '';
-        (currentMovie.comments || []).forEach(c => { 
-            cList.innerHTML += `<div style="background:#111; padding:12px; border-radius:8px; margin-bottom:8px; border-left:3px solid var(--primary); font-size:13px; color:#ccc;"><b>User:</b> ${c}</div>`; 
-        });
+        // Load Real Comments
+        document.getElementById('comments-list').innerHTML = '<p style="color:#666; font-size:13px;">Loading live comments...</p>';
+        if(window.fetchLiveComments) window.fetchLiveComments(id);
 
         document.getElementById('introSource').src = currentMovie.trailerLink;
         const intro = document.getElementById('introVideo'); intro.load(); intro.play();
@@ -399,7 +419,12 @@
         document.querySelectorAll('.tab-content').forEach((c, i) => c.classList.toggle('active', i === idx)); 
     }
 
-    function closeInfoPage() { document.getElementById('introVideo').pause(); document.getElementById('playerModal').style.display = 'none'; }
+    function closeInfoPage() { 
+        document.getElementById('introVideo').pause(); 
+        document.getElementById('playerModal').style.display = 'none'; 
+        // Stop listening to comments when page closes
+        if(window.currentCommentListener) { window.currentCommentListener(); }
+    }
     
     let splashTime = 4;
     let splashInterval;
@@ -440,7 +465,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDFHIr_2W-jRr97x1HVY9tpyWaI2QqtY9E",
@@ -468,16 +493,10 @@
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         if(!email || !password) return alert("Bhai, email aur password toh daal de!");
-
         try {
-            if (isLoginMode) {
-                await signInWithEmailAndPassword(auth, email, password);
-            } else {
-                await createUserWithEmailAndPassword(auth, email, password);
-            }
-        } catch (err) {
-            alert("Error: " + err.message);
-        }
+            if (isLoginMode) await signInWithEmailAndPassword(auth, email, password);
+            else await createUserWithEmailAndPassword(auth, email, password);
+        } catch (err) { alert("Error: " + err.message); }
     };
 
     window.resetPassword = async () => {
@@ -486,29 +505,19 @@
         try {
             await sendPasswordResetEmail(auth, email);
             alert("Password reset link teri email par bhej diya gaya hai! Check kar.");
-        } catch(err) {
-            alert("Error: " + err.message);
-        }
+        } catch(err) { alert("Error: " + err.message); }
     };
 
     window.saveUserProfile = async () => {
         const name = document.getElementById('userName').value;
         const dob = document.getElementById('userDob').value;
         if(!name || !dob) return alert("Bhai, Name aur DOB dono daalna zaroori hai!");
-
         try {
             const user = auth.currentUser;
-            await setDoc(doc(db, "users", user.uid), {
-                name: name,
-                dob: dob,
-                email: user.email,
-                joinedAt: new Date().toISOString()
-            });
+            await setDoc(doc(db, "users", user.uid), { name, dob, email: user.email, joinedAt: new Date().toISOString() });
             document.getElementById('onboardingOverlay').style.display = 'none';
             window.runSplashTimer(); 
-        } catch(err) {
-            alert("Error saving profile: " + err.message);
-        }
+        } catch(err) { alert("Error saving profile: " + err.message); }
     };
 
     window.logoutUser = async () => {
@@ -517,7 +526,62 @@
         window.location.reload();
     }
 
-    // PROFILE FETCH LOGIC ADDED HERE!
+    // --- REALTIME LIVE COMMENTS LOGIC (NEW) ---
+    window.fetchLiveComments = (movieId) => {
+        if(window.currentCommentListener) window.currentCommentListener(); // Purane movie ka chat band karo
+        
+        const q = query(collection(db, "comments"), where("movieId", "==", movieId));
+        
+        // Real-time listener (Jaise hi koi comment karega, turant aayega)
+        window.currentCommentListener = onSnapshot(q, (snapshot) => {
+            const commentsArray = [];
+            snapshot.forEach(doc => commentsArray.push(doc.data()));
+            
+            // Sabse naye comments upar dikhane ke liye sort karo
+            commentsArray.sort((a, b) => b.timestamp - a.timestamp);
+            
+            const cList = document.getElementById('comments-list');
+            cList.innerHTML = '';
+            
+            if(commentsArray.length === 0) {
+                cList.innerHTML = '<p style="color:#666; font-size:13px; text-align:center; padding:20px 0;">Koi comment nahi hai. Sabse pehle aap comment karein! 🔥</p>';
+            } else {
+                commentsArray.forEach(c => {
+                    const initial = c.userName ? c.userName.charAt(0).toUpperCase() : "E";
+                    cList.innerHTML += `
+                        <div class="live-comment">
+                            <div class="c-avatar">${initial}</div>
+                            <div>
+                                <div style="color:var(--gold); font-size:12px; font-weight:bold; margin-bottom:4px;">${c.userName}</div>
+                                <div style="color:#ddd; font-size:13px; line-height:1.4;">${c.text}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        });
+    };
+
+    window.postLiveComment = async () => {
+        const textObj = document.getElementById('newCommentText');
+        const text = textObj.value;
+        if(!text.trim()) return alert("Bhai, khali comment thodi post hoga!");
+        if(!window.currentOpenMovieId) return;
+
+        try {
+            await addDoc(collection(db, "comments"), {
+                movieId: window.currentOpenMovieId,
+                userName: window.currentUserName, // Asli naam seedha profile se aayega
+                text: text,
+                timestamp: Date.now()
+            });
+            textObj.value = ''; // Post hone ke baad box khali kar do
+        } catch(e) {
+            alert("Error posting comment: " + e.message);
+        }
+    };
+
+    // USER PROFILE FETCH
     onAuthStateChanged(auth, async (user) => {
         const authOverlay = document.getElementById('authOverlay');
         const onboardingOverlay = document.getElementById('onboardingOverlay');
@@ -527,11 +591,12 @@
             const docSnap = await getDoc(doc(db, "users", user.uid));
             
             if (docSnap.exists()) {
-                // Profile mil gayi, ab usko HTML mein update karo!
                 const data = docSnap.data();
+                window.currentUserName = data.name; // Global save for comments!
+                
                 document.getElementById('valName').innerText = data.name;
                 document.getElementById('displayProfileName').innerText = data.name;
-                document.getElementById('profileInitial').innerText = data.name.charAt(0).toUpperCase(); // Naam ka pehla letter
+                document.getElementById('profileInitial').innerText = data.name.charAt(0).toUpperCase(); 
                 document.getElementById('valEmail').innerText = user.email;
                 document.getElementById('valDob').innerText = data.dob;
 
@@ -546,4 +611,4 @@
     });
 </script>
 </body>
-</html>
+                </html>
