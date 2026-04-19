@@ -113,7 +113,6 @@
         .auth-box h2 span { color: #ffcc00; }
         
         .auth-box input, .action-modal input { width: 100%; padding: 14px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; color: white; outline: none; }
-        /* NAYA FIX: Date input theme */
         input[type="date"] { color-scheme: dark; } 
         
         .auth-box button, .action-modal button { width: 100%; padding: 14px; background: #00d2ff; color: black; font-weight: bold; border: none; border-radius: 12px; margin-top: 20px; cursor: pointer; }
@@ -249,7 +248,7 @@
         <div class="settings-group">
             <div class="settings-title">App Info</div>
             <div class="settings-box">
-                <div class="set-item">App Version <span>v4.0.0 Pro</span></div>
+                <div class="set-item">App Version <span>v5.0.0 Pro</span></div>
                 <div class="set-item">Help & Support <span>></span></div>
                 <div class="set-item" style="color: #ff4444; font-weight:bold;" onclick="logoutUser()">🚪 Logout Account</div>
             </div>
@@ -302,6 +301,12 @@
 
     <div id="home">
         <div class="slider-wrapper" id="main-slider"></div>
+
+        <div id="continue-watching-section" style="display: none; margin-top: 10px; margin-bottom: 20px;">
+            <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; color: var(--gold);">▶ Continue Watching</h3>
+            <div class="grid" id="continue-grid"></div>
+        </div>
+
         <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px;">Must Watch</h3>
         <div class="grid" id="movie-grid"></div>
     </div>
@@ -453,9 +458,27 @@
         }, 4000);
     }
 
+    // 🔥 NAYA: Render Continue Watching Section 🔥
+    window.renderContinueWatching = function(movieId) {
+        const movie = movies.find(x => x.id === movieId);
+        if(movie) {
+            document.getElementById('continue-watching-section').style.display = 'block';
+            document.getElementById('continue-grid').innerHTML = `
+                <div class="movie-card" onclick="playMovie(${movie.id})" style="border: 2px solid var(--gold);">
+                    <img src="${movie.img}">
+                    <div class="movie-info" style="background:var(--gold); color:black;"><p style="color:black; font-weight:bold;">${movie.title}</p></div>
+                </div>
+            `;
+        }
+    };
+
     function playMovie(id) {
         const currentMovie = movies.find(x => x.id === id);
         window.currentOpenMovieId = id;
+
+        // 🔥 NAYA: Save to Firebase as "lastWatched" 🔥
+        if(window.saveHistoryToFirebase) window.saveHistoryToFirebase(id);
+        window.renderContinueWatching(id); 
 
         document.getElementById('p-title').innerText = currentMovie.title;
         document.getElementById('dynamic-tag').innerText = currentMovie.detailTag;
@@ -607,7 +630,6 @@
         }
     };
 
-    // --- EDIT PROFILE LOGIC ---
     let isEditingProfile = false;
     window.toggleEditProfile = () => {
         isEditingProfile = !isEditingProfile;
@@ -648,7 +670,6 @@
         } catch(e) { alert("Error updating profile: " + e.message); }
     };
 
-    // --- NAYA: GALLERY UPLOAD W/ AUTO-COMPRESSOR ---
     window.handleGalleryUpload = function(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -657,7 +678,6 @@
         reader.onload = function(e) {
             const img = new Image();
             img.onload = function() {
-                // Compressor Logic: Max width 250px
                 const canvas = document.createElement('canvas');
                 const MAX_WIDTH = 250;
                 let scaleSize = 1;
@@ -670,9 +690,8 @@
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 
-                // Convert back to string (JPEG, 70% quality)
                 const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
-                window.selectAvatar(compressedDataUrl); // Save to Firebase
+                window.selectAvatar(compressedDataUrl); 
             }
             img.src = e.target.result;
         }
@@ -701,7 +720,6 @@
         }
     }
 
-    // --- CHANGE PASSWORD LOGIC ---
     window.updateUserPassword = async () => {
         const oldP = document.getElementById('oldPass').value;
         const newP = document.getElementById('newPass').value;
@@ -720,13 +738,14 @@
         }
     }
 
+    // 🔥 NAYA: "lastWatched" ko null ke saath initialize karna 🔥
     window.saveUserProfile = async () => {
         const name = document.getElementById('userName').value;
         const dob = document.getElementById('userDob').value;
         if(!name || !dob) return alert("Bhai, Name aur DOB dono daalna zaroori hai!");
         try {
             const user = auth.currentUser;
-            await setDoc(doc(db, "users", user.uid), { name, dob, email: user.email, joinedAt: new Date().toISOString(), avatarUrl: "" });
+            await setDoc(doc(db, "users", user.uid), { name, dob, email: user.email, joinedAt: new Date().toISOString(), avatarUrl: "", lastWatched: null });
             document.getElementById('onboardingOverlay').style.display = 'none';
             window.runSplashTimer(); 
         } catch(err) { alert("Error saving profile: " + err.message); }
@@ -738,7 +757,16 @@
         window.location.reload();
     }
 
-    // --- REALTIME LIVE COMMENTS LOGIC ---
+    // --- 🔥 NAYA: SAVE HISTORY TO FIREBASE 🔥 ---
+    window.saveHistoryToFirebase = async (movieId) => {
+        const user = auth.currentUser;
+        if(user) {
+            try {
+                await updateDoc(doc(db, "users", user.uid), { lastWatched: movieId });
+            } catch(e) { console.log("History save error: ", e); }
+        }
+    };
+
     window.fetchLiveComments = (movieId) => {
         if(window.currentCommentListener) window.currentCommentListener(); 
         
@@ -791,7 +819,6 @@
         } catch(e) { alert("Error posting comment: " + e.message); }
     };
 
-    // USER PROFILE FETCH
     onAuthStateChanged(auth, async (user) => {
         const authOverlay = document.getElementById('authOverlay');
         const onboardingOverlay = document.getElementById('onboardingOverlay');
@@ -810,6 +837,11 @@
                 document.getElementById('valDob').innerText = data.dob;
                 updateAvatarUI(data.avatarUrl, data.name);
 
+                // 🔥 NAYA: CHECK LAST WATCHED AND RENDER 🔥
+                if(data.lastWatched) {
+                    window.renderContinueWatching(data.lastWatched);
+                }
+
                 window.runSplashTimer(); 
             } else {
                 onboardingOverlay.style.display = 'flex'; 
@@ -821,4 +853,4 @@
     });
 </script>
 </body>
-            </html>
+    </html>
