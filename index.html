@@ -57,7 +57,7 @@
         .detail-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .detail-label { color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
         .detail-value { color: white; font-size: 16px; font-weight: bold; margin-top: 5px; }
-        .detail-input { background: #222; border: 1px solid #444; color: white; padding: 8px; border-radius: 8px; width: 100%; display: none; margin-top: 5px; font-size: 16px; }
+        .detail-input { background: #222; border: 1px solid #444; color: white; padding: 8px; border-radius: 8px; width: 100%; display: none; margin-top: 5px; font-size: 16px; color-scheme: dark;}
         
         .action-btn { width: 100%; padding: 15px; background: #222; color: white; border: 1px solid #333; border-radius: 12px; font-weight: bold; margin-bottom: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .save-btn { display: none; width: 100%; padding: 15px; background: var(--primary); color: black; border: none; border-radius: 12px; font-weight: bold; margin-bottom: 15px; cursor: pointer; }
@@ -107,25 +107,25 @@
         @keyframes loadingPulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
         /* --- FORMS & MODALS --- */
-        .auth-overlay { position: fixed; inset: 0; backdrop-filter: blur(15px); z-index: 100000; display: flex; justify-content: center; align-items: center; }
+        .auth-overlay { position: fixed; inset: 0; backdrop-filter: blur(15px); z-index: 100000; display: flex; justify-content: center; align-items: center; background: #000; }
         .auth-box { background: rgba(255, 255, 255, 0.07); padding: 40px 30px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1); width: 85%; max-width: 380px; text-align: center; box-shadow: 0 8px 32px rgba(0, 210, 255, 0.2); }
         .auth-box h2 { color: #00d2ff; margin-bottom: 20px; font-size: 24px; }
         .auth-box h2 span { color: #ffcc00; }
         
-        /* FIX: Date Input Color Scheme */
         .auth-box input, .action-modal input { width: 100%; padding: 14px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; color: white; outline: none; }
-        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; } /* White Icon Fix */
+        /* NAYA FIX: Date input theme */
+        input[type="date"] { color-scheme: dark; } 
         
         .auth-box button, .action-modal button { width: 100%; padding: 14px; background: #00d2ff; color: black; font-weight: bold; border: none; border-radius: 12px; margin-top: 20px; cursor: pointer; }
         .toggle-text { color: #ccc; font-size: 13px; cursor: pointer; }
         .toggle-text span { color: #00d2ff; text-decoration: underline; }
 
-        /* ACTION MODALS (Password/Avatar) */
+        /* ACTION MODALS */
         .action-modal { display:none; position: fixed; inset:0; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; }
         .modal-content { background: #111; padding: 25px; border-radius: 20px; width: 85%; border: 1px solid #333; text-align: center;}
         .close-modal { text-align: right; font-size: 24px; color: #888; cursor: pointer; margin-bottom: 10px; }
         
-        .avatar-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 20px; }
+        .avatar-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 20px; margin-bottom: 20px;}
         .avatar-option { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #333; cursor: pointer; object-fit: cover; }
         .avatar-option:hover { border-color: var(--primary); }
 
@@ -141,7 +141,7 @@
 
 <div class="main-wrapper">
 
-    <div id="authOverlay" class="auth-overlay" style="background: #000;">
+    <div id="authOverlay" class="auth-overlay">
         <div class="auth-box">
             <h2 class="logo-text">STEROMAX <span>ELITE</span></h2>
             <div id="authForm">
@@ -157,12 +157,17 @@
         </div>
     </div>
 
-    <div id="onboardingOverlay" class="auth-overlay" style="display: none; background: #000; z-index: 100005;">
+    <div id="onboardingOverlay" class="auth-overlay" style="display: none; z-index: 100005;">
         <div class="auth-box">
             <h2 class="logo-text">WELCOME TO <span>ELITE</span></h2>
             <h3 style="color:white; margin-bottom:15px; font-size:18px;">Apni Profile Banayein</h3>
             <input type="text" id="userName" placeholder="Full Name (Real Name)">
-            <input type="date" id="userDob">
+            
+            <div style="text-align: left; margin-top: 15px;">
+                <label for="userDob" style="color: #bbb; font-size: 13px; margin-left: 5px;">Date of Birth 👇</label>
+                <input type="date" id="userDob">
+            </div>
+
             <button onclick="saveUserProfile()">Start Streaming</button>
         </div>
     </div>
@@ -182,14 +187,21 @@
         <div class="modal-content">
             <div class="close-modal" onclick="closeModal('avatarModal')">✕</div>
             <h3 style="color:white; margin-top:0;">Select Avatar</h3>
+            
             <div class="avatar-grid">
                 <img src="https://i.postimg.cc/W1rC8nq9/MV5BMDk5ODNj-Nz-Mt-Yz-I5Yy00Nm-I3LWIw-Yzct-MTFj-Zjcw-N2I2Yzk2Xk-Ey-Xk-Fqc-Gc-V1.jpg" class="avatar-option" onclick="selectAvatar(this.src)">
                 <img src="https://i.postimg.cc/DwfGrBHM/kv-1.jpg" class="avatar-option" onclick="selectAvatar(this.src)">
                 <img src="https://i.postimg.cc/sx5jTc4N/Screenshot-2026-04-16-22-20-03-85-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" class="avatar-option" onclick="selectAvatar(this.src)">
                 <img src="https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png" class="avatar-option" onclick="selectAvatar(this.src)">
                 <img src="https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg" class="avatar-option" onclick="selectAvatar(this.src)">
-                <div class="avatar-option" style="background: linear-gradient(45deg, var(--primary), #bc4ed8); display:flex; align-items:center; justify-content:center; color:white; font-weight:bold;" onclick="selectAvatar('')">TEXT</div>
+                <div class="avatar-option" style="background: linear-gradient(45deg, var(--primary), #bc4ed8); display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; font-size:12px;" onclick="selectAvatar('')">TEXT</div>
             </div>
+
+            <label for="galleryUpload" style="display:block; padding: 12px; background: var(--primary); color: black; font-weight: bold; border-radius: 12px; cursor: pointer; margin-top: 10px;">
+                📁 Upload from Gallery
+            </label>
+            <input type="file" id="galleryUpload" accept="image/*" style="display: none;" onchange="handleGalleryUpload(event)">
+            <p style="color:#888; font-size:10px; margin-top:10px;">Auto-compress on upload.</p>
         </div>
     </div>
 
@@ -261,21 +273,21 @@
         
         <div class="profile-details-box">
             <div class="detail-item">
-                <div>
+                <div style="width: 100%;">
                     <div class="detail-label">Full Name</div>
                     <div class="detail-value" id="valName">Loading...</div>
                     <input type="text" id="editName" class="detail-input">
                 </div>
             </div>
             <div class="detail-item">
-                <div>
+                <div style="width: 100%;">
                     <div class="detail-label">Registered Email</div>
                     <div class="detail-value" id="valEmail">Loading...</div>
                     <p style="margin:5px 0 0 0; font-size:11px; color:#555;">Email cannot be changed.</p>
                 </div>
             </div>
             <div class="detail-item">
-                <div>
+                <div style="width: 100%;">
                     <div class="detail-label">Date of Birth</div>
                     <div class="detail-value" id="valDob">Loading...</div>
                     <input type="date" id="editDob" class="detail-input">
@@ -283,9 +295,9 @@
             </div>
         </div>
 
-        <button class="action-btn" id="editProfileBtn" onclick="toggleEditProfile()">✏️ Edit Profile Information <span>></span></button>
+        <button class="action-btn" id="editProfileBtn" onclick="toggleEditProfile()">✏️ Edit Profile Information <span style="color:#666;">></span></button>
         <button class="save-btn" id="saveProfileBtn" onclick="saveEditedProfile()">💾 Save Changes</button>
-        <button class="action-btn" onclick="openModal('passwordModal')">🔒 Change Password <span>></span></button>
+        <button class="action-btn" onclick="openModal('passwordModal')">🔒 Change Password <span style="color:#666;">></span></button>
     </div>
 
     <div id="home">
@@ -595,7 +607,7 @@
         }
     };
 
-    // --- NEW: EDIT PROFILE & AVATAR LOGIC ---
+    // --- EDIT PROFILE LOGIC ---
     let isEditingProfile = false;
     window.toggleEditProfile = () => {
         isEditingProfile = !isEditingProfile;
@@ -622,14 +634,12 @@
             const user = auth.currentUser;
             await updateDoc(doc(db, "users", user.uid), { name: newName, dob: newDob });
             
-            // Update UI
             document.getElementById('valName').innerText = newName;
             document.getElementById('displayProfileName').innerText = newName;
             if(!window.currentUserAvatar) document.getElementById('profileInitial').innerText = newName.charAt(0).toUpperCase();
             document.getElementById('valDob').innerText = newDob;
             window.currentUserName = newName;
 
-            // Reset UI
             document.getElementById('editName').style.display = 'none'; document.getElementById('editDob').style.display = 'none';
             document.getElementById('valName').style.display = 'block'; document.getElementById('valDob').style.display = 'block';
             document.getElementById('editProfileBtn').style.display = 'flex'; document.getElementById('saveProfileBtn').style.display = 'none';
@@ -638,12 +648,44 @@
         } catch(e) { alert("Error updating profile: " + e.message); }
     };
 
+    // --- NAYA: GALLERY UPLOAD W/ AUTO-COMPRESSOR ---
+    window.handleGalleryUpload = function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                // Compressor Logic: Max width 250px
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 250;
+                let scaleSize = 1;
+                if (img.width > MAX_WIDTH) {
+                    scaleSize = MAX_WIDTH / img.width;
+                }
+                canvas.width = img.width * scaleSize;
+                canvas.height = img.height * scaleSize;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                
+                // Convert back to string (JPEG, 70% quality)
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                window.selectAvatar(compressedDataUrl); // Save to Firebase
+            }
+            img.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    };
+
     window.selectAvatar = async (url) => {
         try {
             const user = auth.currentUser;
             await updateDoc(doc(db, "users", user.uid), { avatarUrl: url });
             updateAvatarUI(url, window.currentUserName);
             closeModal('avatarModal');
+            alert("Avatar updated successfully! 🔥");
         } catch(e) { alert("Error saving avatar: " + e.message); }
     };
 
@@ -654,12 +696,12 @@
             avatarBox.style.backgroundImage = `url('${url}')`;
             avatarBox.innerText = "";
         } else {
-            avatarBox.style.backgroundImage = "none";
+            avatarBox.style.backgroundImage = "linear-gradient(45deg, var(--primary), #bc4ed8)";
             avatarBox.innerText = name ? name.charAt(0).toUpperCase() : "E";
         }
     }
 
-    // --- NEW: CHANGE PASSWORD LOGIC ---
+    // --- CHANGE PASSWORD LOGIC ---
     window.updateUserPassword = async () => {
         const oldP = document.getElementById('oldPass').value;
         const newP = document.getElementById('newPass').value;
@@ -668,11 +710,9 @@
         try {
             const user = auth.currentUser;
             const credential = EmailAuthProvider.credential(user.email, oldP);
-            // Pehle verify karo ki banda asli hai
             await reauthenticateWithCredential(user, credential);
-            // Phir naya update karo
             await updatePassword(user, newP);
-            alert("Password mast update ho gaya! ✅ Wapas login karne ki zarurat nahi hai.");
+            alert("Password mast update ho gaya! ✅");
             closeModal('passwordModal');
             document.getElementById('oldPass').value = ''; document.getElementById('newPass').value = '';
         } catch(e) {
@@ -781,4 +821,4 @@
     });
 </script>
 </body>
-    </html>
+            </html>
