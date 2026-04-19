@@ -43,27 +43,38 @@
         .nav-item.active { color: var(--primary); }
         .nav-item span { display: block; font-size: 12px; margin-top: 4px; font-weight: 700; }
 
-        /* --- FULL PROFILE PAGE --- */
-        #profilePage { display: none; position: fixed; inset: 0; background: #000; z-index: 4000; flex-direction: column; padding: 40px 20px; overflow-y: auto; }
-        .profile-header { text-align: center; margin-bottom: 30px; }
-        .avatar { width: 100px; height: 100px; background: linear-gradient(45deg, var(--primary), #bc4ed8); border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-size: 40px; border: 4px solid #222; }
-        .profile-details-box { background: #111; border-radius: 20px; padding: 20px; border: 1px solid #222; }
-        .detail-item { margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        /* --- FULL SCREEN PAGES (Profile & Settings) --- */
+        .full-page { display: none; position: fixed; inset: 0; background: #000; z-index: 4000; flex-direction: column; padding: 20px; overflow-y: auto; }
+        .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; margin-top: 10px; border-bottom: 1px solid #222; padding-bottom: 15px; }
+        
+        /* PROFILE SPECIFIC */
+        .avatar-container { position: relative; width: 110px; height: 110px; margin: 0 auto 15px auto; }
+        .avatar { width: 100%; height: 100%; background: linear-gradient(45deg, var(--primary), #bc4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 45px; border: 4px solid #222; background-size: cover; background-position: center; }
+        .edit-avatar-btn { position: absolute; bottom: 0; right: 0; background: var(--gold); color: black; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; border: 2px solid #000; }
+        
+        .profile-details-box { background: #111; border-radius: 20px; padding: 20px; border: 1px solid #222; margin-bottom: 20px; }
+        .detail-item { margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;}
+        .detail-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .detail-label { color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
         .detail-value { color: white; font-size: 16px; font-weight: bold; margin-top: 5px; }
+        .detail-input { background: #222; border: 1px solid #444; color: white; padding: 8px; border-radius: 8px; width: 100%; display: none; margin-top: 5px; font-size: 16px; }
+        
+        .action-btn { width: 100%; padding: 15px; background: #222; color: white; border: 1px solid #333; border-radius: 12px; font-weight: bold; margin-bottom: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .save-btn { display: none; width: 100%; padding: 15px; background: var(--primary); color: black; border: none; border-radius: 12px; font-weight: bold; margin-bottom: 15px; cursor: pointer; }
 
-        /* --- SETTINGS MENU --- */
-        .side-menu { position: fixed; top: 0; right: -100%; width: 85%; height: 100%; background: #0a0a0a; z-index: 5000; transition: 0.4s; padding: 30px; border-left: 1px solid #333; }
-        .side-menu.active { right: 0; }
-        .menu-header { font-size: 22px; font-weight: bold; border-bottom: 1px solid #222; padding-bottom: 15px; margin-bottom: 20px; color: var(--gold); }
-        .menu-item { padding: 18px 0; font-size: 16px; border-bottom: 1px solid #111; display: flex; align-items: center; gap: 15px; color: #ccc; cursor: pointer; }
+        /* SETTINGS SPECIFIC */
+        .settings-group { margin-bottom: 25px; }
+        .settings-title { color: var(--gold); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; padding-left: 10px; font-weight: bold; }
+        .settings-box { background: #111; border-radius: 16px; border: 1px solid #222; overflow: hidden; }
+        .set-item { padding: 18px 20px; border-bottom: 1px solid #222; color: #eee; font-size: 15px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+        .set-item:last-child { border-bottom: none; }
+        .set-item span { color: #666; }
 
         /* --- PLAYER CSS --- */
         .player { display: none; position: fixed; inset: 0; background: #000; z-index: 5000; flex-direction: column; overflow-y: auto; height: 100vh; }
         .video-box { width: 100%; aspect-ratio: 16 / 9; background: #000; position: relative; flex-shrink: 0; }
         video::-webkit-media-controls { display:none !important; }
         .screen-tag { position: absolute; top: 15px; right: 15px; padding: 5px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; color: white; z-index: 6001; text-transform: uppercase; letter-spacing: 1px; }
-
         .close-info { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); border-radius: 50%; width: 40px; height: 40px; text-align:center; line-height:40px; color:white; z-index: 6000; font-weight:bold; cursor:pointer; }
         .p-content { padding-bottom: 50px; flex-grow: 1; display: flex; flex-direction: column; }
         .watch-btn { width: 90%; margin: 0 auto 20px auto; padding: 15px; background: var(--gold); border: none; border-radius: 8px; font-weight: 900; font-size: 14px; color: #000; display: block; cursor: pointer; }
@@ -83,14 +94,7 @@
         @media (orientation: landscape) { iframe { width: 100vw; height: 100vh; } }
 
         /* --- SPLASH SCREEN --- */
-        #splashScreen {
-            display: none; 
-            position: fixed; inset: 0; z-index: 99999;
-            background-image: url('https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg'); 
-            background-size: cover; background-position: top center;
-            flex-direction: column; justify-content: flex-end; align-items: center;
-            padding-bottom: 60px; transition: opacity 0.4s ease-out;
-        }
+        #splashScreen { display: none; position: fixed; inset: 0; z-index: 99999; background-image: url('https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg'); background-size: cover; background-position: top center; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 60px; transition: opacity 0.4s ease-out; }
         #splashScreen::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0) 80%); z-index: 1; pointer-events: none; }
         .splash-click-area { position: absolute; inset: 0; z-index: 5; cursor: pointer; }
         .splash-top-bar { position: absolute; top: 20px; right: 20px; z-index: 10; }
@@ -99,26 +103,38 @@
         .splash-logo-text { color: var(--primary); font-size: 38px; font-weight: 900; letter-spacing: 2px; text-shadow: 0 0 20px var(--primary); margin: 0 0 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .splash-elite-badge { background: var(--gold); color: black; font-size: 14px; font-weight: 900; padding: 4px 10px; border-radius: 4px; text-shadow: none; }
         .splash-loading { color: #ddd; font-size: 14px; font-weight: bold; letter-spacing: 2px; animation: loadingPulse 1.5s infinite; }
-
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes loadingPulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
-        /* --- LOGIN & ONBOARDING OVERLAY CSS --- */
+        /* --- FORMS & MODALS --- */
         .auth-overlay { position: fixed; inset: 0; backdrop-filter: blur(15px); z-index: 100000; display: flex; justify-content: center; align-items: center; }
         .auth-box { background: rgba(255, 255, 255, 0.07); padding: 40px 30px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1); width: 85%; max-width: 380px; text-align: center; box-shadow: 0 8px 32px rgba(0, 210, 255, 0.2); }
         .auth-box h2 { color: #00d2ff; margin-bottom: 20px; font-size: 24px; }
         .auth-box h2 span { color: #ffcc00; }
-        .auth-box input { width: 100%; padding: 14px; margin: 10px 0; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; outline: none; }
-        .auth-box button { width: 100%; padding: 14px; background: #00d2ff; color: black; font-weight: bold; border: none; border-radius: 12px; margin-top: 20px; cursor: pointer; }
+        
+        /* FIX: Date Input Color Scheme */
+        .auth-box input, .action-modal input { width: 100%; padding: 14px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; color: white; outline: none; }
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; } /* White Icon Fix */
+        
+        .auth-box button, .action-modal button { width: 100%; padding: 14px; background: #00d2ff; color: black; font-weight: bold; border: none; border-radius: 12px; margin-top: 20px; cursor: pointer; }
         .toggle-text { color: #ccc; font-size: 13px; cursor: pointer; }
         .toggle-text span { color: #00d2ff; text-decoration: underline; }
+
+        /* ACTION MODALS (Password/Avatar) */
+        .action-modal { display:none; position: fixed; inset:0; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; }
+        .modal-content { background: #111; padding: 25px; border-radius: 20px; width: 85%; border: 1px solid #333; text-align: center;}
+        .close-modal { text-align: right; font-size: 24px; color: #888; cursor: pointer; margin-bottom: 10px; }
+        
+        .avatar-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 20px; }
+        .avatar-option { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #333; cursor: pointer; object-fit: cover; }
+        .avatar-option:hover { border-color: var(--primary); }
 
         /* --- COMMENTS UI --- */
         .comment-input-area { display: flex; gap: 10px; margin-bottom: 20px; }
         .comment-input-area input { flex: 1; padding: 12px 15px; border-radius: 12px; border: 1px solid #333; background: #111; color: white; outline: none; }
         .comment-input-area button { padding: 12px 20px; background: var(--primary); color: black; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
         .live-comment { background: #111; padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #222; display: flex; gap: 12px; }
-        .c-avatar { width: 35px; height: 35px; background: linear-gradient(45deg, var(--gold), #ff8800); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 16px; flex-shrink: 0; }
+        .c-avatar { width: 35px; height: 35px; background: linear-gradient(45deg, var(--gold), #ff8800); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 16px; flex-shrink: 0; background-size: cover; background-position: center;}
     </style>
 </head>
 <body>
@@ -146,23 +162,44 @@
             <h2 class="logo-text">WELCOME TO <span>ELITE</span></h2>
             <h3 style="color:white; margin-bottom:15px; font-size:18px;">Apni Profile Banayein</h3>
             <input type="text" id="userName" placeholder="Full Name (Real Name)">
-            <input type="date" id="userDob" style="color: #888; background: rgba(255, 255, 255, 0.05); padding: 14px; width: 100%; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; margin: 10px 0;">
+            <input type="date" id="userDob">
             <button onclick="saveUserProfile()">Start Streaming</button>
+        </div>
+    </div>
+
+    <div id="passwordModal" class="action-modal">
+        <div class="modal-content">
+            <div class="close-modal" onclick="closeModal('passwordModal')">✕</div>
+            <h3 style="color:white; margin-top:0;">Change Password</h3>
+            <p style="color:#888; font-size:12px;">Pehle apna purana password daalein verification ke liye.</p>
+            <input type="password" id="oldPass" placeholder="Purana Password">
+            <input type="password" id="newPass" placeholder="Naya Password">
+            <button onclick="updateUserPassword()">Update Password</button>
+        </div>
+    </div>
+
+    <div id="avatarModal" class="action-modal">
+        <div class="modal-content">
+            <div class="close-modal" onclick="closeModal('avatarModal')">✕</div>
+            <h3 style="color:white; margin-top:0;">Select Avatar</h3>
+            <div class="avatar-grid">
+                <img src="https://i.postimg.cc/W1rC8nq9/MV5BMDk5ODNj-Nz-Mt-Yz-I5Yy00Nm-I3LWIw-Yzct-MTFj-Zjcw-N2I2Yzk2Xk-Ey-Xk-Fqc-Gc-V1.jpg" class="avatar-option" onclick="selectAvatar(this.src)">
+                <img src="https://i.postimg.cc/DwfGrBHM/kv-1.jpg" class="avatar-option" onclick="selectAvatar(this.src)">
+                <img src="https://i.postimg.cc/sx5jTc4N/Screenshot-2026-04-16-22-20-03-85-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" class="avatar-option" onclick="selectAvatar(this.src)">
+                <img src="https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png" class="avatar-option" onclick="selectAvatar(this.src)">
+                <img src="https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg" class="avatar-option" onclick="selectAvatar(this.src)">
+                <div class="avatar-option" style="background: linear-gradient(45deg, var(--primary), #bc4ed8); display:flex; align-items:center; justify-content:center; color:white; font-weight:bold;" onclick="selectAvatar('')">TEXT</div>
+            </div>
         </div>
     </div>
 
     <div id="splashScreen">
         <div class="splash-click-area" onclick="openSplashMovie()"></div>
         <div class="splash-top-bar">
-            <div class="skip-btn" onclick="forceSkipSplash(event)">
-                Skip <span id="splashTimer">4</span>s ⏭
-            </div>
+            <div class="skip-btn" onclick="forceSkipSplash(event)">Skip <span id="splashTimer">4</span>s ⏭</div>
         </div>
         <div class="splash-content">
-            <h1 class="splash-logo-text">
-                <span class="splash-elite-badge">⭐ ELITE</span>
-                STEROMAX
-            </h1>
+            <h1 class="splash-logo-text"><span class="splash-elite-badge">⭐ ELITE</span>STEROMAX</h1>
             <div class="splash-loading">LOADING...</div>
         </div>
     </div>
@@ -170,41 +207,85 @@
     <header>
         <div style="background:var(--gold); color:black; font-size:10px; font-weight:900; padding:4px 10px; border-radius:4px;">⭐ ELITE</div>
         <div class="logo">STEROMAX</div>
-        <div style="font-size: 24px; cursor: pointer;" onclick="toggleMenu()">⚙️</div>
+        <div style="font-size: 24px; cursor: pointer;" onclick="openSettings()">⚙️</div>
     </header>
 
-    <div id="sideMenu" class="side-menu">
-        <div style="text-align: right; font-size: 30px; cursor: pointer;" onclick="toggleMenu()">✕</div>
-        <div class="menu-header">⚙️ Settings</div>
-        <div class="menu-item">🔔 App Notifications</div>
-        <div class="menu-item">📥 Download Quality</div>
-        <div class="menu-item">🔒 Privacy & Security</div>
-        <div class="menu-item">💬 Help & Support</div>
-        <div class="menu-item" style="color: #ff4444; margin-top:20px; font-weight:bold;" onclick="logoutUser()">🚪 Logout Account</div>
+    <div id="settingsPage" class="full-page">
+        <div class="page-header">
+            <h2 style="margin:0; color:var(--gold);">⚙️ Settings</h2>
+            <div onclick="closeSettings()" style="font-size:30px; cursor:pointer;">✕</div>
+        </div>
+        
+        <div class="settings-group">
+            <div class="settings-title">Account & Security</div>
+            <div class="settings-box">
+                <div class="set-item" onclick="openProfile()">Profile Details <span>></span></div>
+                <div class="set-item" onclick="openModal('passwordModal')">Change Password <span>></span></div>
+                <div class="set-item">Subscription Plan <span style="color:var(--primary); font-weight:bold;">Elite</span></div>
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <div class="settings-title">Playback & Downloads</div>
+            <div class="settings-box">
+                <div class="set-item">Video Quality <span>Auto (1080p)</span></div>
+                <div class="set-item">Download Quality <span>High</span></div>
+                <div class="set-item">Wi-Fi Only Downloads <span style="color:var(--primary);">ON</span></div>
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <div class="settings-title">App Info</div>
+            <div class="settings-box">
+                <div class="set-item">App Version <span>v4.0.0 Pro</span></div>
+                <div class="set-item">Help & Support <span>></span></div>
+                <div class="set-item" style="color: #ff4444; font-weight:bold;" onclick="logoutUser()">🚪 Logout Account</div>
+            </div>
+        </div>
     </div>
 
-    <div id="profilePage">
-        <div onclick="closeProfile()" style="font-size:30px; position:absolute; top:20px; left:20px; cursor:pointer;">✕</div>
-        <div class="profile-header">
+    <div id="profilePage" class="full-page">
+        <div class="page-header">
+            <h2 style="margin:0; color:var(--primary);">My Profile</h2>
+            <div onclick="closeProfile()" style="font-size:30px; cursor:pointer;">✕</div>
+        </div>
+
+        <div class="avatar-container">
             <div class="avatar" id="profileInitial">S</div>
+            <div class="edit-avatar-btn" onclick="openModal('avatarModal')">📷</div>
+        </div>
+        <div style="text-align:center; margin-bottom: 25px;">
             <h2 id="displayProfileName" style="margin:0;">Loading...</h2>
             <p style="color:var(--gold); font-size:12px; margin-top:5px; font-weight:bold;">⭐ ELITE MEMBER</p>
         </div>
         
         <div class="profile-details-box">
             <div class="detail-item">
-                <div class="detail-label">Full Name</div>
-                <div class="detail-value" id="valName">Loading...</div>
+                <div>
+                    <div class="detail-label">Full Name</div>
+                    <div class="detail-value" id="valName">Loading...</div>
+                    <input type="text" id="editName" class="detail-input">
+                </div>
             </div>
             <div class="detail-item">
-                <div class="detail-label">Registered Email</div>
-                <div class="detail-value" id="valEmail">Loading...</div>
+                <div>
+                    <div class="detail-label">Registered Email</div>
+                    <div class="detail-value" id="valEmail">Loading...</div>
+                    <p style="margin:5px 0 0 0; font-size:11px; color:#555;">Email cannot be changed.</p>
+                </div>
             </div>
-            <div class="detail-item" style="border-bottom:none; margin-bottom:0; padding-bottom:0;">
-                <div class="detail-label">Date of Birth</div>
-                <div class="detail-value" id="valDob">Loading...</div>
+            <div class="detail-item">
+                <div>
+                    <div class="detail-label">Date of Birth</div>
+                    <div class="detail-value" id="valDob">Loading...</div>
+                    <input type="date" id="editDob" class="detail-input">
+                </div>
             </div>
         </div>
+
+        <button class="action-btn" id="editProfileBtn" onclick="toggleEditProfile()">✏️ Edit Profile Information <span>></span></button>
+        <button class="save-btn" id="saveProfileBtn" onclick="saveEditedProfile()">💾 Save Changes</button>
+        <button class="action-btn" onclick="openModal('passwordModal')">🔒 Change Password <span>></span></button>
     </div>
 
     <div id="home">
@@ -260,9 +341,7 @@
                     <input type="text" id="newCommentText" placeholder="Apna opinion share karein...">
                     <button onclick="postLiveComment()">Post</button>
                 </div>
-                <div id="comments-list">
-                    <p style="color:#666; font-size:13px;">Loading comments...</p>
-                </div>
+                <div id="comments-list"><p style="color:#666; font-size:13px;">Loading comments...</p></div>
             </div>
 
             <div id="tab-poster" class="tab-content">
@@ -289,6 +368,7 @@
 <script>
     // Global Variables
     window.currentUserName = "Elite User"; 
+    window.currentUserAvatar = ""; 
     window.currentOpenMovieId = null;
 
     // MOVIE DATA
@@ -324,13 +404,16 @@
         }
     ];
 
-    // NAVIGATION LOGIC
-    function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
+    // MODALS & NAVIGATION LOGIC
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    function openSettings() { document.getElementById('settingsPage').style.display = 'flex'; }
+    function closeSettings() { document.getElementById('settingsPage').style.display = 'none'; }
+    function openProfile() { closeSettings(); document.getElementById('profilePage').style.display = 'flex'; }
+    function closeProfile() { document.getElementById('profilePage').style.display = 'none'; }
     function openSearch() { document.getElementById('searchOverlay').style.display = 'flex'; document.getElementById('searchInput').focus(); }
     function closeSearch() { document.getElementById('searchOverlay').style.display = 'none'; document.getElementById('searchInput').value = ''; }
-    function openProfile() { document.getElementById('profilePage').style.display = 'flex'; }
-    function closeProfile() { document.getElementById('profilePage').style.display = 'none'; }
-    function goHome() { closeProfile(); closeSearch(); closeInfoPage(); }
+    function goHome() { closeProfile(); closeSettings(); closeSearch(); closeInfoPage(); }
 
     function quickSearch(t) { document.getElementById('searchInput').value = t; doSearch(); }
     
@@ -460,8 +543,8 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDFHIr_2W-jRr97x1HVY9tpyWaI2QqtY9E",
@@ -479,12 +562,10 @@
 
     let isLoginMode = true;
 
-    // 🔥 NAYA FIX: Password box ka text change karna
     window.toggleAuth = () => {
         isLoginMode = !isLoginMode;
         document.getElementById('authTitle').innerText = isLoginMode ? 'Login' : 'Signup';
         document.getElementById('mainAuthBtn').innerText = isLoginMode ? 'Login' : 'Signup';
-        
         if (isLoginMode) {
             document.getElementById('password').placeholder = "Password";
         } else {
@@ -502,22 +583,102 @@
         } catch (err) { alert("Error: " + err.message); }
     };
 
-    // 🔥 NAYA FIX: Forgot Password Spam Warning & Error Check
     window.resetPassword = async () => {
         const email = document.getElementById('email').value;
         if(!email) return alert("Pehle apna Email box mein daal, phir Forgot Password daba!");
-        
         try {
             await sendPasswordResetEmail(auth, email);
             alert("✅ Password reset link bhej diya gaya hai!\n\n⚠️ IMPORTANT: Agar Inbox mein na dikhe, toh apna SPAM ya JUNK folder zaroor check karna!");
         } catch(err) {
-            if(err.code === 'auth/user-not-found') {
-                alert("❌ Is email se SteroMax par koi account nahi hai. Pehle Signup karein!");
-            } else {
-                alert("Error: " + err.message);
-            }
+            if(err.code === 'auth/user-not-found') alert("❌ Is email se SteroMax par koi account nahi hai.");
+            else alert("Error: " + err.message);
         }
     };
+
+    // --- NEW: EDIT PROFILE & AVATAR LOGIC ---
+    let isEditingProfile = false;
+    window.toggleEditProfile = () => {
+        isEditingProfile = !isEditingProfile;
+        const vName = document.getElementById('valName');
+        const eName = document.getElementById('editName');
+        const vDob = document.getElementById('valDob');
+        const eDob = document.getElementById('editDob');
+        
+        if(isEditingProfile) {
+            eName.value = vName.innerText; eDob.value = vDob.innerText;
+            vName.style.display = 'none'; vDob.style.display = 'none';
+            eName.style.display = 'block'; eDob.style.display = 'block';
+            document.getElementById('editProfileBtn').style.display = 'none';
+            document.getElementById('saveProfileBtn').style.display = 'block';
+        }
+    };
+
+    window.saveEditedProfile = async () => {
+        const newName = document.getElementById('editName').value;
+        const newDob = document.getElementById('editDob').value;
+        if(!newName || !newDob) return alert("Details khali nahi chhod sakte!");
+        
+        try {
+            const user = auth.currentUser;
+            await updateDoc(doc(db, "users", user.uid), { name: newName, dob: newDob });
+            
+            // Update UI
+            document.getElementById('valName').innerText = newName;
+            document.getElementById('displayProfileName').innerText = newName;
+            if(!window.currentUserAvatar) document.getElementById('profileInitial').innerText = newName.charAt(0).toUpperCase();
+            document.getElementById('valDob').innerText = newDob;
+            window.currentUserName = newName;
+
+            // Reset UI
+            document.getElementById('editName').style.display = 'none'; document.getElementById('editDob').style.display = 'none';
+            document.getElementById('valName').style.display = 'block'; document.getElementById('valDob').style.display = 'block';
+            document.getElementById('editProfileBtn').style.display = 'flex'; document.getElementById('saveProfileBtn').style.display = 'none';
+            isEditingProfile = false;
+            alert("Profile details updated successfully! ✅");
+        } catch(e) { alert("Error updating profile: " + e.message); }
+    };
+
+    window.selectAvatar = async (url) => {
+        try {
+            const user = auth.currentUser;
+            await updateDoc(doc(db, "users", user.uid), { avatarUrl: url });
+            updateAvatarUI(url, window.currentUserName);
+            closeModal('avatarModal');
+        } catch(e) { alert("Error saving avatar: " + e.message); }
+    };
+
+    function updateAvatarUI(url, name) {
+        window.currentUserAvatar = url;
+        const avatarBox = document.getElementById('profileInitial');
+        if(url && url !== "") {
+            avatarBox.style.backgroundImage = `url('${url}')`;
+            avatarBox.innerText = "";
+        } else {
+            avatarBox.style.backgroundImage = "none";
+            avatarBox.innerText = name ? name.charAt(0).toUpperCase() : "E";
+        }
+    }
+
+    // --- NEW: CHANGE PASSWORD LOGIC ---
+    window.updateUserPassword = async () => {
+        const oldP = document.getElementById('oldPass').value;
+        const newP = document.getElementById('newPass').value;
+        if(!oldP || !newP) return alert("Dono password daal bhai!");
+        
+        try {
+            const user = auth.currentUser;
+            const credential = EmailAuthProvider.credential(user.email, oldP);
+            // Pehle verify karo ki banda asli hai
+            await reauthenticateWithCredential(user, credential);
+            // Phir naya update karo
+            await updatePassword(user, newP);
+            alert("Password mast update ho gaya! ✅ Wapas login karne ki zarurat nahi hai.");
+            closeModal('passwordModal');
+            document.getElementById('oldPass').value = ''; document.getElementById('newPass').value = '';
+        } catch(e) {
+            alert("Error: Purana password galat hai ya network issue hai.\n" + e.message);
+        }
+    }
 
     window.saveUserProfile = async () => {
         const name = document.getElementById('userName').value;
@@ -525,7 +686,7 @@
         if(!name || !dob) return alert("Bhai, Name aur DOB dono daalna zaroori hai!");
         try {
             const user = auth.currentUser;
-            await setDoc(doc(db, "users", user.uid), { name, dob, email: user.email, joinedAt: new Date().toISOString() });
+            await setDoc(doc(db, "users", user.uid), { name, dob, email: user.email, joinedAt: new Date().toISOString(), avatarUrl: "" });
             document.getElementById('onboardingOverlay').style.display = 'none';
             window.runSplashTimer(); 
         } catch(err) { alert("Error saving profile: " + err.message); }
@@ -533,7 +694,7 @@
 
     window.logoutUser = async () => {
         await signOut(auth);
-        document.getElementById('sideMenu').classList.remove('active');
+        document.getElementById('settingsPage').style.display = 'none';
         window.location.reload();
     }
 
@@ -556,10 +717,11 @@
                 cList.innerHTML = '<p style="color:#666; font-size:13px; text-align:center; padding:20px 0;">Koi comment nahi hai. Sabse pehle aap comment karein! 🔥</p>';
             } else {
                 commentsArray.forEach(c => {
-                    const initial = c.userName ? c.userName.charAt(0).toUpperCase() : "E";
+                    const avatarStyle = c.avatarUrl ? `background-image: url('${c.avatarUrl}'); font-size:0;` : ``;
+                    const initial = c.avatarUrl ? "" : (c.userName ? c.userName.charAt(0).toUpperCase() : "E");
                     cList.innerHTML += `
                         <div class="live-comment">
-                            <div class="c-avatar">${initial}</div>
+                            <div class="c-avatar" style="${avatarStyle}">${initial}</div>
                             <div>
                                 <div style="color:var(--gold); font-size:12px; font-weight:bold; margin-bottom:4px;">${c.userName}</div>
                                 <div style="color:#ddd; font-size:13px; line-height:1.4;">${c.text}</div>
@@ -581,13 +743,12 @@
             await addDoc(collection(db, "comments"), {
                 movieId: window.currentOpenMovieId,
                 userName: window.currentUserName, 
+                avatarUrl: window.currentUserAvatar || "",
                 text: text,
                 timestamp: Date.now()
             });
             textObj.value = ''; 
-        } catch(e) {
-            alert("Error posting comment: " + e.message);
-        }
+        } catch(e) { alert("Error posting comment: " + e.message); }
     };
 
     // USER PROFILE FETCH
@@ -605,9 +766,9 @@
                 
                 document.getElementById('valName').innerText = data.name;
                 document.getElementById('displayProfileName').innerText = data.name;
-                document.getElementById('profileInitial').innerText = data.name.charAt(0).toUpperCase(); 
                 document.getElementById('valEmail').innerText = user.email;
                 document.getElementById('valDob').innerText = data.dob;
+                updateAvatarUI(data.avatarUrl, data.name);
 
                 window.runSplashTimer(); 
             } else {
