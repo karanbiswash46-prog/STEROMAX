@@ -43,9 +43,19 @@
         .nav-item.active { color: var(--primary); }
         .nav-item span { display: block; font-size: 12px; margin-top: 4px; font-weight: 700; }
 
-        .side-menu { position: fixed; top: 0; right: -100%; width: 75%; height: 100%; background: rgba(10, 10, 10, 0.98); z-index: 3000; transition: 0.4s; padding: 30px; border-left: 1px solid #333; }
+        /* --- FULL PROFILE PAGE (NEW) --- */
+        #profilePage { display: none; position: fixed; inset: 0; background: #000; z-index: 4000; flex-direction: column; padding: 40px 20px; overflow-y: auto; }
+        .profile-header { text-align: center; margin-bottom: 30px; }
+        .avatar { width: 100px; height: 100px; background: linear-gradient(45deg, var(--primary), #bc4ed8); border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-size: 40px; border: 4px solid #222; }
+        .profile-details-box { background: #111; border-radius: 20px; padding: 20px; border: 1px solid #222; }
+        .detail-item { margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .detail-label { color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .detail-value { color: white; font-size: 16px; font-weight: bold; margin-top: 5px; }
+
+        /* --- SETTINGS MENU (UPDATED) --- */
+        .side-menu { position: fixed; top: 0; right: -100%; width: 85%; height: 100%; background: #0a0a0a; z-index: 5000; transition: 0.4s; padding: 30px; border-left: 1px solid #333; }
         .side-menu.active { right: 0; }
-        .menu-header { font-size: 22px; font-weight: bold; border-bottom: 1px solid #222; padding-bottom: 15px; margin-bottom: 20px; color: var(--primary); }
+        .menu-header { font-size: 22px; font-weight: bold; border-bottom: 1px solid #222; padding-bottom: 15px; margin-bottom: 20px; color: var(--gold); }
         .menu-item { padding: 18px 0; font-size: 16px; border-bottom: 1px solid #111; display: flex; align-items: center; gap: 15px; color: #ccc; cursor: pointer; }
 
         /* --- PLAYER CSS --- */
@@ -72,9 +82,9 @@
         iframe { width: 100vw; height: 56.25vw; max-height: 100vh; border: none; }
         @media (orientation: landscape) { iframe { width: 100vw; height: 100vh; } }
 
-        /* --- SPLASH SCREEN (UPDATED) --- */
+        /* --- SPLASH SCREEN --- */
         #splashScreen {
-            display: none; /* Login hone tak hide rahega */
+            display: none; 
             position: fixed; inset: 0; z-index: 99999;
             background-image: url('https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg'); 
             background-size: cover; background-position: top center;
@@ -93,7 +103,7 @@
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes loadingPulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
-        /* --- LOGIN & ONBOARDING OVERLAY CSS (NEW) --- */
+        /* --- LOGIN & ONBOARDING OVERLAY CSS --- */
         .auth-overlay { position: fixed; inset: 0; backdrop-filter: blur(15px); z-index: 100000; display: flex; justify-content: center; align-items: center; }
         .auth-box { background: rgba(255, 255, 255, 0.07); padding: 40px 30px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1); width: 85%; max-width: 380px; text-align: center; box-shadow: 0 8px 32px rgba(0, 210, 255, 0.2); }
         .auth-box h2 { color: #00d2ff; margin-bottom: 20px; font-size: 24px; }
@@ -156,6 +166,46 @@
         <div style="font-size: 24px; cursor: pointer;" onclick="toggleMenu()">⚙️</div>
     </header>
 
+    <div id="sideMenu" class="side-menu">
+        <div style="text-align: right; font-size: 30px; cursor: pointer;" onclick="toggleMenu()">✕</div>
+        <div class="menu-header">⚙️ Settings</div>
+        <div class="menu-item">🔔 App Notifications</div>
+        <div class="menu-item">📥 Download Quality</div>
+        <div class="menu-item">🔒 Privacy & Security</div>
+        <div class="menu-item">💬 Help & Support</div>
+        <div class="menu-item" style="color: #ff4444; margin-top:20px; font-weight:bold;" onclick="logoutUser()">🚪 Logout Account</div>
+    </div>
+
+    <div id="profilePage">
+        <div onclick="closeProfile()" style="font-size:30px; position:absolute; top:20px; left:20px; cursor:pointer;">✕</div>
+        <div class="profile-header">
+            <div class="avatar" id="profileInitial">S</div>
+            <h2 id="displayProfileName" style="margin:0;">Loading...</h2>
+            <p style="color:var(--gold); font-size:12px; margin-top:5px; font-weight:bold;">⭐ ELITE MEMBER</p>
+        </div>
+        
+        <div class="profile-details-box">
+            <div class="detail-item">
+                <div class="detail-label">Full Name</div>
+                <div class="detail-value" id="valName">Loading...</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Registered Email</div>
+                <div class="detail-value" id="valEmail">Loading...</div>
+            </div>
+            <div class="detail-item" style="border-bottom:none; margin-bottom:0; padding-bottom:0;">
+                <div class="detail-label">Date of Birth</div>
+                <div class="detail-value" id="valDob">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="home">
+        <div class="slider-wrapper" id="main-slider"></div>
+        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px;">Must Watch</h3>
+        <div class="grid" id="movie-grid"></div>
+    </div>
+
     <div id="searchOverlay">
         <div class="search-bar-container">
             <input type="text" id="searchInput" placeholder="Search movies..." oninput="doSearch()">
@@ -167,22 +217,6 @@
             <div class="chip" onclick="quickSearch('Pushpa')">Pushpa</div>
         </div>
         <div id="search-results-grid" class="grid"></div>
-    </div>
-
-    <div id="sideMenu" class="side-menu">
-        <div style="text-align: right; font-size: 30px; cursor: pointer;" onclick="toggleMenu()">✕</div>
-        <div class="menu-header">Account Settings</div>
-        <div class="menu-item">👤 Profile Details</div>
-        <div class="menu-item">📥 My Downloads</div>
-        <div class="menu-item">💎 SteroMax Premium</div>
-        <div class="menu-item">🌙 Dark Mode: ON</div>
-        <div class="menu-item" style="color: #ff4444;" onclick="logoutUser()">🚪 Logout</div>
-    </div>
-
-    <div id="home">
-        <div class="slider-wrapper" id="main-slider"></div>
-        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px;">Must Watch</h3>
-        <div class="grid" id="movie-grid"></div>
     </div>
 
     <div id="playerModal" class="player">
@@ -228,12 +262,15 @@
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="closeSearch(); closeInfoPage()">🏠<span>Home</span></div>
+        <div class="nav-item active" onclick="goHome()">🏠<span>Home</span></div>
         <div class="nav-item" onclick="openSearch()">🔍<span>Search</span></div>
         <div class="nav-item">🔥<span>Popular</span></div>
-        <div class="nav-item" onclick="toggleMenu()">👤<span>Profile</span></div>
+        <div class="nav-item" onclick="openProfile()">👤<span>Profile</span></div>
     </div>
-</div> <script>
+</div> 
+
+<script>
+    // MOVIE DATA (Tere same to same movies)
     const movies = [
         { 
             id: 1, title: "Demon Slayer kimetsu no yaiba: Infinity Castle", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", 
@@ -268,9 +305,16 @@
         }
     ];
 
+    // NAVIGATION LOGIC
     function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
     function openSearch() { document.getElementById('searchOverlay').style.display = 'flex'; document.getElementById('searchInput').focus(); }
     function closeSearch() { document.getElementById('searchOverlay').style.display = 'none'; document.getElementById('searchInput').value = ''; }
+    
+    // NAYA: Profile open/close functions
+    function openProfile() { document.getElementById('profilePage').style.display = 'flex'; }
+    function closeProfile() { document.getElementById('profilePage').style.display = 'none'; }
+    function goHome() { closeProfile(); closeSearch(); closeInfoPage(); }
+
     function quickSearch(t) { document.getElementById('searchInput').value = t; doSearch(); }
     
     function doSearch() {
@@ -283,7 +327,7 @@
 
     function initHome() {
         const slider = document.getElementById('main-slider');
-        if(slider.innerHTML !== "") return; // Pachaas baar load na ho
+        if(slider.innerHTML !== "") return; 
         movies.forEach(m => {
             const tagClass = m.tag === "NEW SERIES" ? "tag-red" : "tag-blue";
             slider.innerHTML += `<div class="hero-slide" onclick="playMovie(${m.id})" style="background-image: url('${m.img}');"><div class="slide-overlay"></div><div class="slide-content"><span class="${tagClass}">${m.tag}</span><p style="font-size:18px; font-weight:bold; margin:0;">${m.title}</p></div></div>`;
@@ -360,10 +404,9 @@
     let splashTime = 4;
     let splashInterval;
 
-    // Isko ab Global bana diya hai taaki Firebase isko chala sake
     window.runSplashTimer = function() {
         const splash = document.getElementById('splashScreen');
-        splash.style.display = 'flex'; // Pehle dikhao
+        splash.style.display = 'flex'; 
         setTimeout(() => splash.style.opacity = '1', 50);
 
         initHome(); 
@@ -392,106 +435,115 @@
             setTimeout(() => { splash.style.display = 'none'; }, 400); 
         }
     }
-    </script>
+</script>
 
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-      import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-      import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyDFHIr_2W-jRr97x1HVY9tpyWaI2QqtY9E",
-        authDomain: "stero-max.firebaseapp.com",
-        projectId: "stero-max",
-        storageBucket: "stero-max.firebasestorage.app",
-        messagingSenderId: "101516996592",
-        appId: "1:101516996592:web:7f90b3f4b9805bf74ab735",
-        measurementId: "G-BGN26VB04V"
-      };
+    const firebaseConfig = {
+      apiKey: "AIzaSyDFHIr_2W-jRr97x1HVY9tpyWaI2QqtY9E",
+      authDomain: "stero-max.firebaseapp.com",
+      projectId: "stero-max",
+      storageBucket: "stero-max.firebasestorage.app",
+      messagingSenderId: "101516996592",
+      appId: "1:101516996592:web:7f90b3f4b9805bf74ab735",
+      measurementId: "G-BGN26VB04V"
+    };
 
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-      let isLoginMode = true;
+    let isLoginMode = true;
 
-      window.toggleAuth = () => {
-          isLoginMode = !isLoginMode;
-          document.getElementById('authTitle').innerText = isLoginMode ? 'Login' : 'Signup';
-          document.getElementById('mainAuthBtn').innerText = isLoginMode ? 'Login' : 'Signup';
-      };
+    window.toggleAuth = () => {
+        isLoginMode = !isLoginMode;
+        document.getElementById('authTitle').innerText = isLoginMode ? 'Login' : 'Signup';
+        document.getElementById('mainAuthBtn').innerText = isLoginMode ? 'Login' : 'Signup';
+    };
 
-      window.handleAuth = async () => {
-          const email = document.getElementById('email').value;
-          const password = document.getElementById('password').value;
-          if(!email || !password) return alert("Bhai, email aur password toh daal de!");
+    window.handleAuth = async () => {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        if(!email || !password) return alert("Bhai, email aur password toh daal de!");
 
-          try {
-              if (isLoginMode) {
-                  await signInWithEmailAndPassword(auth, email, password);
-              } else {
-                  await createUserWithEmailAndPassword(auth, email, password);
-              }
-          } catch (err) {
-              alert("Error: " + err.message);
-          }
-      };
+        try {
+            if (isLoginMode) {
+                await signInWithEmailAndPassword(auth, email, password);
+            } else {
+                await createUserWithEmailAndPassword(auth, email, password);
+            }
+        } catch (err) {
+            alert("Error: " + err.message);
+        }
+    };
 
-      window.resetPassword = async () => {
-          const email = document.getElementById('email').value;
-          if(!email) return alert("Pehle apna Email box mein daal, phir Forgot Password daba!");
-          try {
-              await sendPasswordResetEmail(auth, email);
-              alert("Password reset link teri email par bhej diya gaya hai! Check kar.");
-          } catch(err) {
-              alert("Error: " + err.message);
-          }
-      };
+    window.resetPassword = async () => {
+        const email = document.getElementById('email').value;
+        if(!email) return alert("Pehle apna Email box mein daal, phir Forgot Password daba!");
+        try {
+            await sendPasswordResetEmail(auth, email);
+            alert("Password reset link teri email par bhej diya gaya hai! Check kar.");
+        } catch(err) {
+            alert("Error: " + err.message);
+        }
+    };
 
-      window.saveUserProfile = async () => {
-          const name = document.getElementById('userName').value;
-          const dob = document.getElementById('userDob').value;
-          if(!name || !dob) return alert("Bhai, Name aur DOB dono daalna zaroori hai!");
+    window.saveUserProfile = async () => {
+        const name = document.getElementById('userName').value;
+        const dob = document.getElementById('userDob').value;
+        if(!name || !dob) return alert("Bhai, Name aur DOB dono daalna zaroori hai!");
 
-          try {
-              const user = auth.currentUser;
-              await setDoc(doc(db, "users", user.uid), {
-                  name: name,
-                  dob: dob,
-                  email: user.email,
-                  joinedAt: new Date().toISOString()
-              });
-              document.getElementById('onboardingOverlay').style.display = 'none';
-              window.runSplashTimer(); // Profile banne ke baad animation
-          } catch(err) {
-              alert("Error saving profile: (Kya tune Firebase mein Firestore ON kiya?) " + err.message);
-          }
-      };
+        try {
+            const user = auth.currentUser;
+            await setDoc(doc(db, "users", user.uid), {
+                name: name,
+                dob: dob,
+                email: user.email,
+                joinedAt: new Date().toISOString()
+            });
+            document.getElementById('onboardingOverlay').style.display = 'none';
+            window.runSplashTimer(); 
+        } catch(err) {
+            alert("Error saving profile: " + err.message);
+        }
+    };
 
-      window.logoutUser = async () => {
-          await signOut(auth);
-          document.getElementById('sideMenu').classList.remove('active');
-          window.location.reload();
-      }
+    window.logoutUser = async () => {
+        await signOut(auth);
+        document.getElementById('sideMenu').classList.remove('active');
+        window.location.reload();
+    }
 
-      onAuthStateChanged(auth, async (user) => {
-          const authOverlay = document.getElementById('authOverlay');
-          const onboardingOverlay = document.getElementById('onboardingOverlay');
+    // PROFILE FETCH LOGIC ADDED HERE!
+    onAuthStateChanged(auth, async (user) => {
+        const authOverlay = document.getElementById('authOverlay');
+        const onboardingOverlay = document.getElementById('onboardingOverlay');
 
-          if (user) {
-              authOverlay.style.display = 'none';
-              // Check agar profile pehle se bani hai ya nahi
-              const docSnap = await getDoc(doc(db, "users", user.uid));
-              if (docSnap.exists()) {
-                  window.runSplashTimer(); // Purana user hai, direct animation chalao
-              } else {
-                  onboardingOverlay.style.display = 'flex'; // Naya user hai, details maango
-              }
-          } else {
-              authOverlay.style.display = 'flex';
-              document.getElementById('splashScreen').style.display = 'none'; // Bina login animation nahi
-          }
-      });
-    </script>
+        if (user) {
+            authOverlay.style.display = 'none';
+            const docSnap = await getDoc(doc(db, "users", user.uid));
+            
+            if (docSnap.exists()) {
+                // Profile mil gayi, ab usko HTML mein update karo!
+                const data = docSnap.data();
+                document.getElementById('valName').innerText = data.name;
+                document.getElementById('displayProfileName').innerText = data.name;
+                document.getElementById('profileInitial').innerText = data.name.charAt(0).toUpperCase(); // Naam ka pehla letter
+                document.getElementById('valEmail').innerText = user.email;
+                document.getElementById('valDob').innerText = data.dob;
+
+                window.runSplashTimer(); 
+            } else {
+                onboardingOverlay.style.display = 'flex'; 
+            }
+        } else {
+            authOverlay.style.display = 'flex';
+            document.getElementById('splashScreen').style.display = 'none'; 
+        }
+    });
+</script>
 </body>
 </html>
