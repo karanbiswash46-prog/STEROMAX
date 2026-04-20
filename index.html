@@ -226,7 +226,7 @@
         <div class="settings-group">
             <div class="settings-title">App Info</div>
             <div class="settings-box">
-                <div class="set-item">App Version <span>v7.1 Unlimited Seasons</span></div>
+                <div class="set-item">App Version <span>v7.5 Ultimate Hybrid</span></div>
                 <div class="set-item" style="color: #ff4444; font-weight:bold;" onclick="logoutUser()">🚪 Logout Account</div>
             </div>
         </div>
@@ -260,11 +260,19 @@
 
     <div id="home">
         <div class="slider-wrapper" id="main-slider"></div>
+        
         <div id="continue-watching-section" style="display: none; margin-top: 10px; margin-bottom: 20px;">
             <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; color: var(--gold);">▶ Continue Watching</h3>
             <div class="grid" id="continue-grid"></div>
         </div>
-        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; color:var(--primary);">Trending Worldwide 🔥</h3>
+
+        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; color: #ff4444; display: flex; align-items: center; gap: 8px;">
+            <span style="background: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 14px;">🇮🇳</span> 
+            VIP Hindi Dubbed
+        </h3>
+        <div class="grid" id="vip-hindi-grid" style="margin-bottom: 20px;"></div>
+
+        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; color:var(--primary);">Trending Worldwide 🌍</h3>
         <div class="grid" id="movie-grid"></div>
     </div>
 
@@ -345,8 +353,9 @@
     window.currentUserName = "Elite User"; 
     window.currentUserAvatar = ""; 
     window.currentOpenMovieId = null;
-    window.currentTmdbShowId = null; // New variable for season tracking
+    window.currentTmdbShowId = null;
 
+    // 🔥 TERA MANUAL HINDI DUBBED KHAAZANA 🔥
     const movies = [
         { id: 1, title: "Demon Slayer: Infinity Castle", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "https://i.postimg.cc/DwfGrBHM/kv-1.jpg", trailerLink: "https://www.dropbox.com/scl/fi/cmiemscnlidr0iszlal4z/Demon_Slayer__Kimetsu_no_Yaiba_Infinity_Castle___MAIN_TRAILER-1080p.mp4?rlkey=wy1z8i6bjh6janpqk2xaq5a32&raw=1", fullMovieLink: "https://steromax.4meplayer.com/#hn1h5", desc: "The final battle begins.", detailTag: "Official Trailer / Preview" },
         { id: 2, title: "Pushpa 2: The Rule", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg", trailerLink: "https://www.dropbox.com/scl/fi/8ml1gt55dbwso60vgvrpg/Pushpa_2_-_The_Rule_Trailer__Hindi____Allu_Arjun___Sukumar___Rashmika_Mandanna___Fahadh_Faasil___DSP-1080p.mp4?rlkey=2b1euqnm0grgktur01br1lv1g&raw=1", desc: "Pushpa Raj returns.", detailTag: "Official Trailer / Preview" },
@@ -403,18 +412,32 @@
         });
     }
 
+    function renderGrid(data, target) {
+        const grid = document.getElementById(target); grid.innerHTML = '';
+        data.forEach(m => { 
+            grid.innerHTML += `<div class="movie-card" onclick="playMovie(${m.id})"><img src="${m.img}"><div class="movie-info"><p>${m.title}</p></div></div>`; 
+        });
+    }
+
     async function initHome() {
         const slider = document.getElementById('main-slider');
         if(slider.innerHTML !== "") return; 
+        
         movies.forEach(m => {
             const tagClass = m.tag === "NEW SERIES" ? "tag-red" : "tag-blue";
             slider.innerHTML += `<div class="hero-slide" onclick="playMovie(${m.id})" style="background-image: url('${m.img}');"><div class="slide-overlay"></div><div class="slide-content"><span class="${tagClass}">${m.tag}</span><p style="font-size:18px; font-weight:bold; margin:0;">${m.title}</p></div></div>`;
         });
+
+        // 🔥 RENDER VIP HINDI SECTION 🔥
+        renderGrid(movies, 'vip-hindi-grid');
+
+        // 🔥 RENDER TMDB TRENDING 🔥
         try {
             const res = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${TMDB_API_KEY}`);
             const data = await res.json();
             renderTMDBGrid(data.results.slice(0,18), 'movie-grid');
         } catch(e) {}
+
         let slideIndex = 0;
         setInterval(() => {
             slideIndex = (slideIndex + 1) % movies.length;
@@ -434,7 +457,6 @@
         `;
     };
 
-    // 🔥 V7.1 TMDB PLAYER: FULL SEASON SUPPORT 🔥
     window.playTMDBMovie = async function(id, type = 'movie', autoPlay = false) {
         window.currentOpenMovieId = "tmdb_" + id; 
 
@@ -494,16 +516,15 @@
             if(autoPlay) fullBtn.click();
             
         } else {
-            // 🔥 TV SHOW MULTI-SEASON LOGIC 🔥
             fullBtn.style.display = "none"; 
             serverContainer.style.display = "none";
             epTabHead.style.display = "block";
-            window.currentTmdbShowId = id; // Store ID globally for season fetching
+            window.currentTmdbShowId = id; 
             
             let seasonOptions = '';
             if(media.seasons) {
                 media.seasons.forEach(s => {
-                    if(s.season_number > 0) { // Skip "Specials" (Season 0)
+                    if(s.season_number > 0) { 
                         seasonOptions += `<option value="${s.season_number}">Season ${s.season_number}</option>`;
                     }
                 });
@@ -518,7 +539,6 @@
                 <div id="tmdb-episodes-list"><p style="color:#888;">Loading episodes...</p></div>
             `;
             
-            // Load Season 1 initially
             loadTMDBSeason(1);
             if(autoPlay) switchTab(1);
         }
@@ -531,7 +551,6 @@
         } catch(e) {}
     };
 
-    // 🔥 FETCH EPISODES FOR SELECTED SEASON 🔥
     window.loadTMDBSeason = async function(seasonNumber) {
         const listDiv = document.getElementById('tmdb-episodes-list');
         listDiv.innerHTML = '<p style="color:#888;">Fetching episodes from TMDB...</p>';
@@ -612,22 +631,35 @@
         document.getElementById('sim-grid').innerHTML = '';
     }
 
+    // 🔥 FIX: Screen Rotation & Fullscreen BUG 🔥
     function openEpisodeFullscreen(link) {
-        document.getElementById('introVideo').pause(); const fsModal = document.getElementById("fsPlayerModal");
-        document.getElementById('episodeFrame').src = link; fsModal.style.display = 'block';
+        document.getElementById('introVideo').pause(); 
+        const fsModal = document.getElementById("fsPlayerModal");
+        document.getElementById('episodeFrame').src = link; 
+        fsModal.style.display = 'block';
         if (fsModal.requestFullscreen) fsModal.requestFullscreen();
         if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(e => {});
     }
+
     function closeEpisode() { 
-        document.getElementById('episodeFrame').src = ""; document.getElementById('fsPlayerModal').style.display = 'none'; 
-        if (document.exitFullscreen) document.exitFullscreen().catch(e => {});
+        document.getElementById('episodeFrame').src = ""; 
+        document.getElementById('fsPlayerModal').style.display = 'none'; 
+        if (document.fullscreenElement && document.exitFullscreen) {
+            document.exitFullscreen().catch(e => {});
+        }
+        if (screen.orientation && screen.orientation.unlock) {
+            screen.orientation.unlock();
+        }
     }
+
     function switchTab(idx) { 
         document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx)); 
         document.querySelectorAll('.tab-content').forEach((c, i) => c.classList.toggle('active', i === idx)); 
     }
+
     function closeInfoPage() { 
-        document.getElementById('introVideo').pause(); document.getElementById('playerModal').style.display = 'none'; 
+        document.getElementById('introVideo').pause(); 
+        document.getElementById('playerModal').style.display = 'none'; 
         if(window.currentCommentListener) window.currentCommentListener(); 
     }
     
@@ -830,4 +862,4 @@
     });
 </script>
 </body>
-                                                                         </html>
+                </html>
