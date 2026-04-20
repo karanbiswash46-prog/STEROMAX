@@ -464,12 +464,27 @@
         if(movie) {
             document.getElementById('continue-watching-section').style.display = 'block';
             document.getElementById('continue-grid').innerHTML = `
-                <div class="movie-card" onclick="playMovie(${movie.id})" style="border: 2px solid var(--gold);">
+                <div class="movie-card" onclick="playContinueWatching(${movie.id})" style="border: 2px solid var(--gold);">
                     <img src="${movie.img}">
-                    <div class="movie-info" style="background:var(--gold); color:black;"><p style="color:black; font-weight:bold;">${movie.title}</p></div>
+                    <div class="movie-info" style="background:var(--gold); color:black;"><p style="color:black; font-weight:bold;">▶ PLAY: ${movie.title}</p></div>
                 </div>
             `;
         }
+    };
+
+    // 🔥 NAYA: Direct Play Engine 🔥
+    window.playContinueWatching = function(id) {
+        playMovie(id); // Normal data aur comments load karo
+        const movie = movies.find(x => x.id === id);
+        
+        // Thoda timeout diya taaki modal background mein khul jaye, uske baad sidha action ho
+        setTimeout(() => {
+            if (movie.type === "movie" && movie.fullMovieLink) {
+                openEpisodeFullscreen(movie.fullMovieLink); // Seedha Full Screen
+            } else if (movie.type === "series") {
+                switchTab(1); // Seedha Episodes tab
+            }
+        }, 400); 
     };
 
     function playMovie(id) {
@@ -738,7 +753,6 @@
         }
     }
 
-    // 🔥 NAYA: "lastWatched" ko null ke saath initialize karna 🔥
     window.saveUserProfile = async () => {
         const name = document.getElementById('userName').value;
         const dob = document.getElementById('userDob').value;
@@ -757,7 +771,6 @@
         window.location.reload();
     }
 
-    // --- 🔥 NAYA: SAVE HISTORY TO FIREBASE 🔥 ---
     window.saveHistoryToFirebase = async (movieId) => {
         const user = auth.currentUser;
         if(user) {
@@ -837,7 +850,6 @@
                 document.getElementById('valDob').innerText = data.dob;
                 updateAvatarUI(data.avatarUrl, data.name);
 
-                // 🔥 NAYA: CHECK LAST WATCHED AND RENDER 🔥
                 if(data.lastWatched) {
                     window.renderContinueWatching(data.lastWatched);
                 }
@@ -853,4 +865,4 @@
     });
 </script>
 </body>
-    </html>
+                                                                                                             </html>
