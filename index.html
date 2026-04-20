@@ -86,6 +86,7 @@
 
         #trailer-poster { width: 100%; height: 250px; border-radius: 12px; background-size: contain; background-repeat: no-repeat; background-position: center; background-color: #000; border: 1px solid #333; }
 
+        /* 🔥 FULLSCREEN OVERLAY 🔥 */
         .fs-player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 9999; }
         .close-fs { position: absolute; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; width: 45px; height: 45px; text-align: center; line-height: 45px; color: white; font-size: 24px; z-index: 10006; backdrop-filter: blur(10px); cursor:pointer;}
         iframe { width: 100vw; height: 56.25vw; max-height: 100vh; border: none; }
@@ -215,6 +216,13 @@
                 <div class="set-item" onclick="openProfile()">Profile Details <span>></span></div>
                 <div class="set-item" onclick="openModal('passwordModal')">Change Password <span>></span></div>
                 <div class="set-item">Subscription Plan <span style="color:var(--primary); font-weight:bold;">Elite</span></div>
+            </div>
+        </div>
+        <div class="settings-group">
+            <div class="settings-title">Playback & Downloads</div>
+            <div class="settings-box">
+                <div class="set-item">Video Quality <span>Auto (1080p)</span></div>
+                <div class="set-item">Download Quality <span>High</span></div>
             </div>
         </div>
         <div class="settings-group">
@@ -361,7 +369,6 @@
     window.currentTmdbShowId = null;
 
     // 🔥 LIVE TV CHANNELS ARRAY 🔥
-    // Yahan tu apna Live M3U8 link ya Iframe link update kar sakta hai.
     const liveChannels = [
         { 
             id: 101, 
@@ -370,10 +377,10 @@
             tag: "🔴 LIVE MATCH", 
             screenTag: "Live Sports", 
             screenTagColor: "#ff0000", 
-            img: "https://i.postimg.cc/tJ0vW9x3/tata-ipl-logo.jpg", // Placeholder IPL logo
-            // 👇 Yahan apna link paste karna (Embed link ya m3u8) 👇
-            liveLink: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", // Ye abhi ek Dummy test link hai
-            desc: "Watch TATA IPL 2026 Live. (Admin: Paste your actual working m3u8 or embed link in the code!)", 
+            img: "https://i.postimg.cc/tJ0vW9x3/tata-ipl-logo.jpg", 
+            // 👇 YAHAN MAINE TERA LINK CHIPKA DIYA HAI 👇
+            liveLink: "https://catowrap.live/mrgamingbtsport2.m3u8", 
+            desc: "Watch TATA IPL 2026 Live. High Quality Stream.", 
             detailTag: "Live Cricket • Full HD" 
         }
     ];
@@ -451,13 +458,9 @@
             slider.innerHTML += `<div class="hero-slide" onclick="playMovie(${m.id})" style="background-image: url('${m.img}');"><div class="slide-overlay"></div><div class="slide-content"><span class="${tagClass}">${m.tag}</span><p style="font-size:18px; font-weight:bold; margin:0;">${m.title}</p></div></div>`;
         });
 
-        // RENDER LIVE TV SECTION
         renderGrid(liveChannels, 'live-tv-grid', true);
-
-        // RENDER VIP HINDI SECTION
         renderGrid(movies, 'vip-hindi-grid');
 
-        // RENDER TMDB TRENDING
         try {
             const res = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${TMDB_API_KEY}`);
             const data = await res.json();
@@ -472,7 +475,7 @@
     }
 
     window.renderContinueWatching = function(data) {
-        if(!data || data.type === 'live') return; // Don't save live TV to continue watching
+        if(!data || data.type === 'live') return; 
         document.getElementById('continue-watching-section').style.display = 'block';
         const action = data.isTmdb ? `playTMDBMovie(${data.id}, '${data.type}', true)` : `playMovie(${data.id}, true)`;
         document.getElementById('continue-grid').innerHTML = `
@@ -483,7 +486,6 @@
         `;
     };
 
-    // 🔥 LIVE TV PLAYER FUNCTION 🔥
     window.playLiveChannel = function(id) {
         const channel = liveChannels.find(x => x.id === id);
         window.currentOpenMovieId = "live_" + id;
@@ -701,7 +703,6 @@
         document.getElementById('sim-grid').innerHTML = '';
     }
 
-    // 🔥 SMART FULLSCREEN PLAYER (SUPPORTS M3U8 & IFRAME) 🔥
     function openEpisodeFullscreen(link, isLiveStream = false) {
         document.getElementById('introVideo').pause(); 
         const fsModal = document.getElementById("fsPlayerModal");
@@ -711,7 +712,6 @@
         fsModal.style.display = 'block';
 
         if (isLiveStream && link.includes('.m3u8')) {
-            // PLAY RAW M3U8 LIVE STREAM
             iframePlayer.style.display = 'none';
             videoPlayer.style.display = 'block';
             
@@ -723,12 +723,10 @@
                     videoPlayer.play();
                 });
             } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
-                // Native support (Safari/iOS)
                 videoPlayer.src = link;
                 videoPlayer.play();
             }
         } else {
-            // NORMAL IFRAME EMBED (VidSrc, 4meplayer, Embed links)
             videoPlayer.style.display = 'none';
             iframePlayer.style.display = 'block';
             iframePlayer.src = link;
