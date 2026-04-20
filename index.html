@@ -207,10 +207,7 @@
     </header>
 
     <div id="settingsPage" class="full-page">
-        <div class="page-header">
-            <h2 style="margin:0; color:var(--gold);">⚙️ Settings</h2>
-            <div onclick="closeSettings()" style="font-size:30px; cursor:pointer;">✕</div>
-        </div>
+        <div class="page-header"><h2 style="margin:0; color:var(--gold);">⚙️ Settings</h2><div onclick="closeSettings()" style="font-size:30px; cursor:pointer;">✕</div></div>
         <div class="settings-group">
             <div class="settings-title">Account & Security</div>
             <div class="settings-box">
@@ -229,17 +226,14 @@
         <div class="settings-group">
             <div class="settings-title">App Info</div>
             <div class="settings-box">
-                <div class="set-item">App Version <span>v6.0 TMDB Edition</span></div>
+                <div class="set-item">App Version <span>v7.0 Ultimate</span></div>
                 <div class="set-item" style="color: #ff4444; font-weight:bold;" onclick="logoutUser()">🚪 Logout Account</div>
             </div>
         </div>
     </div>
 
     <div id="profilePage" class="full-page">
-        <div class="page-header">
-            <h2 style="margin:0; color:var(--primary);">My Profile</h2>
-            <div onclick="closeProfile()" style="font-size:30px; cursor:pointer;">✕</div>
-        </div>
+        <div class="page-header"><h2 style="margin:0; color:var(--primary);">My Profile</h2><div onclick="closeProfile()" style="font-size:30px; cursor:pointer;">✕</div></div>
         <div class="avatar-container">
             <div class="avatar" id="profileInitial">S</div>
             <div class="edit-avatar-btn" onclick="openModal('avatarModal')">📷</div>
@@ -278,7 +272,7 @@
 
     <div id="searchOverlay">
         <div class="search-bar-container">
-            <input type="text" id="searchInput" placeholder="Search Hollywood, Anime..." oninput="doSearch()">
+            <input type="text" id="searchInput" placeholder="Search Movies or Series..." oninput="doSearch()">
             <div class="close-search" style="font-size: 24px; cursor:pointer;" onclick="closeSearch()">✕</div>
         </div>
         <div class="chip-container">
@@ -312,7 +306,10 @@
 
             <div id="tab-details" class="tab-content active">
                 <p id="movie-desc" style="color:#bbb; font-size:14px; line-height:1.6;"></p>
-                <h3 style="color:var(--primary); font-size:16px;">Recommended</h3>
+                
+                <div id="server-container" style="display:none; margin-top:20px;"></div>
+
+                <h3 style="color:var(--primary); font-size:16px; margin-top:20px;">Recommended</h3>
                 <div class="grid" id="sim-grid" style="padding:0;"></div>
             </div>
 
@@ -356,7 +353,7 @@
     window.currentUserAvatar = ""; 
     window.currentOpenMovieId = null;
 
-    // HERO SLIDER MOVIES (Hardcoded for custom trailers)
+    // HERO SLIDER MOVIES (Hardcoded for custom trailers & perfect episodes)
     const movies = [
         { id: 1, title: "Demon Slayer: Infinity Castle", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "https://i.postimg.cc/DwfGrBHM/kv-1.jpg", trailerLink: "https://www.dropbox.com/scl/fi/cmiemscnlidr0iszlal4z/Demon_Slayer__Kimetsu_no_Yaiba_Infinity_Castle___MAIN_TRAILER-1080p.mp4?rlkey=wy1z8i6bjh6janpqk2xaq5a32&raw=1", fullMovieLink: "https://steromax.4meplayer.com/#hn1h5", desc: "The final battle begins.", detailTag: "Official Trailer / Preview" },
         { id: 2, title: "Pushpa 2: The Rule", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg", trailerLink: "https://www.dropbox.com/scl/fi/8ml1gt55dbwso60vgvrpg/Pushpa_2_-_The_Rule_Trailer__Hindi____Allu_Arjun___Sukumar___Rashmika_Mandanna___Fahadh_Faasil___DSP-1080p.mp4?rlkey=2b1euqnm0grgktur01br1lv1g&raw=1", desc: "Pushpa Raj returns.", detailTag: "Official Trailer / Preview" },
@@ -382,7 +379,7 @@
     function goHome() { closeProfile(); closeSettings(); closeSearch(); closeInfoPage(); }
     function quickSearch(t) { document.getElementById('searchInput').value = t; doSearch(); }
     
-    // 🔥 NEW TMDB ENGINE FUNCS 🔥
+    // 🔥 NEW TMDB ENGINE: SMART SEARCH & SERIES SUPPORT 🔥
     async function doSearch() {
         const q = document.getElementById('searchInput').value.toLowerCase();
         const grid = document.getElementById('search-results-grid'); 
@@ -390,7 +387,7 @@
         if(q === "") return;
         
         try {
-            const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${q}`);
+            const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${q}`);
             const data = await res.json();
             renderTMDBGrid(data.results, 'search-results-grid');
         } catch(e) { console.log(e); }
@@ -402,11 +399,17 @@
         if(!results) return;
         results.forEach(m => {
             if(!m.poster_path) return;
+            const type = m.media_type || 'movie'; 
+            if(type !== 'movie' && type !== 'tv') return; // Filter out garbage/people
+            const title = m.title || m.name;
             const img = 'https://image.tmdb.org/t/p/w500' + m.poster_path;
+            // Display tag for TV Shows
+            const tagHtml = type === 'tv' ? `<span style="position:absolute; top:5px; left:5px; background:red; color:white; font-size:8px; padding:2px 5px; border-radius:3px; font-weight:bold;">SERIES</span>` : '';
             grid.innerHTML += `
-                <div class="movie-card" onclick="playTMDBMovie(${m.id}); closeSearch()">
+                <div class="movie-card" style="position:relative;" onclick="playTMDBMovie(${m.id}, '${type}'); closeSearch()">
+                    ${tagHtml}
                     <img src="${img}">
-                    <div class="movie-info"><p>${m.title}</p></div>
+                    <div class="movie-info"><p>${title}</p></div>
                 </div>`;
         });
     }
@@ -415,15 +418,13 @@
         const slider = document.getElementById('main-slider');
         if(slider.innerHTML !== "") return; 
         
-        // 1. Hardcoded Slider
         movies.forEach(m => {
             const tagClass = m.tag === "NEW SERIES" ? "tag-red" : "tag-blue";
             slider.innerHTML += `<div class="hero-slide" onclick="playMovie(${m.id})" style="background-image: url('${m.img}');"><div class="slide-overlay"></div><div class="slide-content"><span class="${tagClass}">${m.tag}</span><p style="font-size:18px; font-weight:bold; margin:0;">${m.title}</p></div></div>`;
         });
 
-        // 2. Fetch TMDB Trending for Grid
         try {
-            const res = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${TMDB_API_KEY}`);
+            const res = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${TMDB_API_KEY}`);
             const data = await res.json();
             renderTMDBGrid(data.results.slice(0,18), 'movie-grid');
         } catch(e) { console.log(e); }
@@ -438,7 +439,7 @@
     window.renderContinueWatching = function(data) {
         if(!data) return;
         document.getElementById('continue-watching-section').style.display = 'block';
-        const action = data.isTmdb ? `playTMDBMovie(${data.id}, true)` : `playMovie(${data.id}, true)`;
+        const action = data.isTmdb ? `playTMDBMovie(${data.id}, '${data.type}', true)` : `playMovie(${data.id}, true)`;
         document.getElementById('continue-grid').innerHTML = `
             <div class="movie-card" onclick="${action}" style="border: 2px solid var(--gold);">
                 <img src="${data.img}">
@@ -447,27 +448,29 @@
         `;
     };
 
-    // 🔥 TMDB PLAYER ENGINE 🔥
-    window.playTMDBMovie = async function(id, autoPlay = false) {
-        const res = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}&language=en-US`);
-        const movie = await res.json();
-        
+    // 🔥 V7.0 TMDB PLAYER: MULTI-SERVER & EPISODES 🔥
+    window.playTMDBMovie = async function(id, type = 'movie', autoPlay = false) {
         window.currentOpenMovieId = "tmdb_" + id; 
-        const imgUrl = 'https://image.tmdb.org/t/p/w500' + movie.poster_path;
-        const bgUrl = 'https://image.tmdb.org/t/p/original' + movie.backdrop_path;
 
-        const cwData = { id: id, isTmdb: true, title: movie.title, img: imgUrl };
+        const endpoint = type === 'tv' ? `tv/${id}` : `movie/${id}`;
+        const res = await fetch(`https://api.themoviedb.org/3/${endpoint}?api_key=${TMDB_API_KEY}&language=en-US`);
+        const media = await res.json();
+        
+        const title = type === 'tv' ? media.name : media.title;
+        const releaseDate = type === 'tv' ? media.first_air_date : media.release_date;
+        const imgUrl = 'https://image.tmdb.org/t/p/w500' + media.poster_path;
+        const bgUrl = 'https://image.tmdb.org/t/p/original' + media.backdrop_path;
+
+        const cwData = { id: id, isTmdb: true, type: type, title: title, img: imgUrl };
         if(window.saveHistoryToFirebase) window.saveHistoryToFirebase(cwData);
         window.renderContinueWatching(cwData); 
 
-        // Set UI
-        document.getElementById('p-title').innerText = movie.title;
-        document.getElementById('dynamic-tag').innerText = "⭐ " + (movie.vote_average).toFixed(1) + " • " + movie.release_date;
-        document.getElementById('screen-tag').style.display = 'none'; // Hide trailer tag
-        document.getElementById('movie-desc').innerText = movie.overview;
+        document.getElementById('p-title').innerText = title;
+        document.getElementById('dynamic-tag').innerText = "⭐ " + (media.vote_average).toFixed(1) + " • " + (releaseDate || '');
+        document.getElementById('screen-tag').style.display = 'none'; 
+        document.getElementById('movie-desc').innerText = media.overview || "No description available.";
         document.getElementById('trailer-poster').style.backgroundImage = `url('${imgUrl}')`;
         
-        // Hide intro video, show backdrop
         const vBox = document.getElementById('main-video-box');
         document.getElementById('introVideo').style.display = 'none';
         document.getElementById('introVideo').pause();
@@ -479,24 +482,77 @@
         if(window.fetchLiveComments) window.fetchLiveComments("tmdb_" + id);
 
         const fullBtn = document.getElementById('fullMovieBtn');
-        fullBtn.style.display = "block"; document.getElementById('ep-tab-head').style.display = "none";
-        
-        // VidSrc Magic Link 🪄
-        fullBtn.onclick = function() {
-            openEpisodeFullscreen(`https://vidsrc.me/embed/movie?tmdb=${id}`);
-        };
+        const serverContainer = document.getElementById('server-container');
+        const epTabHead = document.getElementById('ep-tab-head');
+        const epContainer = document.getElementById('ep-container');
+
+        if (type === 'movie') {
+            fullBtn.style.display = "block"; 
+            epTabHead.style.display = "none";
+            
+            fullBtn.onclick = function() {
+                openEpisodeFullscreen(`https://vidsrc.me/embed/movie?tmdb=${id}`);
+            };
+
+            // 🔥 MULTI-SERVER SWITCHER FOR MOVIES 🔥
+            serverContainer.style.display = 'block';
+            serverContainer.innerHTML = `
+                <div style="margin-top:15px; padding-top:15px; border-top:1px solid #222;">
+                    <h4 style="color:var(--gold); margin-bottom:10px; font-size:13px;">Server Switcher (If video is unavailable)</h4>
+                    <div style="display:flex; gap:10px;">
+                        <button style="flex:1; padding:10px; background:#222; color:white; border:1px solid var(--primary); border-radius:8px; font-weight:bold; cursor:pointer;" onclick="openEpisodeFullscreen('https://vidsrc.me/embed/movie?tmdb=${id}')">Server 1</button>
+                        <button style="flex:1; padding:10px; background:#222; color:white; border:1px solid #444; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="openEpisodeFullscreen('https://vidsrc.to/embed/movie/${id}')">Server 2</button>
+                        <button style="flex:1; padding:10px; background:#222; color:white; border:1px solid #444; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="openEpisodeFullscreen('https://embed.su/embed/movie/${id}')">Server 3</button>
+                    </div>
+                </div>
+            `;
+            
+            if(autoPlay) fullBtn.click();
+            
+        } else {
+            // 🔥 TV SHOW EPISODE FETCHER 🔥
+            fullBtn.style.display = "none"; 
+            serverContainer.style.display = "none";
+            epTabHead.style.display = "block";
+            epContainer.innerHTML = '<p style="color:#888;">Fetching Season 1 Episodes...</p>';
+            
+            try {
+                const s1Res = await fetch(`https://api.themoviedb.org/3/tv/${id}/season/1?api_key=${TMDB_API_KEY}&language=en-US`);
+                const s1Data = await s1Res.json();
+                epContainer.innerHTML = '';
+                if(s1Data.episodes && s1Data.episodes.length > 0) {
+                    s1Data.episodes.forEach(ep => {
+                        let epImg = ep.still_path ? 'https://image.tmdb.org/t/p/w300' + ep.still_path : imgUrl;
+                        let epLink = `https://vidsrc.me/embed/tv?tmdb=${id}&season=1&episode=${ep.episode_number}`;
+                        epContainer.innerHTML += `
+                            <div style="display:flex; align-items:center; gap:12px; background:#111; padding:12px; border-radius:10px; margin-bottom:8px; border:1px solid #222; cursor:pointer;" onclick="openEpisodeFullscreen('${epLink}')">
+                                <div style="width:80px; height:45px; border-radius:5px; overflow:hidden; flex-shrink:0;">
+                                    <img src="${epImg}" style="width:100%;height:100%;object-fit:cover">
+                                </div>
+                                <div>
+                                    <b style="color:var(--gold); font-size:12px;">S1 E${ep.episode_number}</b>
+                                    <div style="font-size:13px; color:white;">${ep.name}</div>
+                                </div>
+                            </div>`;
+                    });
+                } else {
+                    epContainer.innerHTML = '<p style="color:#888;">Episodes not found on TMDB.</p>';
+                }
+            } catch(e) { epContainer.innerHTML = '<p style="color:red;">Error loading episodes.</p>'; }
+            
+            if(autoPlay) switchTab(1);
+        }
 
         document.getElementById('playerModal').style.display = 'flex'; switchTab(0);
 
-        // Fetch Similar
-        const simRes = await fetch(`https://api.themoviedb.org/3/movie/${id}/similar?api_key=${TMDB_API_KEY}&language=en-US&page=1`);
-        const simData = await simRes.json();
-        renderTMDBGrid(simData.results.slice(0,6), 'sim-grid');
-
-        if(autoPlay) fullBtn.click();
+        try {
+            const simRes = await fetch(`https://api.themoviedb.org/3/${endpoint}/${id}/similar?api_key=${TMDB_API_KEY}&language=en-US&page=1`);
+            const simData = await simRes.json();
+            renderTMDBGrid(simData.results.slice(0,6), 'sim-grid');
+        } catch(e) {}
     };
 
-    // HERO HARDCODED PLAYER
+    // HERO HARDCODED PLAYER (Safe & Unchanged)
     window.playMovie = function(id, autoPlay = false) {
         const currentMovie = movies.find(x => x.id === id);
         window.currentOpenMovieId = "local_" + id;
@@ -505,11 +561,11 @@
         if(window.saveHistoryToFirebase) window.saveHistoryToFirebase(cwData);
         window.renderContinueWatching(cwData); 
 
-        // Restore intro video
         const vBox = document.getElementById('main-video-box');
         vBox.style.backgroundImage = 'none';
         document.getElementById('introVideo').style.display = 'block';
         document.getElementById('screen-tag').style.display = 'block';
+        document.getElementById('server-container').style.display = 'none'; // Hide multi-server for local
         
         document.getElementById('p-title').innerText = currentMovie.title;
         document.getElementById('dynamic-tag').innerText = currentMovie.detailTag;
@@ -542,8 +598,6 @@
         }
         
         document.getElementById('playerModal').style.display = 'flex'; switchTab(0); 
-        
-        // Reset sim grid for hardcoded
         document.getElementById('sim-grid').innerHTML = '';
     }
 
@@ -818,4 +872,4 @@
     });
 </script>
 </body>
-                    </html>
+                                                                                               </html>
