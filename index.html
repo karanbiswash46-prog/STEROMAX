@@ -17,12 +17,14 @@
         header { background: rgba(17, 17, 17, 0.9); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); }
         .logo { color: var(--primary); font-size: 22px; font-weight: 900; letter-spacing: 1px; }
 
+        /* --- SEARCH OVERLAY CSS --- */
         #searchOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 6000; padding: 20px; flex-direction: column; overflow-y: auto; }
         .search-bar-container { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
         #searchInput { flex: 1; background: #1a1a1a; border: 1px solid var(--primary); padding: 12px 20px; border-radius: 30px; color: white; outline: none; }
         .chip-container { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0 20px 0; }
         .chip { background: #111; padding: 6px 15px; border-radius: 20px; font-size: 12px; border: 1px solid #333; color: #bbb; cursor: pointer; }
 
+        /* --- SLIDER CSS --- */
         .slider-wrapper { position: relative; width: 95%; height: 210px; overflow-x: auto; display: flex; scroll-snap-type: x mandatory; gap: 10px; margin: 15px auto; border-radius: 15px; scrollbar-width: none; scroll-behavior: smooth; }
         .slider-wrapper::-webkit-scrollbar { display: none; }
         .hero-slide { min-width: 100%; height: 100%; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 20px; position: relative; scroll-snap-align: start; border-radius: 15px; }
@@ -32,18 +34,37 @@
         .tag-red { background: #ff0000; color: white; font-size: 10px; font-weight: bold; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
         .tag-blue { background: #0066ff; color: white; font-size: 10px; font-weight: bold; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
 
+        /* 🔥 HORIZONTAL SCROLL CSS (Line se Movies) 🔥 */
+        .scroll-row { display: flex; overflow-x: auto; gap: 12px; padding: 0 15px; scrollbar-width: none; scroll-behavior: smooth; }
+        .scroll-row::-webkit-scrollbar { display: none; }
+        
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 15px; }
-        .movie-card { background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid #252525; cursor: pointer;}
-        .movie-card img { width: 100%; height: 135px; object-fit: cover; }
-        .movie-info { padding: 6px; text-align: center; }
-        .movie-info p { margin: 0; font-size: 10px; color: #eee; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* Fixed width for scrollable cards */
+        .scroll-row .movie-card { flex: 0 0 115px; } 
+        .grid .movie-card { flex: auto; }
 
+        .movie-card { background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid #252525; cursor: pointer; position: relative;}
+        .movie-card img { width: 100%; height: 145px; object-fit: cover; }
+        .movie-info { padding: 8px 6px; text-align: center; }
+        .movie-info p { margin: 0; font-size: 11px; color: #eee; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* 🏆 RANKING BADGES CSS 🏆 */
+        .rank-badge { position: absolute; top: -5px; left: -5px; font-size: 11px; font-weight: 900; padding: 5px 10px; border-radius: 8px; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2);}
+        .rank-1 { background: linear-gradient(45deg, #b9f2ff, #00d2ff); color: #000; } /* Diamond */
+        .rank-2 { background: linear-gradient(45deg, #fff200, #ff8c00); color: #000; } /* Gold */
+        .rank-3 { background: linear-gradient(45deg, #e0e0e0, #999999); color: #000; } /* Silver */
+        .rank-4 { background: linear-gradient(45deg, #cd7f32, #8b4513); color: #fff; } /* Bronze */
+        .rank-other { background: rgba(0,0,0,0.8); color: white; border: 1px solid #444; }
+
+        /* --- BOTTOM NAV --- */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(15, 15, 15, 0.98); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; backdrop-filter: blur(15px); z-index: 5000; height: 75px; }
         .nav-item { color: #888; font-size: 24px; text-align: center; cursor: pointer; flex: 1; transition: 0.3s;}
         .nav-item.active { color: var(--primary); transform: translateY(-3px);}
         .nav-item.live-btn.active { color: #ff4444; }
         .nav-item span { display: block; font-size: 12px; margin-top: 4px; font-weight: 700; }
 
+        /* --- FULL SCREEN PAGES (Profile & Settings) --- */
         .full-page { display: none; position: fixed; inset: 0; background: #000; z-index: 4000; flex-direction: column; padding: 20px; overflow-y: auto; padding-bottom: 100px;}
         .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; margin-top: 10px; border-bottom: 1px solid #222; padding-bottom: 15px; }
         
@@ -228,7 +249,7 @@
         <div class="settings-group">
             <div class="settings-title">App Info</div>
             <div class="settings-box">
-                <div class="set-item">App Version <span>v11.5 Pro Update</span></div>
+                <div class="set-item">App Version <span>v12.0 Pro Update</span></div>
                 <div class="set-item" style="color: #ff4444; font-weight:bold;" onclick="logoutUser()">🚪 Logout Account</div>
             </div>
         </div>
@@ -265,23 +286,31 @@
         
         <div id="continue-watching-section" style="display: none; margin-top: 10px; margin-bottom: 20px;">
             <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; color: var(--gold);">▶ Continue Watching</h3>
-            <div class="grid" id="continue-grid"></div>
+            <div class="scroll-row" id="continue-grid"></div>
         </div>
 
-        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; color: #ff4757; display: flex; align-items: center; gap: 8px;">
+        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; margin-top:25px; color:var(--primary);">
+            🏆 Top 10 Trending
+        </h3>
+        <div class="scroll-row" id="trending-grid"></div>
+
+        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; margin-top:25px; color: #ff4757; display: flex; align-items: center; gap: 8px;">
             <span style="background: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 14px;">👺</span> 
             Anime Zone
         </h3>
-        <div class="grid" id="anime-grid" style="margin-bottom: 20px;"></div>
+        <div class="scroll-row" id="anime-grid"></div>
 
-        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; color: #ff4444; display: flex; align-items: center; gap: 8px;">
+        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; margin-top:25px; color: #ff6b81; display: flex; align-items: center; gap: 8px;">
+            <span style="background: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 14px;">💖</span> 
+            Sweet K-Dramas
+        </h3>
+        <div class="scroll-row" id="kdrama-grid"></div>
+
+        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; margin-top:25px; color: #ffcc00; display: flex; align-items: center; gap: 8px;">
             <span style="background: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 14px;">🇮🇳</span> 
             VIP Hindi Dubbed
         </h3>
-        <div class="grid" id="vip-hindi-grid" style="margin-bottom: 20px;"></div>
-
-        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; color:var(--primary);">Trending Worldwide 🌍</h3>
-        <div class="grid" id="movie-grid"></div>
+        <div class="scroll-row" id="vip-hindi-grid" style="margin-bottom: 20px;"></div>
     </div>
 
     <div id="livePage" style="display: none; padding-top: 10px; padding-bottom: 100px;">
@@ -332,7 +361,7 @@
                 <p id="movie-desc" style="color:#bbb; font-size:14px; line-height:1.6;"></p>
                 <div id="server-container" style="display:none; margin-top:20px;"></div>
                 <h3 style="color:var(--primary); font-size:16px; margin-top:20px;">Recommended</h3>
-                <div class="grid" id="sim-grid" style="padding:0;"></div>
+                <div class="scroll-row" id="sim-grid" style="padding:0;"></div>
             </div>
 
             <div id="tab-episodes" class="tab-content"><div id="ep-container"></div></div>
@@ -389,23 +418,21 @@
         if(pageId === 'searchOverlay') document.getElementById('searchInput').focus();
     }
 
-    // MULTIPLE LIVE CHANNELS WITH WORKING IMAGES
+    // MULTIPLE LIVE CHANNELS
     const liveChannels = [
-        { 
-            id: 101, title: "TATA IPL HINDI", type: "live", tag: "🔴 MATCH", screenTag: "Sports", screenTagColor: "#ff0000", 
-            img: "https://i.postimg.cc/9X12mGL3/Screenshot-2026-04-20-19-23-50-30-dba69a5e82e939c3ddef13f99a115ca3.jpg", 
-            liveLink: "https://cmvlive.blogspot.com/2026/02/str-1-hindi.html?m=1", desc: "Watch TATA IPL 2026 Live. (Select Watch Now when player loads)", detailTag: "Cricket • HD" 
-        },
-        { 
-            id: 102, title: "Star Sports 1", type: "live", tag: "🔴 SPORTS", screenTag: "Sports", screenTagColor: "#0066ff", 
-            img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Star_Sports_Logo.svg/1200px-Star_Sports_Logo.svg.png", 
-            liveLink: "https://catowrap.live/mrgamingbtsport2.m3u8", desc: "Star Sports 1 Live Stream.", detailTag: "Sports • Hindi" 
-        },
-        { 
-            id: 103, title: "Aaj Tak News", type: "live", tag: "🔴 NEWS", screenTag: "News", screenTagColor: "#ff0000", 
-            img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Aaj_tak_logo.png/600px-Aaj_tak_logo.png", 
-            liveLink: "https://aajtaklive-jitp.akamaized.net/hls/live/2014416/aajtak/aajtaklive/master.m3u8", desc: "Aaj Tak Live News 24x7.", detailTag: "News • Hindi" 
-        }
+        { id: 101, title: "TATA IPL HINDI", type: "live", tag: "🔴 MATCH", screenTag: "Sports", screenTagColor: "#ff0000", img: "https://i.postimg.cc/mZz5jSFn/IMG-20260418-153418.png", liveLink: "https://cmvlive.blogspot.com/2026/02/str-1-hindi.html?m=1", desc: "Watch TATA IPL 2026 Live. (Select Watch Now when player loads)", detailTag: "Cricket • HD" },
+        { id: 102, title: "Star Sports 1", type: "live", tag: "🔴 SPORTS", screenTag: "Sports", screenTagColor: "#0066ff", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Star_Sports_Logo.svg/1200px-Star_Sports_Logo.svg.png", liveLink: "https://catowrap.live/mrgamingbtsport2.m3u8", desc: "Star Sports 1 Live Stream.", detailTag: "Sports • Hindi" },
+        { id: 103, title: "Aaj Tak News", type: "live", tag: "🔴 NEWS", screenTag: "News", screenTagColor: "#ff0000", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Aaj_tak_logo.png/600px-Aaj_tak_logo.png", liveLink: "https://aajtaklive-jitp.akamaized.net/hls/live/2014416/aajtak/aajtaklive/master.m3u8", desc: "Aaj Tak Live News 24x7.", detailTag: "News • Hindi" }
+    ];
+
+    // 🔥 PERFECT ANIME ARRAY (From your screenshots) 🔥
+    const exactAnimeList = [
+        { id: 95479, title: "Jujutsu Kaisen", img: "https://image.tmdb.org/t/p/w500/1v0E2P6A4v9yWlG4kK4907BtaM1.jpg", type: "tv" },
+        { id: 98114, title: "Overflow", img: "https://image.tmdb.org/t/p/w500/8d8H05d3x2i8Xo1YtIq6XwzVzS0.jpg", type: "tv" },
+        { id: 113110, title: "Girlfriend, Girlfriend", img: "https://image.tmdb.org/t/p/w500/5mG7vK4V4v3T5Lp9p0YqH2v2x2Q.jpg", type: "tv" },
+        { id: 209867, title: "Frieren: Beyond Journey's End", img: "https://image.tmdb.org/t/p/w500/dQjR0PZkX7fR9T6CqR1aD2yD0V4.jpg", type: "tv" },
+        { id: 218729, title: "The Apothecary Diaries", img: "https://image.tmdb.org/t/p/w500/9b9f7D2C0u5M6a9xP5M3eA8y7G3.jpg", type: "tv" },
+        { id: 17351, title: "Doraemon", img: "https://image.tmdb.org/t/p/w500/A3x1uYn3z6N5eE4mB1c5D8A3t3K.jpg", type: "tv" }
     ];
 
     const movies = [
@@ -418,7 +445,7 @@
                 { title: "Episode 3: Sabito and Makomo (Hindi)", embed: "https://steromax.4meplayer.com/#6rhkf", thumb: "https://i.postimg.cc/mZz5jSFn/IMG-20260418-153418.png" }
             ]
         },
-        { id: 4, title: "LEO (Hindi) comingsoon", type: "movie", tag: "ACTION BLOCKBUSTER", screenTag: "Full Movie", screenTagColor: "#ffcc00", img: "https://i.postimg.cc/W1rC8nq9/MV5BMDk5ODNj-Nz-Mt-Yz-I5Yy00Nm-I3LWIw-Yzct-MTFj-Zjcw-N2I2Yzk2Xk-Ey-Xk-Fqc-Gc-V1.jpg", trailerLink: "https://www.dropbox.com/scl/fi/otoj18y42qn8l37xx0ttt/LEO__Hindi__Official_Trailer___Thalapathy_Vijay___Sanjay_Dutt___Lokesh_Kanagaraj___Anirudh-1080p.mp4?rlkey=4abh6y0y3yvtnz9i6ei7dz4lq&st=n3rv4m1u&raw=1", desc: "Thalapathy Vijay is Leo Das.", detailTag: "Action / LCU" }
+        { id: 4, title: "LEO (Hindi)", type: "movie", tag: "ACTION BLOCKBUSTER", screenTag: "Full Movie", screenTagColor: "#ffcc00", img: "https://i.postimg.cc/W1rC8nq9/MV5BMDk5ODNj-Nz-Mt-Yz-I5Yy00Nm-I3LWIw-Yzct-MTFj-Zjcw-N2I2Yzk2Xk-Ey-Xk-Fqc-Gc-V1.jpg", trailerLink: "https://www.dropbox.com/scl/fi/otoj18y42qn8l37xx0ttt/LEO__Hindi__Official_Trailer___Thalapathy_Vijay___Sanjay_Dutt___Lokesh_Kanagaraj___Anirudh-1080p.mp4?rlkey=4abh6y0y3yvtnz9i6ei7dz4lq&st=n3rv4m1u&raw=1", desc: "Thalapathy Vijay is Leo Das.", detailTag: "Action / LCU" }
     ];
 
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
@@ -464,6 +491,42 @@
         });
     }
 
+    // 🔥 NEW SCROLL RENDERING ENGINE (Horizontal & Ranks) 🔥
+    function renderScrollRow(data, target, isRanked = false, isLive = false, isLocal = false) {
+        const grid = document.getElementById(target);
+        grid.innerHTML = '';
+        data.forEach((m, index) => {
+            let clickAction = "";
+            if (isLive) clickAction = `playLiveChannel(${m.id})`;
+            else if (isLocal) clickAction = `playMovie(${m.id})`;
+            else clickAction = `playTMDBMovie(${m.id || m.mal_id}, '${m.type || m.media_type || 'tv'}')`;
+
+            let title = m.title || m.name || "Unknown";
+            let img = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : m.img;
+
+            // 🏆 RANKING BADGES LOGIC
+            let badgeHtml = "";
+            if (isRanked) {
+                let rankClass = "rank-other";
+                let rankIcon = `#${index + 1}`;
+                if (index === 0) { rankClass = "rank-1"; rankIcon = "💎 #1"; }
+                else if (index === 1) { rankClass = "rank-2"; rankIcon = "🥇 #2"; }
+                else if (index === 2) { rankClass = "rank-3"; rankIcon = "🥈 #3"; }
+                else if (index === 3) { rankClass = "rank-4"; rankIcon = "🥉 #4"; }
+                badgeHtml = `<div class="rank-badge ${rankClass}">${rankIcon}</div>`;
+            }
+
+            let imgStyle = isLive ? 'style="object-fit:contain; background:#fff; padding:5px;"' : '';
+
+            grid.innerHTML += `
+                <div class="movie-card" onclick="${clickAction}">
+                    ${badgeHtml}
+                    <img src="${img}" ${imgStyle}>
+                    <div class="movie-info"><p>${title}</p></div>
+                </div>`;
+        });
+    }
+
     function renderGrid(data, target, isLive = false) {
         const grid = document.getElementById(target); grid.innerHTML = '';
         data.forEach(m => { 
@@ -486,16 +549,19 @@
             // 2. LIVE TV PAGE RENDER
             renderGrid(liveChannels, 'all-live-grid', true);
 
-            // 3. VIP HINDI
-            renderGrid(movies, 'vip-hindi-grid');
-
-            // 4. ANIME FETCH
-            fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_API_KEY}&with_genres=16&with_original_language=ja&sort_by=popularity.desc`)
-            .then(r => r.json()).then(d => renderTMDBGrid(d.results.slice(0,6), 'anime-grid')).catch(e=>{});
-
-            // 5. TRENDING FETCH
+            // 3. RANKED TRENDING GLOBAL (Horizontal Scroll)
             fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${TMDB_API_KEY}`)
-            .then(r => r.json()).then(d => renderTMDBGrid(d.results.slice(0,18), 'movie-grid')).catch(e=>{});
+            .then(r => r.json()).then(d => renderScrollRow(d.results.slice(0, 10), 'trending-grid', true));
+
+            // 4. HARDCODED PERFECT ANIME ZONE (Horizontal)
+            renderScrollRow(exactAnimeList, 'anime-grid');
+
+            // 5. SWEET K-DRAMAS (Horizontal)
+            fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_API_KEY}&with_original_language=ko&sort_by=popularity.desc`)
+            .then(r => r.json()).then(d => renderScrollRow(d.results.slice(0, 10), 'kdrama-grid'));
+
+            // 6. VIP HINDI DUBBED (Local Horizontal)
+            renderScrollRow(movies, 'vip-hindi-grid', false, false, true);
 
             let slideIndex = 0;
             setInterval(() => {
@@ -511,7 +577,7 @@
         document.getElementById('continue-watching-section').style.display = 'block';
         const action = data.isTmdb ? `playTMDBMovie(${data.id}, '${data.type}', true)` : `playMovie(${data.id}, true)`;
         document.getElementById('continue-grid').innerHTML = `
-            <div class="movie-card" onclick="${action}" style="border: 2px solid var(--gold);">
+            <div class="movie-card" onclick="${action}" style="border: 2px solid var(--gold); flex: 0 0 115px;">
                 <img src="${data.img}">
                 <div class="movie-info" style="background:var(--gold); color:black;"><p style="color:black; font-weight:bold;">▶ PLAY: ${data.title}</p></div>
             </div>
@@ -649,7 +715,7 @@
         try {
             const simRes = await fetch(`https://api.themoviedb.org/3/${endpoint}/${id}/similar?api_key=${TMDB_API_KEY}&language=en-US&page=1`);
             const simData = await simRes.json();
-            renderTMDBGrid(simData.results.slice(0,6), 'sim-grid');
+            renderScrollRow(simData.results.slice(0,10), 'sim-grid');
         } catch(e) {}
     };
 
@@ -989,7 +1055,6 @@
                 document.getElementById('valEmail').innerText = user.email; document.getElementById('valDob').innerText = data.dob;
                 updateAvatarUI(data.avatarUrl, data.name);
                 
-                // FIXED THE BROKEN CONTINUE WATCHING BUG HERE
                 if(data.lastWatched && data.lastWatched.title && data.lastWatched.img) {
                     if(typeof data.lastWatched === 'object') { window.renderContinueWatching(data.lastWatched); } else {
                         const m = movies.find(x => x.id === data.lastWatched); if(m) window.renderContinueWatching({id: m.id, isTmdb: false, title: m.title, img: m.img});
@@ -1001,4 +1066,4 @@
     });
 </script>
 </body>
-                                                                </html>
+                </html>
