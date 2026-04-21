@@ -17,8 +17,7 @@
         header { background: rgba(17, 17, 17, 0.9); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); }
         .logo { color: var(--primary); font-size: 22px; font-weight: 900; letter-spacing: 1px; }
 
-        #searchOverlay, #livePage { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 3000; padding: 20px; flex-direction: column; overflow-y: auto; padding-bottom: 100px;}
-        
+        #searchOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 6000; padding: 20px; flex-direction: column; overflow-y: auto; }
         .search-bar-container { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
         #searchInput { flex: 1; background: #1a1a1a; border: 1px solid var(--primary); padding: 12px 20px; border-radius: 30px; color: white; outline: none; }
         .chip-container { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0 20px 0; }
@@ -150,10 +149,58 @@
         </div>
     </div>
 
-    <div id="onboardingOverlay" class="auth-overlay" style="display: none; z-index: 100005;">...</div>
-    <div id="passwordModal" class="action-modal">...</div>
-    <div id="avatarModal" class="action-modal">...</div>
-    <div id="splashScreen">...</div>
+    <div id="onboardingOverlay" class="auth-overlay" style="display: none; z-index: 100005;">
+        <div class="auth-box">
+            <h2 class="logo-text">WELCOME TO <span>ELITE</span></h2>
+            <h3 style="color:white; margin-bottom:15px; font-size:18px;">Apni Profile Banayein</h3>
+            <input type="text" id="userName" placeholder="Full Name (Real Name)">
+            <div style="text-align: left; margin-top: 15px;">
+                <label for="userDob" style="color: #bbb; font-size: 13px; margin-left: 5px;">Date of Birth 👇</label>
+                <input type="date" id="userDob">
+            </div>
+            <button onclick="saveUserProfile()">Start Streaming</button>
+        </div>
+    </div>
+
+    <div id="passwordModal" class="action-modal">
+        <div class="modal-content">
+            <div class="close-modal" onclick="closeModal('passwordModal')">✕</div>
+            <h3 style="color:white; margin-top:0;">Change Password</h3>
+            <p style="color:#888; font-size:12px;">Pehle apna purana password daalein verification ke liye.</p>
+            <input type="password" id="oldPass" placeholder="Purana Password">
+            <input type="password" id="newPass" placeholder="Naya Password">
+            <button onclick="updateUserPassword()">Update Password</button>
+        </div>
+    </div>
+
+    <div id="avatarModal" class="action-modal">
+        <div class="modal-content">
+            <div class="close-modal" onclick="closeModal('avatarModal')">✕</div>
+            <h3 style="color:white; margin-top:0;">Select Avatar</h3>
+            <div class="avatar-grid">
+                <img src="https://i.postimg.cc/W1rC8nq9/MV5BMDk5ODNj-Nz-Mt-Yz-I5Yy00Nm-I3LWIw-Yzct-MTFj-Zjcw-N2I2Yzk2Xk-Ey-Xk-Fqc-Gc-V1.jpg" class="avatar-option" onclick="selectAvatar(this.src)">
+                <img src="https://i.postimg.cc/DwfGrBHM/kv-1.jpg" class="avatar-option" onclick="selectAvatar(this.src)">
+                <img src="https://i.postimg.cc/sx5jTc4N/Screenshot-2026-04-16-22-20-03-85-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" class="avatar-option" onclick="selectAvatar(this.src)">
+                <img src="https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png" class="avatar-option" onclick="selectAvatar(this.src)">
+                <img src="https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg" class="avatar-option" onclick="selectAvatar(this.src)">
+                <div class="avatar-option" style="background: linear-gradient(45deg, var(--primary), #bc4ed8); display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; font-size:12px;" onclick="selectAvatar('')">TEXT</div>
+            </div>
+            <label for="galleryUpload" style="display:block; padding: 12px; background: var(--primary); color: black; font-weight: bold; border-radius: 12px; cursor: pointer; margin-top: 10px;">
+                📁 Upload from Gallery
+            </label>
+            <input type="file" id="galleryUpload" accept="image/*" style="display: none;" onchange="handleGalleryUpload(event)">
+            <p style="color:#888; font-size:10px; margin-top:10px;">Auto-compress on upload.</p>
+        </div>
+    </div>
+
+    <div id="splashScreen">
+        <div class="splash-click-area" onclick="openSplashMovie()"></div>
+        <div class="splash-top-bar"><div class="skip-btn" onclick="forceSkipSplash(event)">Skip <span id="splashTimer">4</span>s ⏭</div></div>
+        <div class="splash-content">
+            <h1 class="splash-logo-text"><span class="splash-elite-badge">⭐ ELITE</span>STEROMAX</h1>
+            <div class="splash-loading">LOADING...</div>
+        </div>
+    </div>
 
     <header>
         <div style="background:var(--gold); color:black; font-size:10px; font-weight:900; padding:4px 10px; border-radius:4px;">⭐ ELITE</div>
@@ -161,20 +208,56 @@
         <div style="font-size: 24px; cursor: pointer;" onclick="openSettings()">⚙️</div>
     </header>
 
-    <div id="settingsPage" class="full-page">...</div>
-    <div id="profilePage" class="full-page">...</div>
-    
-    <div id="searchOverlay">
-        <div class="search-bar-container">
-            <input type="text" id="searchInput" placeholder="Search Movies or Series..." oninput="doSearch()">
-            <div class="close-search" style="font-size: 24px; cursor:pointer;" onclick="switchNav('home', document.querySelector('.bottom-nav .nav-item'))">✕</div>
+    <div id="settingsPage" class="full-page">
+        <div class="page-header"><h2 style="margin:0; color:var(--gold);">⚙️ Settings</h2><div onclick="closeSettings()" style="font-size:30px; cursor:pointer;">✕</div></div>
+        <div class="settings-group">
+            <div class="settings-title">Account & Security</div>
+            <div class="settings-box">
+                <div class="set-item" onclick="openProfile()">Profile Details <span>></span></div>
+                <div class="set-item" onclick="openModal('passwordModal')">Change Password <span>></span></div>
+                <div class="set-item">Subscription Plan <span style="color:var(--primary); font-weight:bold;">Elite</span></div>
+            </div>
         </div>
-        <div class="chip-container">
-            <div class="chip" onclick="quickSearch('Avengers')">Avengers</div>
-            <div class="chip" onclick="quickSearch('Naruto')">Naruto</div>
-            <div class="chip" onclick="quickSearch('Demon Slayer')">Demon Slayer</div>
+        <div class="settings-group">
+            <div class="settings-title">Playback & Downloads</div>
+            <div class="settings-box">
+                <div class="set-item">Video Quality <span>Auto (1080p)</span></div>
+                <div class="set-item">Download Quality <span>High</span></div>
+            </div>
         </div>
-        <div id="search-results-grid" class="grid"></div>
+        <div class="settings-group">
+            <div class="settings-title">App Info</div>
+            <div class="settings-box">
+                <div class="set-item">App Version <span>v11.5 Pro Update</span></div>
+                <div class="set-item" style="color: #ff4444; font-weight:bold;" onclick="logoutUser()">🚪 Logout Account</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="profilePage" class="full-page">
+        <div class="page-header"><h2 style="margin:0; color:var(--primary);">My Profile</h2><div onclick="closeProfile()" style="font-size:30px; cursor:pointer;">✕</div></div>
+        <div class="avatar-container">
+            <div class="avatar" id="profileInitial">S</div>
+            <div class="edit-avatar-btn" onclick="openModal('avatarModal')">📷</div>
+        </div>
+        <div style="text-align:center; margin-bottom: 25px;">
+            <h2 id="displayProfileName" style="margin:0;">Loading...</h2>
+            <p style="color:var(--gold); font-size:12px; margin-top:5px; font-weight:bold;">⭐ ELITE MEMBER</p>
+        </div>
+        <div class="profile-details-box">
+            <div class="detail-item">
+                <div style="width: 100%;"><div class="detail-label">Full Name</div><div class="detail-value" id="valName">Loading...</div><input type="text" id="editName" class="detail-input"></div>
+            </div>
+            <div class="detail-item">
+                <div style="width: 100%;"><div class="detail-label">Registered Email</div><div class="detail-value" id="valEmail">Loading...</div></div>
+            </div>
+            <div class="detail-item">
+                <div style="width: 100%;"><div class="detail-label">Date of Birth</div><div class="detail-value" id="valDob">Loading...</div><input type="date" id="editDob" class="detail-input"></div>
+            </div>
+        </div>
+        <button class="action-btn" id="editProfileBtn" onclick="toggleEditProfile()">✏️ Edit Profile Information <span style="color:#666;">></span></button>
+        <button class="save-btn" id="saveProfileBtn" onclick="saveEditedProfile()">💾 Save Changes</button>
+        <button class="action-btn" onclick="openModal('passwordModal')">🔒 Change Password <span style="color:#666;">></span></button>
     </div>
 
     <div id="home">
@@ -209,6 +292,19 @@
         <p style="margin-left: 20px; color: #888; font-size: 12px; margin-top: 0;">Explore thousands of live channels globally.</p>
         
         <div class="grid" id="all-live-grid" style="margin-bottom: 20px;"></div>
+    </div>
+
+    <div id="searchOverlay">
+        <div class="search-bar-container">
+            <input type="text" id="searchInput" placeholder="Search Movies or Series..." oninput="doSearch()">
+            <div class="close-search" style="font-size: 24px; cursor:pointer;" onclick="switchNav('home', document.querySelector('.bottom-nav .nav-item'))">✕</div>
+        </div>
+        <div class="chip-container">
+            <div class="chip" onclick="quickSearch('Avengers')">Avengers</div>
+            <div class="chip" onclick="quickSearch('Naruto')">Naruto</div>
+            <div class="chip" onclick="quickSearch('Demon Slayer')">Demon Slayer</div>
+        </div>
+        <div id="search-results-grid" class="grid"></div>
     </div>
 
     <div id="playerModal" class="player">
@@ -278,56 +374,55 @@
     window.currentOpenMovieId = null;
     window.currentTmdbShowId = null;
 
-    // 🔥 SMART NAVIGATION SYSTEM 🔥
+    // PAGE NAVIGATION
     function switchNav(pageId, el) {
-        // Hide all main pages
         document.getElementById('home').style.display = 'none';
         document.getElementById('searchOverlay').style.display = 'none';
         document.getElementById('livePage').style.display = 'none';
         document.getElementById('profilePage').style.display = 'none';
         document.getElementById('settingsPage').style.display = 'none';
 
-        // Show selected page
         document.getElementById(pageId).style.display = (pageId === 'home' || pageId === 'livePage') ? 'block' : 'flex';
 
-        // Update active icon
         document.querySelectorAll('.bottom-nav .nav-item').forEach(item => item.classList.remove('active'));
         if(el) el.classList.add('active');
-        
         if(pageId === 'searchOverlay') document.getElementById('searchInput').focus();
     }
 
-    // 🔥 LIVE TV CHANNELS DATABASE (IPTV STYLE) 🔥
+    // MULTIPLE LIVE CHANNELS WITH WORKING IMAGES
     const liveChannels = [
         { 
             id: 101, title: "TATA IPL HINDI", type: "live", tag: "🔴 MATCH", screenTag: "Sports", screenTagColor: "#ff0000", 
-            img: "https://upload.wikimedia.org/wikipedia/en/thumb/8/84/Indian_Premier_League_Official_Logo.svg/1200px-Indian_Premier_League_Official_Logo.svg.png", 
+            img: "https://i.postimg.cc/mZz5jSFn/IMG-20260418-153418.png", 
             liveLink: "https://cmvlive.blogspot.com/2026/02/str-1-hindi.html?m=1", desc: "Watch TATA IPL 2026 Live. (Select Watch Now when player loads)", detailTag: "Cricket • HD" 
         },
         { 
-            id: 102, title: "Aaj Tak News", type: "live", tag: "🔴 NEWS", screenTag: "News", screenTagColor: "#ff0000", 
+            id: 102, title: "Star Sports 1", type: "live", tag: "🔴 SPORTS", screenTag: "Sports", screenTagColor: "#0066ff", 
+            img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Star_Sports_Logo.svg/1200px-Star_Sports_Logo.svg.png", 
+            liveLink: "https://catowrap.live/mrgamingbtsport2.m3u8", desc: "Star Sports 1 Live Stream.", detailTag: "Sports • Hindi" 
+        },
+        { 
+            id: 103, title: "Aaj Tak News", type: "live", tag: "🔴 NEWS", screenTag: "News", screenTagColor: "#ff0000", 
             img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Aaj_tak_logo.png/600px-Aaj_tak_logo.png", 
             liveLink: "https://aajtaklive-jitp.akamaized.net/hls/live/2014416/aajtak/aajtaklive/master.m3u8", desc: "Aaj Tak Live News 24x7.", detailTag: "News • Hindi" 
-        },
-        { 
-            id: 103, title: "DD Sports", type: "live", tag: "🔴 SPORTS", screenTag: "Sports", screenTagColor: "#0066ff", 
-            img: "https://upload.wikimedia.org/wikipedia/commons/e/ec/DD_Sports_logo.png", 
-            liveLink: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", desc: "DD Sports National Channel (Test Link).", detailTag: "Sports • National" 
-        },
-        { 
-            id: 104, title: "ABP News", type: "live", tag: "🔴 NEWS", screenTag: "News", screenTagColor: "#ffcc00", 
-            img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/ABP_News_logo.svg/1200px-ABP_News_logo.svg.png", 
-            liveLink: "https://abp-i.akamaihd.net/hls/live/765529/abphindi/master.m3u8", desc: "ABP News Live Stream.", detailTag: "News • Hindi" 
         }
     ];
 
-    // 🔥 LOCAL MOVIES (HINDI DUBBED VIP) 🔥
     const movies = [
         { id: 1, title: "Demon Slayer: Infinity Castle", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "https://i.postimg.cc/DwfGrBHM/kv-1.jpg", trailerLink: "https://www.dropbox.com/scl/fi/cmiemscnlidr0iszlal4z/Demon_Slayer__Kimetsu_no_Yaiba_Infinity_Castle___MAIN_TRAILER-1080p.mp4?rlkey=wy1z8i6bjh6janpqk2xaq5a32&raw=1", fullMovieLink: "https://steromax.4meplayer.com/#hn1h5", desc: "The final battle begins.", detailTag: "Official Trailer / Preview" },
-        { id: 2, title: "Pushpa 2: The Rule", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg", trailerLink: "https://www.dropbox.com/scl/fi/8ml1gt55dbwso60vgvrpg/Pushpa_2_-_The_Rule_Trailer__Hindi____Allu_Arjun___Sukumar___Rashmika_Mandanna___Fahadh_Faasil___DSP-1080p.mp4?rlkey=2b1euqnm0grgktur01br1lv1g&raw=1", desc: "Pushpa Raj returns.", detailTag: "Official Trailer / Preview" }
+        { id: 2, title: "Pushpa 2: The Rule", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg", trailerLink: "https://www.dropbox.com/scl/fi/8ml1gt55dbwso60vgvrpg/Pushpa_2_-_The_Rule_Trailer__Hindi____Allu_Arjun___Sukumar___Rashmika_Mandanna___Fahadh_Faasil___DSP-1080p.mp4?rlkey=2b1euqnm0grgktur01br1lv1g&raw=1", desc: "Pushpa Raj returns.", detailTag: "Official Trailer / Preview" },
+        { id: 3, title: "Demon Slayer Season 1", type: "series", tag: "NEW SERIES", screenTag: "New Series", screenTagColor: "#ff0000", img: "https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg", trailerLink: "https://www.dropbox.com/scl/fi/i2fsl28a3p8r5do86bhwu/Demon_Slayer___OP____Gurenge__by_LiSA_HD-1080p.mp4?rlkey=pe9xi0ivfsg7fx6to2z30qtv9&raw=1", desc: "Tanjiro's journey begins.", detailTag: "New Series / Preview",
+            episodes: [
+                { title: "Episode 1: Cruelty (Hindi)", embed: "https://steromax.4meplayer.com/#6rsmm", thumb: "https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png" },
+                { title: "Episode 2: Trainer Sakonji Urokodaki (Hindi)", embed: "https://steromax.4meplayer.com/#8ecyx", thumb: "https://i.postimg.cc/sx5jTc4N/Screenshot-2026-04-16-22-20-03-85-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" },
+                { title: "Episode 3: Sabito and Makomo (Hindi)", embed: "https://steromax.4meplayer.com/#6rhkf", thumb: "https://i.postimg.cc/mZz5jSFn/IMG-20260418-153418.png" }
+            ]
+        },
+        { id: 4, title: "LEO (Hindi) comingsoon", type: "movie", tag: "ACTION BLOCKBUSTER", screenTag: "Full Movie", screenTagColor: "#ffcc00", img: "https://i.postimg.cc/W1rC8nq9/MV5BMDk5ODNj-Nz-Mt-Yz-I5Yy00Nm-I3LWIw-Yzct-MTFj-Zjcw-N2I2Yzk2Xk-Ey-Xk-Fqc-Gc-V1.jpg", trailerLink: "https://www.dropbox.com/scl/fi/otoj18y42qn8l37xx0ttt/LEO__Hindi__Official_Trailer___Thalapathy_Vijay___Sanjay_Dutt___Lokesh_Kanagaraj___Anirudh-1080p.mp4?rlkey=4abh6y0y3yvtnz9i6ei7dz4lq&st=n3rv4m1u&raw=1", desc: "Thalapathy Vijay is Leo Das.", detailTag: "Action / LCU" }
     ];
 
-    // MODAL FUNCTIONS (Settings/Profile handled by switchNav mostly)
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
     function openSettings() { switchNav('settingsPage'); }
     function closeSettings() { switchNav('home', document.querySelector('.bottom-nav .nav-item')); }
     function openProfile() { switchNav('profilePage', document.querySelectorAll('.bottom-nav .nav-item')[3]); }
@@ -373,46 +468,46 @@
         const grid = document.getElementById(target); grid.innerHTML = '';
         data.forEach(m => { 
             let clickAction = isLive ? `playLiveChannel(${m.id})` : `playMovie(${m.id})`;
-            grid.innerHTML += `<div class="movie-card" onclick="${clickAction}"><img src="${m.img}" style="object-fit:contain; background:#fff; padding:10px;"><div class="movie-info"><p>${m.title}</p></div></div>`; 
+            grid.innerHTML += `<div class="movie-card" onclick="${clickAction}"><img src="${m.img}" style="object-fit:contain; background:#fff; padding:5px;"><div class="movie-info"><p>${m.title}</p></div></div>`; 
         });
     }
 
     async function initHome() {
-        const slider = document.getElementById('main-slider');
-        if(slider.innerHTML !== "") return; 
-        
-        movies.forEach(m => {
-            const tagClass = m.tag === "NEW SERIES" ? "tag-red" : "tag-blue";
-            slider.innerHTML += `<div class="hero-slide" onclick="playMovie(${m.id})" style="background-image: url('${m.img}');"><div class="slide-overlay"></div><div class="slide-content"><span class="${tagClass}">${m.tag}</span><p style="font-size:18px; font-weight:bold; margin:0;">${m.title}</p></div></div>`;
-        });
-
-        // 🔥 RENDER LIVE TV IN ITS DEDICATED TAB 🔥
-        renderGrid(liveChannels, 'all-live-grid', true);
-        
-        // Render Anime & Bollywood in Home
         try {
-            const animeRes = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_API_KEY}&with_genres=16&with_original_language=ja&sort_by=popularity.desc`);
-            const animeData = await animeRes.json();
-            renderTMDBGrid(animeData.results.slice(0,6), 'anime-grid');
-        } catch(e) {}
+            // 1. SLIDER
+            const slider = document.getElementById('main-slider');
+            if(slider.innerHTML === "") {
+                movies.forEach(m => {
+                    const tagClass = m.tag === "NEW SERIES" ? "tag-red" : "tag-blue";
+                    slider.innerHTML += `<div class="hero-slide" onclick="playMovie(${m.id})" style="background-image: url('${m.img}');"><div class="slide-overlay"></div><div class="slide-content"><span class="${tagClass}">${m.tag}</span><p style="font-size:18px; font-weight:bold; margin:0;">${m.title}</p></div></div>`;
+                });
+            }
 
-        renderGrid(movies, 'vip-hindi-grid');
+            // 2. LIVE TV PAGE RENDER
+            renderGrid(liveChannels, 'all-live-grid', true);
 
-        try {
-            const res = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${TMDB_API_KEY}`);
-            const data = await res.json();
-            renderTMDBGrid(data.results.slice(0,18), 'movie-grid');
-        } catch(e) {}
+            // 3. VIP HINDI
+            renderGrid(movies, 'vip-hindi-grid');
 
-        let slideIndex = 0;
-        setInterval(() => {
-            slideIndex = (slideIndex + 1) % movies.length;
-            slider.scrollTo({ left: slideIndex * slider.offsetWidth, behavior: 'smooth' });
-        }, 4000);
+            // 4. ANIME FETCH
+            fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_API_KEY}&with_genres=16&with_original_language=ja&sort_by=popularity.desc`)
+            .then(r => r.json()).then(d => renderTMDBGrid(d.results.slice(0,6), 'anime-grid')).catch(e=>{});
+
+            // 5. TRENDING FETCH
+            fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${TMDB_API_KEY}`)
+            .then(r => r.json()).then(d => renderTMDBGrid(d.results.slice(0,18), 'movie-grid')).catch(e=>{});
+
+            let slideIndex = 0;
+            setInterval(() => {
+                slideIndex = (slideIndex + 1) % movies.length;
+                if(slider) slider.scrollTo({ left: slideIndex * slider.offsetWidth, behavior: 'smooth' });
+            }, 4000);
+
+        } catch(err) { console.error("Init Error:", err); }
     }
 
     window.renderContinueWatching = function(data) {
-        if(!data || data.type === 'live') return; 
+        if(!data || !data.title || !data.img || data.type === 'live') return; 
         document.getElementById('continue-watching-section').style.display = 'block';
         const action = data.isTmdb ? `playTMDBMovie(${data.id}, '${data.type}', true)` : `playMovie(${data.id}, true)`;
         document.getElementById('continue-grid').innerHTML = `
@@ -504,7 +599,9 @@
             fullBtn.style.display = "block"; 
             epTabHead.style.display = "none";
             
-            fullBtn.onclick = function() { openEpisodeFullscreen(`https://autoembed.to/movie/tmdb/${id}`); };
+            fullBtn.onclick = function() {
+                openEpisodeFullscreen(`https://autoembed.to/movie/tmdb/${id}`);
+            };
 
             serverContainer.style.display = 'block';
             serverContainer.innerHTML = `
@@ -529,7 +626,9 @@
             let seasonOptions = '';
             if(media.seasons) {
                 media.seasons.forEach(s => {
-                    if(s.season_number > 0) { seasonOptions += `<option value="${s.season_number}">Season ${s.season_number}</option>`; }
+                    if(s.season_number > 0) { 
+                        seasonOptions += `<option value="${s.season_number}">Season ${s.season_number}</option>`;
+                    }
                 });
             }
 
@@ -577,8 +676,12 @@
                             </div>
                         </div>`;
                 });
-            } else { listDiv.innerHTML = '<p style="color:#888;">Episodes not found.</p>'; }
-        } catch(e) { listDiv.innerHTML = '<p style="color:red;">Error loading episodes.</p>'; }
+            } else {
+                listDiv.innerHTML = '<p style="color:#888;">Episodes not found.</p>';
+            }
+        } catch(e) {
+            listDiv.innerHTML = '<p style="color:red;">Error loading episodes.</p>';
+        }
     }
 
     window.playMovie = function(id, autoPlay = false) {
@@ -616,8 +719,11 @@
         if(currentMovie.type === "movie") {
             fullBtn.style.display = "block"; document.getElementById('ep-tab-head').style.display = "none";
             fullBtn.onclick = function() {
-                if(currentMovie.fullMovieLink) { openEpisodeFullscreen(currentMovie.fullMovieLink); } 
-                else { alert("Bhai, ye movie HD mein upload ho rahi hai ya iska link update hona baaki hai! 🔥"); }
+                if(currentMovie.fullMovieLink) {
+                    openEpisodeFullscreen(currentMovie.fullMovieLink);
+                } else {
+                    alert("Bhai, ye movie HD mein upload ho rahi hai ya iska link update hona baaki hai! 🔥");
+                }
             };
             if(autoPlay) fullBtn.click();
         } else {
@@ -649,9 +755,12 @@
                 const hls = new Hls();
                 hls.loadSource(link);
                 hls.attachMedia(videoPlayer);
-                hls.on(Hls.Events.MANIFEST_PARSED, function() { videoPlayer.play(); });
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    videoPlayer.play();
+                });
             } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
-                videoPlayer.src = link; videoPlayer.play();
+                videoPlayer.src = link;
+                videoPlayer.play();
             }
         } else {
             videoPlayer.style.display = 'none';
@@ -666,10 +775,18 @@
     function closeEpisode() { 
         const iframePlayer = document.getElementById('episodeFrame');
         const videoPlayer = document.getElementById('liveVideoPlayer');
-        iframePlayer.src = ""; videoPlayer.pause(); videoPlayer.src = "";
+        
+        iframePlayer.src = ""; 
+        videoPlayer.pause();
+        videoPlayer.src = "";
+
         document.getElementById('fsPlayerModal').style.display = 'none'; 
-        if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(e => {});
-        if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+        if (document.fullscreenElement && document.exitFullscreen) {
+            document.exitFullscreen().catch(e => {});
+        }
+        if (screen.orientation && screen.orientation.unlock) {
+            screen.orientation.unlock();
+        }
     }
 
     function switchTab(idx) { 
@@ -871,7 +988,9 @@
                 document.getElementById('valName').innerText = data.name; document.getElementById('displayProfileName').innerText = data.name;
                 document.getElementById('valEmail').innerText = user.email; document.getElementById('valDob').innerText = data.dob;
                 updateAvatarUI(data.avatarUrl, data.name);
-                if(data.lastWatched) {
+                
+                // FIXED THE BROKEN CONTINUE WATCHING BUG HERE
+                if(data.lastWatched && data.lastWatched.title && data.lastWatched.img) {
                     if(typeof data.lastWatched === 'object') { window.renderContinueWatching(data.lastWatched); } else {
                         const m = movies.find(x => x.id === data.lastWatched); if(m) window.renderContinueWatching({id: m.id, isTmdb: false, title: m.title, img: m.img});
                     }
@@ -882,4 +1001,4 @@
     });
 </script>
 </body>
-    </html>
+                                                                </html>
