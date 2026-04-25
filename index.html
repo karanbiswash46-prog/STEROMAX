@@ -34,32 +34,27 @@
         .tag-red { background: #ff0000; color: white; font-size: 10px; font-weight: bold; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
         .tag-blue { background: #0066ff; color: white; font-size: 10px; font-weight: bold; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
 
-        /* 🔥 HORIZONTAL SCROLL CSS (Line se Movies) 🔥 */
+        /* 🔥 HORIZONTAL SCROLL CSS 🔥 */
         .scroll-row { display: flex; overflow-x: auto; gap: 12px; padding: 0 15px; scrollbar-width: none; scroll-behavior: smooth; }
         .scroll-row::-webkit-scrollbar { display: none; }
         
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 15px; }
         
-        /* 🔥 POSTER FIX PROBLEM: Native aspect-ratio 2:3 🔥 */
-        .movie-card { background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid #252525; cursor: pointer; position: relative; aspect-ratio: 2 / 3.3; display: flex; flex-direction: column; }
-        
-        /* Adjust for horizontal cards */
+        /* Fixed width for scrollable cards */
         .scroll-row .movie-card { flex: 0 0 120px; } 
         .grid .movie-card { flex: auto; width: 100%;}
 
-        /* Movie Images Fixed */
-        .movie-card img { width: 100%; height: 100%; object-fit: cover; border-bottom: 1px solid #222; }
-
-        /* Movie info neat adjustment */
+        .movie-card { background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid #252525; cursor: pointer; position: relative; aspect-ratio: 2 / 3.3; display: flex; flex-direction: column;}
+        .movie-card img { width: 100%; height: 100%; object-fit: cover; border-bottom: 1px solid #222; background: #000; }
         .movie-info { padding: 8px 4px; text-align: center; height: 35px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3);}
         .movie-info p { margin: 0; font-size: 10px; color: #eee; font-weight: bold; white-space: wrap; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* 🏆 NEW PRO RANK NUMBERS CSS (Diamond/Gold/Silver large) 🏆 */
-        .rank-badge { position: absolute; bottom: 30px; left: 0; font-size: 55px; font-weight: 900; z-index: 10; margin: 0; padding: 0 5px; line-height: 1; -webkit-text-stroke: 1.5px black; text-shadow: 2px 2px 10px rgba(0,0,0,0.9); font-family: 'Arial Narrow', 'Segoe UI', sans-serif;}
-        .rank-1 { color: #b9f2ff; /* Diamond Color text */ }
-        .rank-2 { color: #fff200; /* Gold Color text */ }
-        .rank-3 { color: #e0e0e0; /* Silver Color text */ }
-        .rank-4 { color: #cd7f32; /* Bronze Color text */ }
+        /* 🏆 RANKING BADGES CSS 🏆 */
+        .rank-badge { position: absolute; bottom: 30px; left: 0; font-size: 55px; font-weight: 900; z-index: 10; margin: 0; padding: 0 5px; line-height: 1; -webkit-text-stroke: 1.5px black; text-shadow: 2px 2px 10px rgba(0,0,0,0.9); font-family: 'Arial Narrow', sans-serif;}
+        .rank-1 { color: #b9f2ff; }
+        .rank-2 { color: #fff200; }
+        .rank-3 { color: #e0e0e0; }
+        .rank-4 { color: #cd7f32; }
         .rank-other { color: rgba(255,255,255,0.6); -webkit-text-stroke: 1px black;}
 
         /* --- BOTTOM NAV --- */
@@ -151,8 +146,6 @@
         .comment-input-area button { padding: 12px 20px; background: var(--primary); color: black; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
         .live-comment { background: #111; padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #222; display: flex; gap: 12px; }
         .c-avatar { width: 35px; height: 35px; background: linear-gradient(45deg, var(--gold), #ff8800); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 16px; flex-shrink: 0; background-size: cover; background-position: center;}
-        
-        @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
     </style>
 </head>
 <body>
@@ -192,7 +185,7 @@
         <div class="modal-content">
             <div class="close-modal" onclick="closeModal('passwordModal')">✕</div>
             <h3 style="color:white; margin-top:0;">Change Password</h3>
-            <p style="color:#888; font-size:12px;">Pehle apna purana password daalein verification ke liye.</p>
+            <p style="color:#888; font-size:12px;">Pehle apna purana password daalein.</p>
             <input type="password" id="oldPass" placeholder="Purana Password">
             <input type="password" id="newPass" placeholder="Naya Password">
             <button onclick="updateUserPassword()">Update Password</button>
@@ -215,7 +208,6 @@
                 📁 Upload from Gallery
             </label>
             <input type="file" id="galleryUpload" accept="image/*" style="display: none;" onchange="handleGalleryUpload(event)">
-            <p style="color:#888; font-size:10px; margin-top:10px;">Auto-compress on upload.</p>
         </div>
     </div>
 
@@ -245,16 +237,9 @@
             </div>
         </div>
         <div class="settings-group">
-            <div class="settings-title">Playback & Downloads</div>
-            <div class="settings-box">
-                <div class="set-item">Video Quality <span>Auto (1080p)</span></div>
-                <div class="set-item">Download Quality <span>High</span></div>
-            </div>
-        </div>
-        <div class="settings-group">
             <div class="settings-title">App Info</div>
             <div class="settings-box">
-                <div class="set-item">App Version <span>v13.0 Pro Update</span></div>
+                <div class="set-item">App Version <span>v13.1 Stable Fix</span></div>
                 <div class="set-item" style="color: #ff4444; font-weight:bold;" onclick="logoutUser()">🚪 Logout Account</div>
             </div>
         </div>
@@ -324,7 +309,6 @@
             Universal Live TV
         </h2>
         <p style="margin-left: 20px; color: #888; font-size: 12px; margin-top: 0;">Explore thousands of live channels globally.</p>
-        
         <div class="grid" id="all-live-grid" style="margin-bottom: 20px;"></div>
     </div>
 
@@ -352,7 +336,6 @@
         <div class="p-content">
             <h2 id="p-title" style="margin:0; font-size: 24px; padding: 20px 20px 5px 20px;"></h2>
             <p id="dynamic-tag" style="color:var(--gold); font-size:12px; margin-bottom:15px; padding: 0 20px;"></p>
-            
             <button class="watch-btn" id="fullMovieBtn" style="display: none;">▶ WATCH FULL MOVIE</button>
             
             <div class="tabs">
@@ -379,9 +362,7 @@
                 <div id="comments-list"><p style="color:#666; font-size:13px;">Loading comments...</p></div>
             </div>
 
-            <div id="tab-poster" class="tab-content">
-                <div id="trailer-poster"></div>
-            </div>
+            <div id="tab-poster" class="tab-content"><div id="trailer-poster"></div></div>
         </div>
     </div>
 
@@ -408,7 +389,7 @@
     window.currentOpenMovieId = null;
     window.currentTmdbShowId = null;
 
-    // PAGE NAVIGATION
+    // Navigation Switcher
     function switchNav(pageId, el) {
         document.getElementById('home').style.display = 'none';
         document.getElementById('searchOverlay').style.display = 'none';
@@ -423,14 +404,14 @@
         if(pageId === 'searchOverlay') document.getElementById('searchInput').focus();
     }
 
-    // MULTIPLE LIVE CHANNELS
+    // 🔥 LIVE CHANNELS WITH FIXED IMAGES 🔥
     const liveChannels = [
-        { id: 101, title: "TATA IPL HINDI", type: "live", tag: "🔴 MATCH", screenTag: "Sports", screenTagColor: "#ff0000", img: "https://i.postimg.cc/9X12mGL3/Screenshot-2026-04-20-19-23-50-30-dba69a5e82e939c3ddef13f99a115ca3.jpg", liveLink: "https://cmvlive.blogspot.com/2026/02/str-1-hindi.html?m=1", desc: "Watch TATA IPL 2026 Live. (Select Watch Now when player loads)", detailTag: "Cricket • HD" },
-        { id: 102, title: "Star Sports 1", type: "live", tag: "🔴 SPORTS", screenTag: "Sports", screenTagColor: "#0066ff", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Star_Sports_Logo.svg/1200px-Star_Sports_Logo.svg.png", liveLink: "https://catowrap.live/mrgamingbtsport2.m3u8", desc: "Star Sports 1 Live Stream.", detailTag: "Sports • Hindi" },
-        { id: 103, title: "Aaj Tak News", type: "live", tag: "🔴 NEWS", screenTag: "News", screenTagColor: "#ff0000", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Aaj_tak_logo.png/600px-Aaj_tak_logo.png", liveLink: "https://feeds.intoday.in/aajtak/api/aajtakhd/master.m3u8", desc: "Aaj Tak Live News 24x7.", detailTag: "News • Hindi" }
+        { id: 101, title: "TATA IPL HINDI", type: "live", tag: "🔴 MATCH", screenTag: "Sports", screenTagColor: "#ff0000", img: "https://i.postimg.cc/mZz5jSFn/IMG-20260418-153418.png", liveLink: "https://cmvlive.blogspot.com/2026/02/str-1-hindi.html?m=1", desc: "Watch TATA IPL 2026 Live. (Select Watch Now when player loads)", detailTag: "Cricket • HD" },
+        { id: 102, title: "Star Sports 1", type: "live", tag: "🔴 SPORTS", screenTag: "Sports", screenTagColor: "#0066ff", img: "https://i.postimg.cc/k47ZzJXX/star-sports-logo.jpg", liveLink: "https://catowrap.live/mrgamingbtsport2.m3u8", desc: "Star Sports 1 Live Stream.", detailTag: "Sports • Hindi" },
+        { id: 103, title: "Aaj Tak News", type: "live", tag: "🔴 NEWS", screenTag: "News", screenTagColor: "#ff0000", img: "https://i.postimg.cc/tC1nS1zL/aajtak.png", liveLink: "https://feeds.intoday.in/aajtak/api/aajtakhd/master.m3u8", desc: "Aaj Tak Live News 24x7.", detailTag: "News • Hindi" }
     ];
 
-    // 🔥 PERFECT ANIME ARRAY (From your screenshots) 🔥
+    // ANIME LIST
     const exactAnimeList = [
         { id: 95479, title: "Jujutsu Kaisen", img: "https://image.tmdb.org/t/p/w500/1v0E2P6A4v9yWlG4kK4907BtaM1.jpg", type: "tv" },
         { id: 98114, title: "Overflow", img: "https://image.tmdb.org/t/p/w500/8d8H05d3x2i8Xo1YtIq6XwzVzS0.jpg", type: "tv" },
@@ -443,13 +424,7 @@
     const movies = [
         { id: 1, title: "Demon Slayer: Infinity Castle", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "https://i.postimg.cc/DwfGrBHM/kv-1.jpg", trailerLink: "https://www.dropbox.com/scl/fi/cmiemscnlidr0iszlal4z/Demon_Slayer__Kimetsu_no_Yaiba_Infinity_Castle___MAIN_TRAILER-1080p.mp4?rlkey=wy1z8i6bjh6janpqk2xaq5a32&raw=1", fullMovieLink: "https://steromax.4meplayer.com/#hn1h5", desc: "The final battle begins.", detailTag: "Official Trailer / Preview" },
         { id: 2, title: "Pushpa 2: The Rule", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg", trailerLink: "https://www.dropbox.com/scl/fi/8ml1gt55dbwso60vgvrpg/Pushpa_2_-_The_Rule_Trailer__Hindi____Allu_Arjun___Sukumar___Rashmika_Mandanna___Fahadh_Faasil___DSP-1080p.mp4?rlkey=2b1euqnm0grgktur01br1lv1g&raw=1", desc: "Pushpa Raj returns.", detailTag: "Official Trailer / Preview" },
-        { id: 3, title: "Demon Slayer Season 1", type: "series", tag: "NEW SERIES", screenTag: "New Series", screenTagColor: "#ff0000", img: "https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg", trailerLink: "https://www.dropbox.com/scl/fi/i2fsl28a3p8r5do86bhwu/Demon_Slayer___OP____Gurenge__by_LiSA_HD-1080p.mp4?rlkey=pe9xi0ivfsg7fx6to2z30qtv9&raw=1", desc: "Tanjiro's journey begins.", detailTag: "New Series / Preview",
-            episodes: [
-                { title: "Episode 1: Cruelty (Hindi)", embed: "https://steromax.4meplayer.com/#6rsmm", thumb: "https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png" },
-                { title: "Episode 2: Trainer Sakonji Urokodaki (Hindi)", embed: "https://steromax.4meplayer.com/#8ecyx", thumb: "https://i.postimg.cc/sx5jTc4N/Screenshot-2026-04-16-22-20-03-85-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" },
-                { title: "Episode 3: Sabito and Makomo (Hindi)", embed: "https://steromax.4meplayer.com/#6rhkf", thumb: "https://i.postimg.cc/mZz5jSFn/IMG-20260418-153418.png" }
-            ]
-        },
+        { id: 3, title: "Demon Slayer Season 1", type: "series", tag: "NEW SERIES", screenTag: "New Series", screenTagColor: "#ff0000", img: "https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg", trailerLink: "https://www.dropbox.com/scl/fi/i2fsl28a3p8r5do86bhwu/Demon_Slayer___OP____Gurenge__by_LiSA_HD-1080p.mp4?rlkey=pe9xi0ivfsg7fx6to2z30qtv9&raw=1", desc: "Tanjiro's journey begins.", detailTag: "New Series / Preview", episodes: [{ title: "Episode 1 (Hindi)", embed: "https://steromax.4meplayer.com/#6rsmm", thumb: "https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png" }] },
         { id: 4, title: "LEO (Hindi)", type: "movie", tag: "ACTION BLOCKBUSTER", screenTag: "Full Movie", screenTagColor: "#ffcc00", img: "https://i.postimg.cc/W1rC8nq9/MV5BMDk5ODNj-Nz-Mt-Yz-I5Yy00Nm-I3LWIw-Yzct-MTFj-Zjcw-N2I2Yzk2Xk-Ey-Xk-Fqc-Gc-V1.jpg", trailerLink: "https://www.dropbox.com/scl/fi/otoj18y42qn8l37xx0ttt/LEO__Hindi__Official_Trailer___Thalapathy_Vijay___Sanjay_Dutt___Lokesh_Kanagaraj___Anirudh-1080p.mp4?rlkey=4abh6y0y3yvtnz9i6ei7dz4lq&st=n3rv4m1u&raw=1", desc: "Thalapathy Vijay is Leo Das.", detailTag: "Action / LCU" }
     ];
 
@@ -486,9 +461,9 @@
             if(type !== 'movie' && type !== 'tv') return; 
             const title = m.title || m.name;
             const img = 'https://image.tmdb.org/t/p/w500' + m.poster_path;
-            const tagHtml = type === 'tv' ? `<span style="position:absolute; top:5px; left:5px; background:red; color:white; font-size:8px; padding:2px 5px; border-radius:3px; font-weight:bold;">SERIES</span>` : '';
+            const tagHtml = type === 'tv' ? `<span style="position:absolute; top:5px; left:5px; background:red; color:white; font-size:8px; padding:2px 5px; border-radius:3px; font-weight:bold; z-index:5;">SERIES</span>` : '';
             grid.innerHTML += `
-                <div class="movie-card" style="position:relative;" onclick="playTMDBMovie(${m.id}, '${type}'); closeSearch()">
+                <div class="movie-card" onclick="playTMDBMovie(${m.id}, '${type}'); closeSearch()">
                     ${tagHtml}
                     <img src="${img}">
                     <div class="movie-info"><p>${title}</p></div>
@@ -496,7 +471,7 @@
         });
     }
 
-    // 🔥 NEW SCROLL RENDERING ENGINE (Horizontal, Standard Posters Fix) 🔥
+    // Scroll Row Rendering
     function renderScrollRow(data, target, isLocal = false) {
         const grid = document.getElementById(target);
         grid.innerHTML = '';
@@ -513,17 +488,17 @@
         });
     }
 
-    // 🔥 🏆 NEW RANK ROW RENDERING ENGINE (Big Number Overlays) 🏆 🔥
+    // 🏆 RANK ROW RENDERING (Big Overlays) 🏆
     function renderRankRow(data, target) {
         const grid = document.getElementById(target);
         grid.innerHTML = '';
         data.forEach((m, index) => {
+            if(!m.poster_path) return;
             const type = m.media_type || 'tv';
             const id = m.id;
             const title = m.title || m.name || "Unknown";
-            const img = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : 'https://i.postimg.cc/mZz5jSFn/IMG-20260418-153418.png'; // Placeholder
+            const img = `https://image.tmdb.org/t/p/w500${m.poster_path}`;
 
-            // 🏆 NEW RANK NUMBERS LOGIC (Example See style Overlay)
             let rankClass = "rank-other";
             if (index === 0) rankClass = "rank-1";
             else if (index === 1) rankClass = "rank-2";
@@ -534,23 +509,27 @@
                 <div class="movie-card" onclick="playTMDBMovie(${id}, '${type}')">
                     <img src="${img}" alt="${title}">
                     <div class="rank-badge ${rankClass}">${index + 1}</div>
-                    <div class="movie-info"><p>${title}</p></div>
                 </div>`;
         });
     }
 
-    function renderGrid(data, target, isLive = false) {
+    // Live TV Grid Rendering
+    function renderLiveGrid(data, target) {
         const grid = document.getElementById(target); grid.innerHTML = '';
         data.forEach(m => { 
-            let clickAction = isLive ? `playLiveChannel(${m.id})` : `playMovie(${m.id})`;
-            // Maintain pichla grid image aspect ratio fix
-            grid.innerHTML += `<div class="movie-card" onclick="${clickAction}"><img src="${m.img}" alt="${m.title}" style="object-fit:contain; background:#fff; padding:5px;"><div class="movie-info"><p>${m.title}</p></div></div>`; 
+            grid.innerHTML += `
+                <div class="movie-card" onclick="playLiveChannel(${m.id})">
+                    <div style="height:100%; width:100%; display:flex; align-items:center; justify-content:center; background:#fff;">
+                        <img src="${m.img}" alt="${m.title}" style="object-fit:contain; padding:10px; width:90%; height:90%;">
+                    </div>
+                    <div class="movie-info"><p>${m.title}</p></div>
+                </div>`; 
         });
     }
 
     async function initHome() {
         try {
-            // 1. SLIDER (Pichla Logic Maintain)
+            // Slider setup
             const slider = document.getElementById('main-slider');
             if(slider.innerHTML === "") {
                 movies.forEach(m => {
@@ -559,20 +538,18 @@
                 });
             }
 
-            // 2. LIVE TV PAGE RENDER
-            renderGrid(liveChannels, 'all-live-grid', true);
+            // Live Grid
+            renderLiveGrid(liveChannels, 'all-live-grid');
 
-            // 🔥 3. VIP HINDI DUBBED (NOW FIRST SECTION) 🔥
-            renderScrollRow(movies, 'vip-hindi-grid', true); // isLocal=true
+            // First Section: VIP HINDI
+            renderScrollRow(movies, 'vip-hindi-grid', true); 
 
-            // 🔥 4. RANK SECTION (Horizontal with Big Numbers) 🔥
+            // RANKED SECTION
             fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${TMDB_API_KEY}`)
             .then(r => r.json()).then(d => renderRankRow(d.results.slice(0, 10), 'rank-grid'));
 
-            // 5. HARDCODED PERFECT ANIME ZONE (Horizontal)
+            // Anime & K-Drama
             renderScrollRow(exactAnimeList, 'anime-grid');
-
-            // 6. SWEET K-DRAMAS (Horizontal)
             fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_API_KEY}&with_original_language=ko&sort_by=popularity.desc`)
             .then(r => r.json()).then(d => renderScrollRow(d.results.slice(0, 10), 'kdrama-grid'));
 
@@ -589,7 +566,6 @@
         if(!data || !data.title || !data.img || data.type === 'live') return; 
         document.getElementById('continue-watching-section').style.display = 'block';
         const action = data.isTmdb ? `playTMDBMovie(${data.id}, '${data.type}', true)` : `playMovie(${data.id}, true)`;
-        // Continue grid maintains horizontal fix
         document.getElementById('continue-grid').innerHTML = `
             <div class="movie-card" onclick="${action}" style="border: 2px solid var(--gold); flex: 0 0 120px;">
                 <img src="${data.img}" alt="${data.title}">
@@ -598,6 +574,7 @@
         `;
     };
 
+    // Video Players Logic
     window.playLiveChannel = function(id) {
         const channel = liveChannels.find(x => x.id === id);
         window.currentOpenMovieId = "live_" + id;
@@ -678,10 +655,7 @@
         if (type === 'movie') {
             fullBtn.style.display = "block"; 
             epTabHead.style.display = "none";
-            
-            fullBtn.onclick = function() {
-                openEpisodeFullscreen(`https://autoembed.to/movie/tmdb/${id}`);
-            };
+            fullBtn.onclick = function() { openEpisodeFullscreen(`https://autoembed.to/movie/tmdb/${id}`); };
 
             serverContainer.style.display = 'block';
             serverContainer.innerHTML = `
@@ -690,13 +664,10 @@
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
                         <button style="flex:1 1 45%; padding:10px; background:#222; color:white; border:1px solid var(--primary); border-radius:8px; font-weight:bold; cursor:pointer;" onclick="openEpisodeFullscreen('https://autoembed.to/movie/tmdb/${id}')">Server 1 (VIP)</button>
                         <button style="flex:1 1 45%; padding:10px; background:#222; color:white; border:1px solid #444; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="openEpisodeFullscreen('https://vidsrc.me/embed/movie?tmdb=${id}')">Server 2</button>
-                        <button style="flex:1 1 45%; padding:10px; background:#222; color:white; border:1px solid #444; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="openEpisodeFullscreen('https://vidsrc.to/embed/movie/${id}')">Server 3</button>
-                        <button style="flex:1 1 45%; padding:10px; background:#222; color:white; border:1px solid #444; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="openEpisodeFullscreen('https://embed.su/embed/movie/${id}')">Server 4</button>
                     </div>
                 </div>
             `;
             if(autoPlay) fullBtn.click();
-            
         } else {
             fullBtn.style.display = "none"; 
             serverContainer.style.display = "none";
@@ -706,12 +677,9 @@
             let seasonOptions = '';
             if(media.seasons) {
                 media.seasons.forEach(s => {
-                    if(s.season_number > 0) { 
-                        seasonOptions += `<option value="${s.season_number}">Season ${s.season_number}</option>`;
-                    }
+                    if(s.season_number > 0) seasonOptions += `<option value="${s.season_number}">Season ${s.season_number}</option>`;
                 });
             }
-
             epContainer.innerHTML = `
                 <div style="margin-bottom: 15px;">
                     <select id="season-select" style="background:#222; color:var(--gold); padding:10px; border:1px solid #444; border-radius:8px; width:100%; font-weight:bold; outline:none;" onchange="loadTMDBSeason(this.value)">
@@ -720,7 +688,6 @@
                 </div>
                 <div id="tmdb-episodes-list"><p style="color:#888;">Loading episodes...</p></div>
             `;
-            
             loadTMDBSeason(1);
             if(autoPlay) switchTab(1);
         }
@@ -729,14 +696,13 @@
         try {
             const simRes = await fetch(`https://api.themoviedb.org/3/${endpoint}/${id}/similar?api_key=${TMDB_API_KEY}&language=en-US&page=1`);
             const simData = await simRes.json();
-            // Recommended keeps standard posters fix
             renderScrollRow(simData.results.slice(0,10), 'sim-grid');
         } catch(e) {}
     };
 
     window.loadTMDBSeason = async function(seasonNumber) {
         const listDiv = document.getElementById('tmdb-episodes-list');
-        listDiv.innerHTML = '<p style="color:#888;">Fetching episodes from TMDB...</p>';
+        listDiv.innerHTML = '<p style="color:#888;">Fetching episodes...</p>';
         try {
             const sRes = await fetch(`https://api.themoviedb.org/3/tv/${window.currentTmdbShowId}/season/${seasonNumber}?api_key=${TMDB_API_KEY}&language=en-US`);
             const sData = await sRes.json();
@@ -745,11 +711,10 @@
                 sData.episodes.forEach(ep => {
                     let epImg = ep.still_path ? 'https://image.tmdb.org/t/p/w300' + ep.still_path : '';
                     let epLink = `https://vidsrc.me/embed/tv?tmdb=${window.currentTmdbShowId}&season=${seasonNumber}&episode=${ep.episode_number}`;
-                    
                     listDiv.innerHTML += `
                         <div style="display:flex; align-items:center; gap:12px; background:#111; padding:12px; border-radius:10px; margin-bottom:8px; border:1px solid #222; cursor:pointer;" onclick="openEpisodeFullscreen('${epLink}')">
                             <div style="width:80px; height:45px; border-radius:5px; overflow:hidden; flex-shrink:0; background:#222; display:flex; justify-content:center; align-items:center;">
-                                ${epImg ? `<img src="${epImg}" style="width:100%;height:100%;object-fit:cover">` : `<span style="color:#555; font-size:10px;">No Image</span>`}
+                                ${epImg ? `<img src="${epImg}" style="width:100%;height:100%;object-fit:cover">` : `<span style="color:#555; font-size:10px;">Play</span>`}
                             </div>
                             <div>
                                 <b style="color:var(--gold); font-size:12px;">S${seasonNumber} E${ep.episode_number}</b>
@@ -757,12 +722,8 @@
                             </div>
                         </div>`;
                 });
-            } else {
-                listDiv.innerHTML = '<p style="color:#888;">Episodes not found.</p>';
-            }
-        } catch(e) {
-            listDiv.innerHTML = '<p style="color:red;">Error loading episodes.</p>';
-        }
+            } else { listDiv.innerHTML = '<p style="color:#888;">Episodes not found.</p>'; }
+        } catch(e) { listDiv.innerHTML = '<p style="color:red;">Error loading.</p>'; }
     }
 
     window.playMovie = function(id, autoPlay = false) {
@@ -800,11 +761,8 @@
         if(currentMovie.type === "movie") {
             fullBtn.style.display = "block"; document.getElementById('ep-tab-head').style.display = "none";
             fullBtn.onclick = function() {
-                if(currentMovie.fullMovieLink) {
-                    openEpisodeFullscreen(currentMovie.fullMovieLink);
-                } else {
-                    alert("Bhai, ye movie HD mein upload ho rahi hai ya iska link update hona baaki hai! 🔥");
-                }
+                if(currentMovie.fullMovieLink) { openEpisodeFullscreen(currentMovie.fullMovieLink); } 
+                else { alert("Movie link update hona baaki hai! 🔥"); }
             };
             if(autoPlay) fullBtn.click();
         } else {
@@ -815,7 +773,6 @@
             });
             if(autoPlay) switchTab(1);
         }
-        
         document.getElementById('playerModal').style.display = 'flex'; switchTab(0); 
         document.getElementById('sim-grid').innerHTML = '';
     }
@@ -825,49 +782,29 @@
         const fsModal = document.getElementById("fsPlayerModal");
         const iframePlayer = document.getElementById('episodeFrame');
         const videoPlayer = document.getElementById('liveVideoPlayer');
-
         fsModal.style.display = 'block';
 
         if (isLiveStream && link.includes('.m3u8')) {
-            iframePlayer.style.display = 'none';
-            videoPlayer.style.display = 'block';
-            
+            iframePlayer.style.display = 'none'; videoPlayer.style.display = 'block';
             if (Hls.isSupported()) {
-                const hls = new Hls();
-                hls.loadSource(link);
-                hls.attachMedia(videoPlayer);
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    videoPlayer.play();
-                });
+                const hls = new Hls(); hls.loadSource(link); hls.attachMedia(videoPlayer);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() { videoPlayer.play(); });
             } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
-                videoPlayer.src = link;
-                videoPlayer.play();
+                videoPlayer.src = link; videoPlayer.play();
             }
         } else {
-            videoPlayer.style.display = 'none';
-            iframePlayer.style.display = 'block';
-            iframePlayer.src = link;
+            videoPlayer.style.display = 'none'; iframePlayer.style.display = 'block'; iframePlayer.src = link;
         }
-
         if (fsModal.requestFullscreen) fsModal.requestFullscreen();
         if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(e => {});
     }
 
     function closeEpisode() { 
-        const iframePlayer = document.getElementById('episodeFrame');
-        const videoPlayer = document.getElementById('liveVideoPlayer');
-        
-        iframePlayer.src = ""; 
-        videoPlayer.pause();
-        videoPlayer.src = "";
-
+        document.getElementById('episodeFrame').src = ""; 
+        document.getElementById('liveVideoPlayer').pause(); document.getElementById('liveVideoPlayer').src = "";
         document.getElementById('fsPlayerModal').style.display = 'none'; 
-        if (document.fullscreenElement && document.exitFullscreen) {
-            document.exitFullscreen().catch(e => {});
-        }
-        if (screen.orientation && screen.orientation.unlock) {
-            screen.orientation.unlock();
-        }
+        if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(e => {});
+        if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
     }
 
     function switchTab(idx) { 
@@ -906,1027 +843,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDFHIr_2W-jRr97x1HVY9tpyWaI2QqtY9E",
-      authDomain: "stero-max.firebaseapp.com",
-      projectId: "stero-max",
-      storageBucket: "stero-max.firebasestorage.app",
-      messagingSenderId: "101516996592",
-      appId: "1:101516996592:web:7f90b3f4b9805bf74ab735",
-      measurementId: "G-BGN26VB04V"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    let isLoginMode = true;
-
-    window.toggleAuth = () => {
-        isLoginMode = !isLoginMode;
-        document.getElementById('authTitle').innerText = isLoginMode ? 'Login' : 'Signup';
-        document.getElementById('mainAuthBtn').innerText = isLoginMode ? 'Login' : 'Signup';
-        if (isLoginMode) { document.getElementById('password').placeholder = "Password"; } else { document.getElementById('password').placeholder = "Create New Password"; }
-    };
-
-    window.handleAuth = async () => {
-        const email = document.getElementById('email').value; const password = document.getElementById('password').value;
-        if(!email || !password) return alert("Bhai, email aur password toh daal de!");
-        try {
-            if (isLoginMode) await signInWithEmailAndPassword(auth, email, password);
-            else await createUserWithEmailAndPassword(auth, email, password);
-        } catch (err) { alert("Error: " + err.message); }
-    };
-
-    window.resetPassword = async () => {
-        const email = document.getElementById('email').value;
-        if(!email) return alert("Pehle apna Email box mein daal, phir Forgot Password daba!");
-        try {
-            await sendPasswordResetEmail(auth, email); alert("✅ Password reset link bhej diya gaya hai!");
-        } catch(err) { alert("Error: " + err.message); }
-    };
-
-    let isEditingProfile = false;
-    window.toggleEditProfile = () => {
-        isEditingProfile = !isEditingProfile;
-        const vName = document.getElementById('valName'); const eName = document.getElementById('editName');
-        const vDob = document.getElementById('valDob'); const eDob = document.getElementById('editDob');
-        
-        if(isEditingProfile) {
-            eName.value = vName.innerText; eDob.value = vDob.innerText;
-            vName.style.display = 'none'; vDob.style.display = 'none';
-            eName.style.display = 'block'; eDob.style.display = 'block';
-            document.getElementById('editProfileBtn').style.display = 'none'; document.getElementById('saveProfileBtn').style.display = 'block';
-        }
-    };
-
-    window.saveEditedProfile = async () => {
-        const newName = document.getElementById('editName').value; const newDob = document.getElementById('editDob').value;
-        if(!newName || !newDob) return alert("Details khali nahi chhod sakte!");
-        try {
-            const user = auth.currentUser;
-            await updateDoc(doc(db, "users", user.uid), { name: newName, dob: newDob });
-            document.getElementById('valName').innerText = newName; document.getElementById('displayProfileName').innerText = newName;
-            if(!window.currentUserAvatar) document.getElementById('profileInitial').innerText = newName.charAt(0).toUpperCase();
-            document.getElementById('valDob').innerText = newDob; window.currentUserName = newName;
-
-            document.getElementById('editName').style.display = 'none'; document.getElementById('editDob').style.display = 'none';
-            document.getElementById('valName').style.display = 'block'; document.getElementById('valDob').style.display = 'block';
-            document.getElementById('editProfileBtn').style.display = 'flex'; document.getElementById('saveProfileBtn').style.display = 'none';
-            isEditingProfile = false; alert("Profile updated! ✅");
-        } catch(e) { alert("Error: " + e.message); }
-    };
-
-    window.handleGalleryUpload = function(event) {
-        const file = event.target.files[0]; if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const img = new Image();
-            img.onload = function() {
-                const canvas = document.createElement('canvas'); const MAX_WIDTH = 250; let scaleSize = 1;
-                if (img.width > MAX_WIDTH) { scaleSize = MAX_WIDTH / img.width; }
-                canvas.width = img.width * scaleSize; canvas.height = img.height * scaleSize;
-                const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7); window.selectAvatar(compressedDataUrl); 
-            }
-            img.src = e.target.result;
-        }
-        reader.readAsDataURL(file);
-    };
-
-    window.selectAvatar = async (url) => {
-        try {
-            const user = auth.currentUser; await updateDoc(doc(db, "users", user.uid), { avatarUrl: url });
-            updateAvatarUI(url, window.currentUserName); closeModal('avatarModal');
-        } catch(e) { alert("Error: " + e.message); }
-    };
-
-    function updateAvatarUI(url, name) {
-        window.currentUserAvatar = url; const avatarBox = document.getElementById('profileInitial');
-        if(url && url !== "") { avatarBox.style.backgroundImage = `url('${url}')`; avatarBox.innerText = ""; } else {
-            avatarBox.style.backgroundImage = "linear-gradient(45deg, var(--primary), #bc4ed8)"; avatarBox.innerText = name ? name.charAt(0Bhai, tune Hukum kiya aur tere bhai ne pura system update kar diya! 🔥
-
-Pura code firse **Lock 🔒** kar liya gaya hai (abhi bhi heavy champion hai!). Tumhari di hui images aur instructions ke hisaab se ye saare dhamakedaar changes kiye hain:
-
-### 🏆 v13 Update Log (Hukum v/s Sach):
-
-1.  **🇮🇳 VIP Hindi Dubbed Top Par:** Chal, Slider aur Continue Watching ke turant baad ab sabse upar **VIP Hindi Dubbed** section makhan ki tarah scroll ho raha hai.
-2.  **🏆 STEROMAX RANKING (Pura Naya Section):** Purana "Trending" grid hatakar maine **Horizontal Rank Row** daal di hai. Example image ke hisaab se ab Posters par bade **Numbered Overlay (55px)** aa gaye hain. Rank 1 Diamond color, Rank 2 Gold, Rank 3 Silver style mein chamak raha hai, baaki simple vertical outline mein hain.
-3.  **🖼️ POSTER FIX PROBLEM (Hamesha ke liye saaf 🛠️):** Maine pure code mein posters ke liye vertical **2:3 aspect ratio** strictly lock kar diya hai. Ab na koi image stretch hogi, na info text grid kharab karega. `object-fit: cover` se native posters neat dikhenge aur local images crop hongi par neat vertical rahengi. Text Wrapping bhi fix kar di hai taaki grid line se chale.
-
-### 👑 Pura 1024-Line Master Code (Rank & Poster Fix Update):
-
-Acode mein jaake purana sab Delete maar aur ye Ultimate code paste kar. Tumhari saari purani mehnat (Firebase login, continue watching, live tv page, comments) safe hai!
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Stero Max Pro - Elite Streaming</title>
-    <link rel="manifest" href="manifest.json">
-    <script src="[https://cdn.jsdelivr.net/npm/hls.js@latest](https://cdn.jsdelivr.net/npm/hls.js@latest)"></script>
-
-    <style>
-        :root { --primary: #00d2ff; --bg: #000000; --card: #151515; --text: #ffffff; --gold: #ffcc00; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 90px; }
-        .main-wrapper { overflow-x: hidden; width: 100%; }
-
-        header { background: rgba(17, 17, 17, 0.9); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); }
-        .logo { color: var(--primary); font-size: 22px; font-weight: 900; letter-spacing: 1px; }
-
-        /* --- SEARCH OVERLAY CSS --- */
-        #searchOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 6000; padding: 20px; flex-direction: column; overflow-y: auto; }
-        .search-bar-container { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
-        #searchInput { flex: 1; background: #1a1a1a; border: 1px solid var(--primary); padding: 12px 20px; border-radius: 30px; color: white; outline: none; }
-        .chip-container { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0 20px 0; }
-        .chip { background: #111; padding: 6px 15px; border-radius: 20px; font-size: 12px; border: 1px solid #333; color: #bbb; cursor: pointer; }
-
-        /* --- SLIDER CSS --- */
-        .slider-wrapper { position: relative; width: 95%; height: 210px; overflow-x: auto; display: flex; scroll-snap-type: x mandatory; gap: 10px; margin: 15px auto; border-radius: 15px; scrollbar-width: none; scroll-behavior: smooth; }
-        .slider-wrapper::-webkit-scrollbar { display: none; }
-        .hero-slide { min-width: 100%; height: 100%; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 20px; position: relative; scroll-snap-align: start; border-radius: 15px; }
-        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(transparent, rgba(0,0,0,0.95)); border-radius: 15px; }
-        .slide-content { position: relative; z-index: 10; }
-        
-        .tag-red { background: #ff0000; color: white; font-size: 10px; font-weight: bold; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
-        .tag-blue { background: #0066ff; color: white; font-size: 10px; font-weight: bold; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
-
-        /* 🔥 HORIZONTAL SCROLL CSS (Line se Movies) 🔥 */
-        .scroll-row { display: flex; overflow-x: auto; gap: 12px; padding: 0 15px; scrollbar-width: none; scroll-behavior: smooth; }
-        .scroll-row::-webkit-scrollbar { display: none; }
-        
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 15px; }
-        
-        /* 🔥 POSTER FIX PROBLEM: Native aspect-ratio 2:3 🔥 */
-        .movie-card { background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid #252525; cursor: pointer; position: relative; aspect-ratio: 2 / 3.3; display: flex; flex-direction: column; }
-        
-        /* Adjust width standard for horizontal cards */
-        .scroll-row .movie-card { flex: 0 0 120px; } 
-        .grid .movie-card { flex: auto; width: 100%;}
-
-        /* Movie Images Fixed */
-        .movie-card img { width: 100%; height: 100%; object-fit: cover; border-bottom: 1px solid #222; }
-
-        /* Movie info neat adjustment (fix stretch) */
-        .movie-info { padding: 8px 4px; text-align: center; height: 35px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3);}
-        .movie-info p { margin: 0; font-size: 10px; color: #eee; font-weight: bold; white-space: wrap; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
-        /* 🏆 NEW PRO RANK NUMBERS CSS (Diamond/Gold/Silver large overlay) 🏆 */
-        .rank-badge { position: absolute; bottom: 30px; left: 0; font-size: 55px; font-weight: 900; z-index: 10; margin: 0; padding: 0 5px; line-height: 1; -webkit-text-stroke: 1.5px black; text-shadow: 2px 2px 10px rgba(0,0,0,0.9); font-family: 'Arial Narrow', 'Segoe UI', sans-serif;}
-        .rank-1 { color: #b9f2ff; /* Diamond Color text */ }
-        .rank-2 { color: #fff200; /* Gold Color text */ }
-        .rank-3 { color: #e0e0e0; /* Silver Color text */ }
-        .rank-4 { color: #cd7f32; /* Bronze Color text */ }
-        .rank-other { color: rgba(255,255,255,0.6); -webkit-text-stroke: 1px black;}
-
-        /* --- BOTTOM NAV --- */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(15, 15, 15, 0.98); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; backdrop-filter: blur(15px); z-index: 5000; height: 75px; }
-        .nav-item { color: #888; font-size: 24px; text-align: center; cursor: pointer; flex: 1; transition: 0.3s;}
-        .nav-item.active { color: var(--primary); transform: translateY(-3px);}
-        .nav-item.live-btn.active { color: #ff4444; }
-        .nav-item span { display: block; font-size: 12px; margin-top: 4px; font-weight: 700; }
-
-        /* --- FULL SCREEN PAGES (Profile & Settings) --- */
-        .full-page { display: none; position: fixed; inset: 0; background: #000; z-index: 4000; flex-direction: column; padding: 20px; overflow-y: auto; padding-bottom: 100px;}
-        .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; margin-top: 10px; border-bottom: 1px solid #222; padding-bottom: 15px; }
-        
-        .avatar-container { position: relative; width: 110px; height: 110px; margin: 0 auto 15px auto; }
-        .avatar { width: 100%; height: 100%; background: linear-gradient(45deg, var(--primary), #bc4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 45px; border: 4px solid #222; background-size: cover; background-position: center; }
-        .edit-avatar-btn { position: absolute; bottom: 0; right: 0; background: var(--gold); color: black; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; border: 2px solid #000; }
-        
-        .profile-details-box { background: #111; border-radius: 20px; padding: 20px; border: 1px solid #222; margin-bottom: 20px; }
-        .detail-item { margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;}
-        .detail-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .detail-label { color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
-        .detail-value { color: white; font-size: 16px; font-weight: bold; margin-top: 5px; }
-        .detail-input { background: #222; border: 1px solid #444; color: white; padding: 8px; border-radius: 8px; width: 100%; display: none; margin-top: 5px; font-size: 16px; color-scheme: dark;}
-        
-        .action-btn { width: 100%; padding: 15px; background: #222; color: white; border: 1px solid #333; border-radius: 12px; font-weight: bold; margin-bottom: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .save-btn { display: none; width: 100%; padding: 15px; background: var(--primary); color: black; border: none; border-radius: 12px; font-weight: bold; margin-bottom: 15px; cursor: pointer; }
-
-        .settings-group { margin-bottom: 25px; }
-        .settings-title { color: var(--gold); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; padding-left: 10px; font-weight: bold; }
-        .settings-box { background: #111; border-radius: 16px; border: 1px solid #222; overflow: hidden; }
-        .set-item { padding: 18px 20px; border-bottom: 1px solid #222; color: #eee; font-size: 15px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
-        .set-item:last-child { border-bottom: none; }
-        .set-item span { color: #666; }
-
-        /* --- PLAYER CSS --- */
-        .player { display: none; position: fixed; inset: 0; background: #000; z-index: 6000; flex-direction: column; overflow-y: auto; height: 100vh; }
-        .video-box { width: 100%; aspect-ratio: 16 / 9; background: #000; position: relative; flex-shrink: 0; transition: background 0.3s; }
-        video::-webkit-media-controls { display:none !important; }
-        .screen-tag { position: absolute; top: 15px; right: 15px; padding: 5px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; color: white; z-index: 6001; text-transform: uppercase; letter-spacing: 1px; }
-        .close-info { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); border-radius: 50%; width: 40px; height: 40px; text-align:center; line-height: 40px; color:white; z-index: 6000; font-weight:bold; cursor:pointer; }
-        .p-content { padding-bottom: 50px; flex-grow: 1; display: flex; flex-direction: column; }
-        .watch-btn { width: 90%; margin: 0 auto 20px auto; padding: 15px; background: var(--gold); border: none; border-radius: 8px; font-weight: 900; font-size: 14px; color: #000; display: block; cursor: pointer; }
-
-        .tabs { display: flex; gap: 20px; border-bottom: 1px solid #222; margin-bottom: 15px; padding: 0 20px; overflow-x: auto; scrollbar-width: none; }
-        .tab { padding: 10px 0; font-weight: bold; font-size: 14px; color: #666; cursor: pointer; white-space: nowrap; }
-        .tab.active { color: white; border-bottom: 3px solid var(--primary); }
-        .tab-content { display: none; padding: 0 20px; min-height: 450px; }
-        .tab-content.active { display: block; }
-
-        #trailer-poster { width: 100%; height: 250px; border-radius: 12px; background-size: contain; background-repeat: no-repeat; background-position: center; background-color: #000; border: 1px solid #333; }
-
-        .fs-player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 9999; }
-        .close-fs { position: absolute; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; width: 45px; height: 45px; text-align: center; line-height: 45px; color: white; font-size: 24px; z-index: 10006; backdrop-filter: blur(10px); cursor:pointer;}
-        iframe { width: 100vw; height: 56.25vw; max-height: 100vh; border: none; }
-        @media (orientation: landscape) { iframe { width: 100vw; height: 100vh; } }
-
-        /* --- SPLASH & FORMS --- */
-        #splashScreen { display: none; position: fixed; inset: 0; z-index: 99999; background-image: url('[https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg](https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg)'); background-size: cover; background-position: top center; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 60px; transition: opacity 0.4s ease-out; }
-        #splashScreen::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0) 80%); z-index: 1; pointer-events: none; }
-        .splash-click-area { position: absolute; inset: 0; z-index: 5; cursor: pointer; }
-        .splash-top-bar { position: absolute; top: 20px; right: 20px; z-index: 10; }
-        .skip-btn { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 14px; border-radius: 20px; font-size: 14px; backdrop-filter: blur(8px); cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: bold; }
-        .splash-content { position: relative; z-index: 6; text-align: center; animation: slideUp 0.8s ease-out forwards; pointer-events: none; }
-        .splash-logo-text { color: var(--primary); font-size: 38px; font-weight: 900; letter-spacing: 2px; text-shadow: 0 0 20px var(--primary); margin: 0 0 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .splash-elite-badge { background: var(--gold); color: black; font-size: 14px; font-weight: 900; padding: 4px 10px; border-radius: 4px; text-shadow: none; }
-        .splash-loading { color: #ddd; font-size: 14px; font-weight: bold; letter-spacing: 2px; animation: loadingPulse 1.5s infinite; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes loadingPulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
-
-        .auth-overlay { position: fixed; inset: 0; backdrop-filter: blur(15px); z-index: 100000; display: flex; justify-content: center; align-items: center; background: #000; }
-        .auth-box { background: rgba(255, 255, 255, 0.07); padding: 40px 30px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1); width: 85%; max-width: 380px; text-align: center; box-shadow: 0 8px 32px rgba(0, 210, 255, 0.2); }
-        .auth-box h2 { color: #00d2ff; margin-bottom: 20px; font-size: 24px; }
-        .auth-box h2 span { color: #ffcc00; }
-        .auth-box input, .action-modal input { width: 100%; padding: 14px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; color: white; outline: none; }
-        input[type="date"] { color-scheme: dark; } 
-        .auth-box button, .action-modal button { width: 100%; padding: 14px; background: #00d2ff; color: black; font-weight: bold; border: none; border-radius: 12px; margin-top: 20px; cursor: pointer; }
-        .toggle-text { color: #ccc; font-size: 13px; cursor: pointer; }
-        .toggle-text span { color: #00d2ff; text-decoration: underline; }
-
-        .action-modal { display:none; position: fixed; inset:0; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; }
-        .modal-content { background: #111; padding: 25px; border-radius: 20px; width: 85%; border: 1px solid #333; text-align: center;}
-        .close-modal { text-align: right; font-size: 24px; color: #888; cursor: pointer; margin-bottom: 10px; }
-        .avatar-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 20px; margin-bottom: 20px;}
-        .avatar-option { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #333; cursor: pointer; object-fit: cover; }
-        .avatar-option:hover { border-color: var(--primary); }
-
-        .comment-input-area { display: flex; gap: 10px; margin-bottom: 20px; }
-        .comment-input-area input { flex: 1; padding: 12px 15px; border-radius: 12px; border: 1px solid #333; background: #111; color: white; outline: none; }
-        .comment-input-area button { padding: 12px 20px; background: var(--primary); color: black; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
-        .live-comment { background: #111; padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #222; display: flex; gap: 12px; }
-        .c-avatar { width: 35px; height: 35px; background: linear-gradient(45deg, var(--gold), #ff8800); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 16px; flex-shrink: 0; background-size: cover; background-position: center;}
-        
-        @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
-    </style>
-</head>
-<body>
-
-<div class="main-wrapper">
-
-    <div id="authOverlay" class="auth-overlay">
-        <div class="auth-box">
-            <h2 class="logo-text">STEROMAX <span>ELITE</span></h2>
-            <div id="authForm">
-                <h3 id="authTitle" style="color:white; margin-bottom:15px;">Login</h3>
-                <input type="email" id="email" placeholder="Email Address">
-                <input type="password" id="password" placeholder="Password">
-                <button id="mainAuthBtn" onclick="handleAuth()">Login</button>
-                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-                    <p class="toggle-text" style="margin:0;" onclick="toggleAuth()">Naya account? <span>Signup</span></p>
-                    <p class="toggle-text" style="margin:0; color:#ff4444;" onclick="resetPassword()">Forgot Password?</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="onboardingOverlay" class="auth-overlay" style="display: none; z-index: 100005;">
-        <div class="auth-box">
-            <h2 class="logo-text">WELCOME TO <span>ELITE</span></h2>
-            <h3 style="color:white; margin-bottom:15px; font-size:18px;">Apni Profile Banayein</h3>
-            <input type="text" id="userName" placeholder="Full Name (Real Name)">
-            <div style="text-align: left; margin-top: 15px;">
-                <label for="userDob" style="color: #bbb; font-size: 13px; margin-left: 5px;">Date of Birth 👇</label>
-                <input type="date" id="userDob">
-            </div>
-            <button onclick="saveUserProfile()">Start Streaming</button>
-        </div>
-    </div>
-
-    <div id="passwordModal" class="action-modal">
-        <div class="modal-content">
-            <div class="close-modal" onclick="closeModal('passwordModal')">✕</div>
-            <h3 style="color:white; margin-top:0;">Change Password</h3>
-            <p style="color:#888; font-size:12px;">Pehle apna purana password daalein verification ke liye.</p>
-            <input type="password" id="oldPass" placeholder="Purana Password">
-            <input type="password" id="newPass" placeholder="Naya Password">
-            <button onclick="updateUserPassword()">Update Password</button>
-        </div>
-    </div>
-
-    <div id="avatarModal" class="action-modal">
-        <div class="modal-content">
-            <div class="close-modal" onclick="closeModal('avatarModal')">✕</div>
-            <h3 style="color:white; margin-top:0;">Select Avatar</h3>
-            <div class="avatar-grid">
-                <img src="[https://i.postimg.cc/W1rC8nq9/MV5BMDk5ODNj-Nz-Mt-Yz-I5Yy00Nm-I3LWIw-Yzct-MTFj-Zjcw-N2I2Yzk2Xk-Ey-Xk-Fqc-Gc-V1.jpg](https://i.postimg.cc/W1rC8nq9/MV5BMDk5ODNj-Nz-Mt-Yz-I5Yy00Nm-I3LWIw-Yzct-MTFj-Zjcw-N2I2Yzk2Xk-Ey-Xk-Fqc-Gc-V1.jpg)" class="avatar-option" onclick="selectAvatar(this.src)">
-                <img src="[https://i.postimg.cc/DwfGrBHM/kv-1.jpg](https://i.postimg.cc/DwfGrBHM/kv-1.jpg)" class="avatar-option" onclick="selectAvatar(this.src)">
-                <img src="[https://i.postimg.cc/sx5jTc4N/Screenshot-2026-04-16-22-20-03-85-40deb401b9ffe8e1df2f1cc5ba480b12.jpg](https://i.postimg.cc/sx5jTc4N/Screenshot-2026-04-16-22-20-03-85-40deb401b9ffe8e1df2f1cc5ba480b12.jpg)" class="avatar-option" onclick="selectAvatar(this.src)">
-                <img src="[https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png](https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png)" class="avatar-option" onclick="selectAvatar(this.src)">
-                <img src="[https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg](https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg)" class="avatar-option" onclick="selectAvatar(this.src)">
-                <div class="avatar-option" style="background: linear-gradient(45deg, var(--primary), #bc4ed8); display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; font-size:12px;" onclick="selectAvatar('')">TEXT</div>
-            </div>
-            <label for="galleryUpload" style="display:block; padding: 12px; background: var(--primary); color: black; font-weight: bold; border-radius: 12px; cursor: pointer; margin-top: 10px;">
-                📁 Upload from Gallery
-            </label>
-            <input type="file" id="galleryUpload" accept="image/*" style="display: none;" onchange="handleGalleryUpload(event)">
-            <p style="color:#888; font-size:10px; margin-top:10px;">Auto-compress on upload.</p>
-        </div>
-    </div>
-
-    <div id="splashScreen">
-        <div class="splash-click-area" onclick="openSplashMovie()"></div>
-        <div class="splash-top-bar"><div class="skip-btn" onclick="forceSkipSplash(event)">Skip <span id="splashTimer">4</span>s ⏭</div></div>
-        <div class="splash-content">
-            <h1 class="splash-logo-text"><span class="splash-elite-badge">⭐ ELITE</span>STEROMAX</h1>
-            <div class="splash-loading">LOADING...</div>
-        </div>
-    </div>
-
-    <header>
-        <div style="background:var(--gold); color:black; font-size:10px; font-weight:900; padding:4px 10px; border-radius:4px;">⭐ ELITE</div>
-        <div class="logo">STEROMAX</div>
-        <div style="font-size: 24px; cursor: pointer;" onclick="openSettings()">⚙️</div>
-    </header>
-
-    <div id="settingsPage" class="full-page">
-        <div class="page-header"><h2 style="margin:0; color:var(--gold);">⚙️ Settings</h2><div onclick="closeSettings()" style="font-size:30px; cursor:pointer;">✕</div></div>
-        <div class="settings-group">
-            <div class="settings-title">Account & Security</div>
-            <div class="settings-box">
-                <div class="set-item" onclick="openProfile()">Profile Details <span>></span></div>
-                <div class="set-item" onclick="openModal('passwordModal')">Change Password <span>></span></div>
-                <div class="set-item">Subscription Plan <span style="color:var(--primary); font-weight:bold;">Elite</span></div>
-            </div>
-        </div>
-        <div class="settings-group">
-            <div class="settings-title">Playback & Downloads</div>
-            <div class="settings-box">
-                <div class="set-item">Video Quality <span>Auto (1080p)</span></div>
-                <div class="set-item">Download Quality <span>High</span></div>
-            </div>
-        </div>
-        <div class="settings-group">
-            <div class="settings-title">App Info</div>
-            <div class="settings-box">
-                <div class="set-item">App Version <span>v13.0 Pro Update</span></div>
-                <div class="set-item" style="color: #ff4444; font-weight:bold;" onclick="logoutUser()">🚪 Logout Account</div>
-            </div>
-        </div>
-    </div>
-
-    <div id="profilePage" class="full-page">
-        <div class="page-header"><h2 style="margin:0; color:var(--primary);">My Profile</h2><div onclick="closeProfile()" style="font-size:30px; cursor:pointer;">✕</div></div>
-        <div class="avatar-container">
-            <div class="avatar" id="profileInitial">S</div>
-            <div class="edit-avatar-btn" onclick="openModal('avatarModal')">📷</div>
-        </div>
-        <div style="text-align:center; margin-bottom: 25px;">
-            <h2 id="displayProfileName" style="margin:0;">Loading...</h2>
-            <p style="color:var(--gold); font-size:12px; margin-top:5px; font-weight:bold;">⭐ ELITE MEMBER</p>
-        </div>
-        <div class="profile-details-box">
-            <div class="detail-item">
-                <div style="width: 100%;"><div class="detail-label">Full Name</div><div class="detail-value" id="valName">Loading...</div><input type="text" id="editName" class="detail-input"></div>
-            </div>
-            <div class="detail-item">
-                <div style="width: 100%;"><div class="detail-label">Registered Email</div><div class="detail-value" id="valEmail">Loading...</div></div>
-            </div>
-            <div class="detail-item">
-                <div style="width: 100%;"><div class="detail-label">Date of Birth</div><div class="detail-value" id="valDob">Loading...</div><input type="date" id="editDob" class="detail-input"></div>
-            </div>
-        </div>
-        <button class="action-btn" id="editProfileBtn" onclick="toggleEditProfile()">✏️ Edit Profile Information <span style="color:#666;">></span></button>
-        <button class="save-btn" id="saveProfileBtn" onclick="saveEditedProfile()">💾 Save Changes</button>
-        <button class="action-btn" onclick="openModal('passwordModal')">🔒 Change Password <span style="color:#666;">></span></button>
-    </div>
-
-    <div id="home">
-        <div class="slider-wrapper" id="main-slider"></div>
-        
-        <div id="continue-watching-section" style="display: none; margin-top: 10px; margin-bottom: 20px;">
-            <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; color: var(--gold);">▶ Continue Watching</h3>
-            <div class="scroll-row" id="continue-grid"></div>
-        </div>
-
-        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; margin-top:25px; color: #ffcc00; display: flex; align-items: center; gap: 8px;">
-            <span style="background: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 14px;">🇮🇳</span> 
-            VIP Hindi Dubbed
-        </h3>
-        <div class="scroll-row" id="vip-hindi-grid"></div>
-
-        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; margin-top:25px; color:var(--primary);">
-            🏆 STEROMAX RANKING
-        </h3>
-        <div class="scroll-row" id="rank-grid"></div>
-
-        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; margin-top:25px; color: #ff4757; display: flex; align-items: center; gap: 8px;">
-            <span style="background: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 14px;">👺</span> 
-            Anime Zone
-        </h3>
-        <div class="scroll-row" id="anime-grid"></div>
-
-        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; margin-top:25px; color: #ff6b81; display: flex; align-items: center; gap: 8px;">
-            <span style="background: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 14px;">💖</span> 
-            Sweet K-Dramas
-        </h3>
-        <div class="scroll-row" id="kdrama-grid" style="margin-bottom: 20px;"></div>
-    </div>
-
-    <div id="livePage" style="display: none; padding-top: 10px; padding-bottom: 100px;">
-        <h2 style="margin-left: 20px; font-size: 22px; margin-bottom: 5px; color: #ff4444; display: flex; align-items: center; gap: 8px;">
-            <span style="background: red; border-radius: 50%; width: 14px; height: 14px; display: inline-block; animation: pulse 1.5s infinite;"></span> 
-            Universal Live TV
-        </h2>
-        <p style="margin-left: 20px; color: #888; font-size: 12px; margin-top: 0;">Explore thousands of live channels globally.</p>
-        
-        <div class="grid" id="all-live-grid" style="margin-bottom: 20px;"></div>
-    </div>
-
-    <div id="searchOverlay">
-        <div class="search-bar-container">
-            <input type="text" id="searchInput" placeholder="Search Movies or Series..." oninput="doSearch()">
-            <div class="close-search" style="font-size: 24px; cursor:pointer;" onclick="switchNav('home', document.querySelector('.bottom-nav .nav-item'))">✕</div>
-        </div>
-        <div class="chip-container">
-            <div class="chip" onclick="quickSearch('Avengers')">Avengers</div>
-            <div class="chip" onclick="quickSearch('Naruto')">Naruto</div>
-            <div class="chip" onclick="quickSearch('Demon Slayer')">Demon Slayer</div>
-        </div>
-        <div id="search-results-grid" class="grid"></div>
-    </div>
-
-    <div id="playerModal" class="player">
-        <div class="close-info" onclick="closeInfoPage()">✕</div>
-        <div class="video-box" id="main-video-box">
-            <div id="screen-tag" class="screen-tag"></div>
-            <video id="introVideo" playsinline autoplay loop style="width:100%; height:100%; object-fit: cover;">
-                <source src="" id="introSource" type="video/mp4">
-            </video>
-        </div>
-        <div class="p-content">
-            <h2 id="p-title" style="margin:0; font-size: 24px; padding: 20px 20px 5px 20px;"></h2>
-            <p id="dynamic-tag" style="color:var(--gold); font-size:12px; margin-bottom:15px; padding: 0 20px;"></p>
-            
-            <button class="watch-btn" id="fullMovieBtn" style="display: none;">▶ WATCH FULL MOVIE</button>
-            
-            <div class="tabs">
-                <div class="tab active" onclick="switchTab(0)">Details</div>
-                <div class="tab" id="ep-tab-head" onclick="switchTab(1)">Episodes</div>
-                <div class="tab" onclick="switchTab(2)">Comments</div>
-                <div class="tab" onclick="switchTab(3)">Poster</div>
-            </div>
-
-            <div id="tab-details" class="tab-content active">
-                <p id="movie-desc" style="color:#bbb; font-size:14px; line-height:1.6;"></p>
-                <div id="server-container" style="display:none; margin-top:20px;"></div>
-                <h3 style="color:var(--primary); font-size:16px; margin-top:20px;">Recommended</h3>
-                <div class="scroll-row" id="sim-grid" style="padding:0;"></div>
-            </div>
-
-            <div id="tab-episodes" class="tab-content"><div id="ep-container"></div></div>
-            
-            <div id="tab-comments" class="tab-content">
-                <div class="comment-input-area">
-                    <input type="text" id="newCommentText" placeholder="Apna opinion share karein...">
-                    <button onclick="postLiveComment()">Post</button>
-                </div>
-                <div id="comments-list"><p style="color:#666; font-size:13px;">Loading comments...</p></div>
-            </div>
-
-            <div id="tab-poster" class="tab-content">
-                <div id="trailer-poster"></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="fsPlayerModal" class="fs-player-overlay">
-        <div class="close-fs" onclick="closeEpisode()">✕</div>
-        <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#000;">
-            <iframe id="episodeFrame" src="" allowfullscreen allow="autoplay; fullscreen" style="display:none;"></iframe>
-            <video id="liveVideoPlayer" controls autoplay style="width:100%; max-height:100vh; display:none;"></video>
-        </div>
-    </div>
-
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchNav('home', this)">🏠<span>Home</span></div>
-        <div class="nav-item" onclick="switchNav('searchOverlay', this)">🔍<span>Search</span></div>
-        <div class="nav-item live-btn" onclick="switchNav('livePage', this)">📺<span>Live TV</span></div>
-        <div class="nav-item" onclick="switchNav('profilePage', this)">👤<span>Profile</span></div>
-    </div>
-</div> 
-
-<script>
-    const TMDB_API_KEY = "36157345f197f22bcad9f2039b77fd4f";
-    window.currentUserName = "Elite User"; 
-    window.currentUserAvatar = ""; 
-    window.currentOpenMovieId = null;
-    window.currentTmdbShowId = null;
-
-    // PAGE NAVIGATION
-    function switchNav(pageId, el) {
-        document.getElementById('home').style.display = 'none';
-        document.getElementById('searchOverlay').style.display = 'none';
-        document.getElementById('livePage').style.display = 'none';
-        document.getElementById('profilePage').style.display = 'none';
-        document.getElementById('settingsPage').style.display = 'none';
-
-        document.getElementById(pageId).style.display = (pageId === 'home' || pageId === 'livePage') ? 'block' : 'flex';
-
-        document.querySelectorAll('.bottom-nav .nav-item').forEach(item => item.classList.remove('active'));
-        if(el) el.classList.add('active');
-        if(pageId === 'searchOverlay') document.getElementById('searchInput').focus();
-    }
-
-    // MULTIPLE LIVE CHANNELS
-    const liveChannels = [
-        { id: 101, title: "TATA IPL HINDI", type: "live", tag: "🔴 MATCH", screenTag: "Sports", screenTagColor: "#ff0000", img: "[https://i.postimg.cc/9X12mGL3/Screenshot-2026-04-20-19-23-50-30-dba69a5e82e939c3ddef13f99a115ca3.jpg](https://i.postimg.cc/9X12mGL3/Screenshot-2026-04-20-19-23-50-30-dba69a5e82e939c3ddef13f99a115ca3.jpg)", liveLink: "[https://cmvlive.blogspot.com/2026/02/str-1-hindi.html?m=1](https://cmvlive.blogspot.com/2026/02/str-1-hindi.html?m=1)", desc: "Watch TATA IPL 2026 Live. (Select Watch Now when player loads)", detailTag: "Cricket • HD" },
-        { id: 102, title: "Star Sports 1", type: "live", tag: "🔴 SPORTS", screenTag: "Sports", screenTagColor: "#0066ff", img: "[https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Star_Sports_Logo.svg/1200px-Star_Sports_Logo.svg.png](https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Star_Sports_Logo.svg/1200px-Star_Sports_Logo.svg.png)", liveLink: "[https://catowrap.live/mrgamingbtsport2.m3u8](https://catowrap.live/mrgamingbtsport2.m3u8)", desc: "Star Sports 1 Live Stream.", detailTag: "Sports • Hindi" },
-        { id: 103, title: "Aaj Tak News", type: "live", tag: "🔴 NEWS", screenTag: "News", screenTagColor: "#ff0000", img: "[https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Aaj_tak_logo.png/600px-Aaj_tak_logo.png](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Aaj_tak_logo.png/600px-Aaj_tak_logo.png)", liveLink: "[https://feeds.intoday.in/aajtak/api/aajtakhd/master.m3u8](https://feeds.intoday.in/aajtak/api/aajtakhd/master.m3u8)", desc: "Aaj Tak Live News 24x7.", detailTag: "News • Hindi" }
-    ];
-
-    // 🔥 PERFECT ANIME ARRAY (From your screenshots) 🔥
-    const exactAnimeList = [
-        { id: 95479, title: "Jujutsu Kaisen", img: "[https://image.tmdb.org/t/p/w500/1v0E2P6A4v9yWlG4kK4907BtaM1.jpg](https://image.tmdb.org/t/p/w500/1v0E2P6A4v9yWlG4kK4907BtaM1.jpg)", type: "tv" },
-        { id: 98114, title: "Overflow", img: "[https://image.tmdb.org/t/p/w500/8d8H05d3x2i8Xo1YtIq6XwzVzS0.jpg](https://image.tmdb.org/t/p/w500/8d8H05d3x2i8Xo1YtIq6XwzVzS0.jpg)", type: "tv" },
-        { id: 113110, title: "Girlfriend, Girlfriend", img: "[https://image.tmdb.org/t/p/w500/5mG7vK4V4v3T5Lp9p0YqH2v2x2Q.jpg](https://image.tmdb.org/t/p/w500/5mG7vK4V4v3T5Lp9p0YqH2v2x2Q.jpg)", type: "tv" },
-        { id: 209867, title: "Frieren: Beyond Journey's End", img: "[https://image.tmdb.org/t/p/w500/dQjR0PZkX7fR9T6CqR1aD2yD0V4.jpg](https://image.tmdb.org/t/p/w500/dQjR0PZkX7fR9T6CqR1aD2yD0V4.jpg)", type: "tv" },
-        { id: 218729, title: "The Apothecary Diaries", img: "[https://image.tmdb.org/t/p/w500/9b9f7D2C0u5M6a9xP5M3eA8y7G3.jpg](https://image.tmdb.org/t/p/w500/9b9f7D2C0u5M6a9xP5M3eA8y7G3.jpg)", type: "tv" },
-        { id: 17351, title: "Doraemon", img: "[https://image.tmdb.org/t/p/w500/A3x1uYn3z6N5eE4mB1c5D8A3t3K.jpg](https://image.tmdb.org/t/p/w500/A3x1uYn3z6N5eE4mB1c5D8A3t3K.jpg)", type: "tv" }
-    ];
-
-    const movies = [
-        { id: 1, title: "Demon Slayer: Infinity Castle", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "[https://i.postimg.cc/DwfGrBHM/kv-1.jpg](https://i.postimg.cc/DwfGrBHM/kv-1.jpg)", trailerLink: "[https://www.dropbox.com/scl/fi/cmiemscnlidr0iszlal4z/Demon_Slayer__Kimetsu_no_Yaiba_Infinity_Castle___MAIN_TRAILER-1080p.mp4?rlkey=wy1z8i6bjh6janpqk2xaq5a32&raw=1](https://www.dropbox.com/scl/fi/cmiemscnlidr0iszlal4z/Demon_Slayer__Kimetsu_no_Yaiba_Infinity_Castle___MAIN_TRAILER-1080p.mp4?rlkey=wy1z8i6bjh6janpqk2xaq5a32&raw=1)", fullMovieLink: "[https://steromax.4meplayer.com/#hn1h5](https://steromax.4meplayer.com/#hn1h5)", desc: "The final battle begins.", detailTag: "Official Trailer / Preview" },
-        { id: 2, title: "Pushpa 2: The Rule", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "[https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg](https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg)", trailerLink: "[https://www.dropbox.com/scl/fi/8ml1gt55dbwso60vgvrpg/Pushpa_2_-_The_Rule_Trailer__Hindi____Allu_Arjun___Sukumar___Rashmika_Mandanna___Fahadh_Faasil___DSP-1080p.mp4?rlkey=2b1euqnm0grgktur01br1lv1g&raw=1](https://www.dropbox.com/scl/fi/8ml1gt55dbwso60vgvrpg/Pushpa_2_-_The_Rule_Trailer__Hindi____Allu_Arjun___Sukumar___Rashmika_Mandanna___Fahadh_Faasil___DSP-1080p.mp4?rlkey=2b1euqnm0grgktur01br1lv1g&raw=1)", desc: "Pushpa Raj returns.", detailTag: "Official Trailer / Preview" },
-        { id: 3, title: "Demon Slayer Season 1", type: "series", tag: "NEW SERIES", screenTag: "New Series", screenTagColor: "#ff0000", img: "[https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg](https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg)", trailerLink: "[https://www.dropbox.com/scl/fi/i2fsl28a3p8r5do86bhwu/Demon_Slayer___OP____Gurenge__by_LiSA_HD-1080p.mp4?rlkey=pe9xi0ivfsg7fx6to2z30qtv9&raw=1](https://www.dropbox.com/scl/fi/i2fsl28a3p8r5do86bhwu/Demon_Slayer___OP____Gurenge__by_LiSA_HD-1080p.mp4?rlkey=pe9xi0ivfsg7fx6to2z30qtv9&raw=1)", desc: "Tanjiro's journey begins.", detailTag: "New Series / Preview",
-            episodes: [
-                { title: "Episode 1: Cruelty (Hindi)", embed: "[https://steromax.4meplayer.com/#6rsmm](https://steromax.4meplayer.com/#6rsmm)", thumb: "[https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png](https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png)" },
-                { title: "Episode 2: Trainer Sakonji Urokodaki (Hindi)", embed: "[https://steromax.4meplayer.com/#8ecyx](https://steromax.4meplayer.com/#8ecyx)", thumb: "[https://i.postimg.cc/sx5jTc4N/Screenshot-2026-04-16-22-20-03-85-40deb401b9ffe8e1df2f1cc5ba480b12.jpg](https://i.postimg.cc/sx5jTc4N/Screenshot-2026-04-16-22-20-03-85-40deb401b9ffe8e1df2f1cc5ba480b12.jpg)" },
-                { title: "Episode 3: Sabito and Makomo (Hindi)", embed: "[https://steromax.4meplayer.com/#6rhkf](https://steromax.4meplayer.com/#6rhkf)", thumb: "[https://i.postimg.cc/mZz5jSFn/IMG-20260418-153418.png](https://i.postimg.cc/mZz5jSFn/IMG-20260418-153418.png)" }
-            ]
-        },
-        { id: 4, title: "LEO (Hindi)", type: "movie", tag: "ACTION BLOCKBUSTER", screenTag: "Full Movie", screenTagColor: "#ffcc00", img: "[https://i.postimg.cc/W1rC8nq9/MV5BMDk5ODNj-Nz-Mt-Yz-I5Yy00Nm-I3LWIw-Yzct-MTFj-Zjcw-N2I2Yzk2Xk-Ey-Xk-Fqc-Gc-V1.jpg](https://i.postimg.cc/W1rC8nq9/MV5BMDk5ODNj-Nz-Mt-Yz-I5Yy00Nm-I3LWIw-Yzct-MTFj-Zjcw-N2I2Yzk2Xk-Ey-Xk-Fqc-Gc-V1.jpg)", trailerLink: "[https://www.dropbox.com/scl/fi/otoj18y42qn8l37xx0ttt/LEO__Hindi__Official_Trailer___Thalapathy_Vijay___Sanjay_Dutt___Lokesh_Kanagaraj___Anirudh-1080p.mp4?rlkey=4abh6y0y3yvtnz9i6ei7dz4lq&st=n3rv4m1u&raw=1](https://www.dropbox.com/scl/fi/otoj18y42qn8l37xx0ttt/LEO__Hindi__Official_Trailer___Thalapathy_Vijay___Sanjay_Dutt___Lokesh_Kanagaraj___Anirudh-1080p.mp4?rlkey=4abh6y0y3yvtnz9i6ei7dz4lq&st=n3rv4m1u&raw=1)", desc: "Thalapathy Vijay is Leo Das.", detailTag: "Action / LCU" }
-    ];
-
-    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-    function openSettings() { switchNav('settingsPage'); }
-    function closeSettings() { switchNav('home', document.querySelector('.bottom-nav .nav-item')); }
-    function openProfile() { switchNav('profilePage', document.querySelectorAll('.bottom-nav .nav-item')[3]); }
-    function closeProfile() { switchNav('home', document.querySelector('.bottom-nav .nav-item')); }
-    function openSearch() { switchNav('searchOverlay', document.querySelectorAll('.bottom-nav .nav-item')[1]); }
-    function closeSearch() { switchNav('home', document.querySelector('.bottom-nav .nav-item')); }
-    function goHome() { switchNav('home', document.querySelector('.bottom-nav .nav-item')); }
-    function quickSearch(t) { document.getElementById('searchInput').value = t; doSearch(); }
-    
-    async function doSearch() {
-        const q = document.getElementById('searchInput').value.toLowerCase();
-        const grid = document.getElementById('search-results-grid'); 
-        grid.innerHTML = ''; 
-        if(q === "") return;
-        try {
-            const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${q}`);
-            const data = await res.json();
-            renderTMDBGrid(data.results, 'search-results-grid');
-        } catch(e) { console.log(e); }
-    }
-
-    function renderTMDBGrid(results, target) {
-        const grid = document.getElementById(target);
-        grid.innerHTML = '';
-        if(!results) return;
-        results.forEach(m => {
-            if(!m.poster_path) return;
-            const type = m.media_type || 'movie'; 
-            if(type !== 'movie' && type !== 'tv') return; 
-            const title = m.title || m.name;
-            const img = '[https://image.tmdb.org/t/p/w500](https://image.tmdb.org/t/p/w500)' + m.poster_path;
-            const tagHtml = type === 'tv' ? `<span style="position:absolute; top:5px; left:5px; background:red; color:white; font-size:8px; padding:2px 5px; border-radius:3px; font-weight:bold;">SERIES</span>` : '';
-            grid.innerHTML += `
-                <div class="movie-card" style="position:relative;" onclick="playTMDBMovie(${m.id}, '${type}'); closeSearch()">
-                    ${tagHtml}
-                    <img src="${img}">
-                    <div class="movie-info"><p>${title}</p></div>
-                </div>`;
-        });
-    }
-
-    // 🔥 NEW SCROLL RENDERING ENGINE (Horizontal, Standard Posters Fix) 🔥
-    function renderScrollRow(data, target, isLocal = false) {
-        const grid = document.getElementById(target);
-        grid.innerHTML = '';
-        data.forEach((m) => {
-            let clickAction = isLocal ? `playMovie(${m.id})` : `playTMDBMovie(${m.id || m.mal_id}, '${m.type || m.media_type || 'tv'}')`;
-            let title = m.title || m.name || "Unknown";
-            let img = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : m.img;
-
-            grid.innerHTML += `
-                <div class="movie-card" onclick="${clickAction}">
-                    <img src="${img}" alt="${title}">
-                    <div class="movie-info"><p>${title}</p></div>
-                </div>`;
-        });
-    }
-
-    // 🔥 🏆 NEW RANK ROW RENDERING ENGINE (Example See style Overlay) 🏆 🔥
-    function renderRankRow(data, target) {
-        const grid = document.getElementById(target);
-        grid.innerHTML = '';
-        data.forEach((m, index) => {
-            const type = m.media_type || 'tv';
-            const id = m.id;
-            const title = m.title || m.name || "Unknown";
-            const img = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : '[https://i.postimg.cc/mZz5jSFn/IMG-20260418-153418.png](https://i.postimg.cc/mZz5jSFn/IMG-20260418-153418.png)'; // Placeholder
-
-            // 🏆 NEW RANK NUMBERS LOGIC (Large Overlay)
-            let rankClass = "rank-other";
-            if (index === 0) rankClass = "rank-1";
-            else if (index === 1) rankClass = "rank-2";
-            else if (index === 2) rankClass = "rank-3";
-            else if (index === 3) rankClass = "rank-4";
-
-            grid.innerHTML += `
-                <div class="movie-card" onclick="playTMDBMovie(${id}, '${type}')">
-                    <img src="${img}" alt="${title}">
-                    <div class="rank-badge ${rankClass}">${index + 1}</div>
-                    <div class="movie-info"><p>${title}</p></div>
-                </div>`;
-        });
-    }
-
-    function renderGrid(data, target, isLive = false) {
-        const grid = document.getElementById(target); grid.innerHTML = '';
-        data.forEach(m => { 
-            let clickAction = isLive ? `playLiveChannel(${m.id})` : `playMovie(${m.id})`;
-            // Grid maintain fix aspect from v12
-            grid.innerHTML += `<div class="movie-card" onclick="${clickAction}"><img src="${m.img}" alt="${m.title}" style="object-fit:contain; background:#fff; padding:5px;"><div class="movie-info"><p>${m.title}</p></div></div>`; 
-        });
-    }
-
-    async function initHome() {
-        try {
-            // 1. SLIDER (Pichla Logic Maintain)
-            const slider = document.getElementById('main-slider');
-            if(slider.innerHTML === "") {
-                movies.forEach(m => {
-                    const tagClass = m.tag === "NEW SERIES" ? "tag-red" : "tag-blue";
-                    slider.innerHTML += `<div class="hero-slide" onclick="playMovie(${m.id})" style="background-image: url('${m.img}');"><div class="slide-overlay"></div><div class="slide-content"><span class="${tagClass}">${m.tag}</span><p style="font-size:18px; font-weight:bold; margin:0;">${m.title}</p></div></div>`;
-                });
-            }
-
-            // 2. LIVE TV PAGE RENDER
-            renderGrid(liveChannels, 'all-live-grid', true);
-
-            // 🔥 3. VIP HINDI DUBBED (NOW FIRST SECTION) 🔥
-            renderScrollRow(movies, 'vip-hindi-grid', true); // isLocal=true
-
-            // 🔥 4. RANK SECTION (Horizontal with Big Numbers) 🔥
-            fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${TMDB_API_KEY}`)
-            .then(r => r.json()).then(d => renderRankRow(d.results.slice(0, 10), 'rank-grid'));
-
-            // 5. HARDCODED PERFECT ANIME ZONE (Horizontal)
-            renderScrollRow(exactAnimeList, 'anime-grid');
-
-            // 6. SWEET K-DRAMAS (Horizontal)
-            fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_API_KEY}&with_original_language=ko&sort_by=popularity.desc`)
-            .then(r => r.json()).then(d => renderScrollRow(d.results.slice(0, 10), 'kdrama-grid'));
-
-            let slideIndex = 0;
-            setInterval(() => {
-                slideIndex = (slideIndex + 1) % movies.length;
-                if(slider) slider.scrollTo({ left: slideIndex * slider.offsetWidth, behavior: 'smooth' });
-            }, 4000);
-
-        } catch(err) { console.error("Init Error:", err); }
-    }
-
-    window.renderContinueWatching = function(data) {
-        if(!data || !data.title || !data.img || data.type === 'live') return; 
-        document.getElementById('continue-watching-section').style.display = 'block';
-        const action = data.isTmdb ? `playTMDBMovie(${data.id}, '${data.type}', true)` : `playMovie(${data.id}, true)`;
-        // Continue grid maintain horizontal fix aspect
-        document.getElementById('continue-grid').innerHTML = `
-            <div class="movie-card" onclick="${action}" style="border: 2px solid var(--gold); flex: 0 0 120px;">
-                <img src="${data.img}" alt="${data.title}">
-                <div class="movie-info" style="background:var(--gold); color:black;"><p style="color:black; font-weight:bold;">▶ PLAY: ${data.title}</p></div>
-            </div>
-        `;
-    };
-
-    window.playLiveChannel = function(id) {
-        const channel = liveChannels.find(x => x.id === id);
-        window.currentOpenMovieId = "live_" + id;
-
-        const vBox = document.getElementById('main-video-box');
-        vBox.style.backgroundImage = `url('${channel.img}')`;
-        vBox.style.backgroundSize = 'contain';
-        vBox.style.backgroundRepeat = 'no-repeat';
-        vBox.style.backgroundColor = '#111';
-        document.getElementById('introVideo').style.display = 'none';
-        document.getElementById('introVideo').pause();
-        
-        document.getElementById('p-title').innerText = channel.title;
-        document.getElementById('dynamic-tag').innerText = channel.detailTag;
-        document.getElementById('screen-tag').innerText = channel.screenTag; 
-        document.getElementById('screen-tag').style.display = 'block';
-        document.getElementById('screen-tag').style.background = channel.screenTagColor;
-        document.getElementById('movie-desc').innerText = channel.desc;
-        document.getElementById('trailer-poster').style.backgroundImage = `url('${channel.img}')`;
-        
-        document.getElementById('comments-list').innerHTML = '<p style="color:#666; font-size:13px;">Loading live chat...</p>';
-        if(window.fetchLiveComments) window.fetchLiveComments("live_" + id);
-
-        const fullBtn = document.getElementById('fullMovieBtn');
-        fullBtn.innerText = "🔴 WATCH LIVE NOW";
-        fullBtn.style.display = "block"; 
-        fullBtn.style.background = "#ff0000";
-        fullBtn.style.color = "white";
-        document.getElementById('ep-tab-head').style.display = "none";
-        document.getElementById('server-container').style.display = 'none'; 
-        
-        fullBtn.onclick = function() { openEpisodeFullscreen(channel.liveLink, true); };
-        
-        document.getElementById('playerModal').style.display = 'flex'; switchTab(0); 
-        document.getElementById('sim-grid').innerHTML = '';
-    }
-
-    window.playTMDBMovie = async function(id, type = 'movie', autoPlay = false) {
-        window.currentOpenMovieId = "tmdb_" + id; 
-        const fullBtn = document.getElementById('fullMovieBtn');
-        fullBtn.innerText = "▶ WATCH FULL MOVIE";
-        fullBtn.style.background = "var(--gold)";
-        fullBtn.style.color = "#000";
-
-        const endpoint = type === 'tv' ? `tv/${id}` : `movie/${id}`;
-        const res = await fetch(`https://api.themoviedb.org/3/${endpoint}?api_key=${TMDB_API_KEY}&language=en-US`);
-        const media = await res.json();
-        
-        const title = type === 'tv' ? media.name : media.title;
-        const releaseDate = type === 'tv' ? media.first_air_date : media.release_date;
-        const imgUrl = '[https://image.tmdb.org/t/p/w500](https://image.tmdb.org/t/p/w500)' + media.poster_path;
-        const bgUrl = '[https://image.tmdb.org/t/p/original](https://image.tmdb.org/t/p/original)' + media.backdrop_path;
-
-        const cwData = { id: id, isTmdb: true, type: type, title: title, img: imgUrl };
-        if(window.saveHistoryToFirebase) window.saveHistoryToFirebase(cwData);
-        window.renderContinueWatching(cwData); 
-
-        document.getElementById('p-title').innerText = title;
-        document.getElementById('dynamic-tag').innerText = "⭐ " + (media.vote_average).toFixed(1) + " • " + (releaseDate || '');
-        document.getElementById('screen-tag').style.display = 'none'; 
-        document.getElementById('movie-desc').innerText = media.overview || "No description available.";
-        document.getElementById('trailer-poster').style.backgroundImage = `url('${imgUrl}')`;
-        
-        const vBox = document.getElementById('main-video-box');
-        document.getElementById('introVideo').style.display = 'none';
-        document.getElementById('introVideo').pause();
-        vBox.style.backgroundImage = `url('${bgUrl}')`;
-        vBox.style.backgroundSize = 'cover';
-        vBox.style.backgroundPosition = 'center';
-
-        document.getElementById('comments-list').innerHTML = '<p style="color:#666; font-size:13px;">Loading live comments...</p>';
-        if(window.fetchLiveComments) window.fetchLiveComments("tmdb_" + id);
-
-        const serverContainer = document.getElementById('server-container');
-        const epTabHead = document.getElementById('ep-tab-head');
-        const epContainer = document.getElementById('ep-container');
-
-        if (type === 'movie') {
-            fullBtn.style.display = "block"; 
-            epTabHead.style.display = "none";
-            
-            fullBtn.onclick = function() {
-                openEpisodeFullscreen(`https://autoembed.to/movie/tmdb/${id}`);
-            };
-
-            serverContainer.style.display = 'block';
-            serverContainer.innerHTML = `
-                <div style="margin-top:15px; padding-top:15px; border-top:1px solid #222;">
-                    <h4 style="color:var(--gold); margin-bottom:10px; font-size:13px;">Server Switcher (VIP for Hindi)</h4>
-                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                        <button style="flex:1 1 45%; padding:10px; background:#222; color:white; border:1px solid var(--primary); border-radius:8px; font-weight:bold; cursor:pointer;" onclick="openEpisodeFullscreen('[https://autoembed.to/movie/tmdb/$](https://autoembed.to/movie/tmdb/$){id}')">Server 1 (VIP)</button>
-                        <button style="flex:1 1 45%; padding:10px; background:#222; color:white; border:1px solid #444; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="openEpisodeFullscreen('[https://vidsrc.me/embed/movie?tmdb=$](https://vidsrc.me/embed/movie?tmdb=$){id}')">Server 2</button>
-                        <button style="flex:1 1 45%; padding:10px; background:#222; color:white; border:1px solid #444; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="openEpisodeFullscreen('[https://vidsrc.to/embed/movie/$](https://vidsrc.to/embed/movie/$){id}')">Server 3</button>
-                        <button style="flex:1 1 45%; padding:10px; background:#222; color:white; border:1px solid #444; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="openEpisodeFullscreen('[https://embed.su/embed/movie/$](https://embed.su/embed/movie/$){id}')">Server 4</button>
-                    </div>
-                </div>
-            `;
-            if(autoPlay) fullBtn.click();
-            
-        } else {
-            fullBtn.style.display = "none"; 
-            serverContainer.style.display = "none";
-            epTabHead.style.display = "block";
-            window.currentTmdbShowId = id; 
-            
-            let seasonOptions = '';
-            if(media.seasons) {
-                media.seasons.forEach(s => {
-                    if(s.season_number > 0) { 
-                        seasonOptions += `<option value="${s.season_number}">Season ${s.season_number}</option>`;
-                    }
-                });
-            }
-
-            epContainer.innerHTML = `
-                <div style="margin-bottom: 15px;">
-                    <select id="season-select" style="background:#222; color:var(--gold); padding:10px; border:1px solid #444; border-radius:8px; width:100%; font-weight:bold; outline:none;" onchange="loadTMDBSeason(this.value)">
-                        ${seasonOptions}
-                    </select>
-                </div>
-                <div id="tmdb-episodes-list"><p style="color:#888;">Loading episodes...</p></div>
-            `;
-            
-            loadTMDBSeason(1);
-            if(autoPlay) switchTab(1);
-        }
-
-        document.getElementById('playerModal').style.display = 'flex'; switchTab(0);
-        try {
-            const simRes = await fetch(`https://api.themoviedb.org/3/${endpoint}/${id}/similar?api_key=${TMDB_API_KEY}&language=en-US&page=1`);
-            const simData = await simRes.json();
-            // Recommended keeps standard posters fix
-            renderScrollRow(simData.results.slice(0,10), 'sim-grid');
-        } catch(e) {}
-    };
-
-    window.loadTMDBSeason = async function(seasonNumber) {
-        const listDiv = document.getElementById('tmdb-episodes-list');
-        listDiv.innerHTML = '<p style="color:#888;">Fetching episodes from TMDB...</p>';
-        try {
-            const sRes = await fetch(`https://api.themoviedb.org/3/tv/${window.currentTmdbShowId}/season/${seasonNumber}?api_key=${TMDB_API_KEY}&language=en-US`);
-            const sData = await sRes.json();
-            listDiv.innerHTML = '';
-            if(sData.episodes && sData.episodes.length > 0) {
-                sData.episodes.forEach(ep => {
-                    let epImg = ep.still_path ? '[https://image.tmdb.org/t/p/w300](https://image.tmdb.org/t/p/w300)' + ep.still_path : '';
-                    let epLink = `https://vidsrc.me/embed/tv?tmdb=${window.currentTmdbShowId}&season=${seasonNumber}&episode=${ep.episode_number}`;
-                    
-                    listDiv.innerHTML += `
-                        <div style="display:flex; align-items:center; gap:12px; background:#111; padding:12px; border-radius:10px; margin-bottom:8px; border:1px solid #222; cursor:pointer;" onclick="openEpisodeFullscreen('${epLink}')">
-                            <div style="width:80px; height:45px; border-radius:5px; overflow:hidden; flex-shrink:0; background:#222; display:flex; justify-content:center; align-items:center;">
-                                ${epImg ? `<img src="${epImg}" style="width:100%;height:100%;object-fit:cover">` : `<span style="color:#555; font-size:10px;">No Image</span>`}
-                            </div>
-                            <div>
-                                <b style="color:var(--gold); font-size:12px;">S${seasonNumber} E${ep.episode_number}</b>
-                                <div style="font-size:13px; color:white;">${ep.name}</div>
-                            </div>
-                        </div>`;
-                });
-            } else {
-                listDiv.innerHTML = '<p style="color:#888;">Episodes not found.</p>';
-            }
-        } catch(e) {
-            listDiv.innerHTML = '<p style="color:red;">Error loading episodes.</p>';
-        }
-    }
-
-    window.playMovie = function(id, autoPlay = false) {
-        const currentMovie = movies.find(x => x.id === id);
-        window.currentOpenMovieId = "local_" + id;
-
-        const cwData = { id: id, isTmdb: false, title: currentMovie.title, img: currentMovie.img };
-        if(window.saveHistoryToFirebase) window.saveHistoryToFirebase(cwData);
-        window.renderContinueWatching(cwData); 
-
-        const vBox = document.getElementById('main-video-box');
-        vBox.style.backgroundImage = 'none';
-        document.getElementById('introVideo').style.display = 'block';
-        document.getElementById('screen-tag').style.display = 'block';
-        document.getElementById('server-container').style.display = 'none'; 
-        
-        document.getElementById('p-title').innerText = currentMovie.title;
-        document.getElementById('dynamic-tag').innerText = currentMovie.detailTag;
-        document.getElementById('screen-tag').innerText = currentMovie.screenTag; 
-        document.getElementById('screen-tag').style.background = currentMovie.screenTagColor;
-        document.getElementById('movie-desc').innerText = currentMovie.desc;
-        document.getElementById('trailer-poster').style.backgroundImage = `url('${currentMovie.img}')`;
-        
-        document.getElementById('comments-list').innerHTML = '<p style="color:#666; font-size:13px;">Loading live comments...</p>';
-        if(window.fetchLiveComments) window.fetchLiveComments("local_" + id);
-
-        document.getElementById('introSource').src = currentMovie.trailerLink;
-        const intro = document.getElementById('introVideo'); intro.load(); intro.play();
-        
-        const fullBtn = document.getElementById('fullMovieBtn');
-        fullBtn.innerText = "▶ WATCH FULL MOVIE";
-        fullBtn.style.background = "var(--gold)";
-        fullBtn.style.color = "#000";
-
-        if(currentMovie.type === "movie") {
-            fullBtn.style.display = "block"; document.getElementById('ep-tab-head').style.display = "none";
-            fullBtn.onclick = function() {
-                if(currentMovie.fullMovieLink) {
-                    openEpisodeFullscreen(currentMovie.fullMovieLink);
-                } else {
-                    alert("Bhai, ye movie HD mein upload ho rahi hai ya iska link update hona baaki hai! 🔥");
-                }
-            };
-            if(autoPlay) fullBtn.click();
-        } else {
-            fullBtn.style.display = "none"; document.getElementById('ep-tab-head').style.display = "block";
-            const epList = document.getElementById('ep-container'); epList.innerHTML = '';
-            currentMovie.episodes.forEach((e) => {
-                epList.innerHTML += `<div style="display:flex; align-items:center; gap:12px; background:#111; padding:12px; border-radius:10px; margin-bottom:8px; border:1px solid #222;" onclick="openEpisodeFullscreen('${e.embed}')"><div style="width:80px; height:45px; border-radius:5px; overflow:hidden;"><img src="${e.thumb}" style="width:100%;height:100%;object-fit:cover"></div><b>${e.title}</b></div>`;
-            });
-            if(autoPlay) switchTab(1);
-        }
-        
-        document.getElementById('playerModal').style.display = 'flex'; switchTab(0); 
-        document.getElementById('sim-grid').innerHTML = '';
-    }
-
-    function openEpisodeFullscreen(link, isLiveStream = false) {
-        document.getElementById('introVideo').pause(); 
-        const fsModal = document.getElementById("fsPlayerModal");
-        const iframePlayer = document.getElementById('episodeFrame');
-        const videoPlayer = document.getElementById('liveVideoPlayer');
-
-        fsModal.style.display = 'block';
-
-        if (isLiveStream && link.includes('.m3u8')) {
-            iframePlayer.style.display = 'none';
-            videoPlayer.style.display = 'block';
-            
-            if (Hls.isSupported()) {
-                const hls = new Hls();
-                hls.loadSource(link);
-                hls.attachMedia(videoPlayer);
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    videoPlayer.play();
-                });
-            } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
-                videoPlayer.src = link;
-                videoPlayer.play();
-            }
-        } else {
-            videoPlayer.style.display = 'none';
-            iframePlayer.style.display = 'block';
-            iframePlayer.src = link;
-        }
-
-        if (fsModal.requestFullscreen) fsModal.requestFullscreen();
-        if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(e => {});
-    }
-
-    function closeEpisode() { 
-        const iframePlayer = document.getElementById('episodeFrame');
-        const videoPlayer = document.getElementById('liveVideoPlayer');
-        
-        iframePlayer.src = ""; 
-        videoPlayer.pause();
-        videoPlayer.src = "";
-
-        document.getElementById('fsPlayerModal').style.display = 'none'; 
-        if (document.fullscreenElement && document.exitFullscreen) {
-            document.exitFullscreen().catch(e => {});
-        }
-        if (screen.orientation && screen.orientation.unlock) {
-            screen.orientation.unlock();
-        }
-    }
-
-    function switchTab(idx) { 
-        document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx)); 
-        document.querySelectorAll('.tab-content').forEach((c, i) => c.classList.toggle('active', i === idx)); 
-    }
-
-    function closeInfoPage() { 
-        document.getElementById('introVideo').pause(); 
-        document.getElementById('playerModal').style.display = 'none'; 
-        if(window.currentCommentListener) window.currentCommentListener(); 
-    }
-    
-    let splashTime = 4; let splashInterval;
-    window.runSplashTimer = function() {
-        const splash = document.getElementById('splashScreen');
-        splash.style.display = 'flex'; setTimeout(() => splash.style.opacity = '1', 50);
-        initHome(); 
-        splashTime = 4; const timerEl = document.getElementById('splashTimer');
-        if(timerEl) timerEl.innerText = splashTime;
-        splashInterval = setInterval(() => {
-            splashTime--; if(splashTime > 0) { if(timerEl) timerEl.innerText = splashTime; } else { removeSplash(); }
-        }, 1000);
-    }
-    function forceSkipSplash(e) { e.stopPropagation(); removeSplash(); }
-    function openSplashMovie() { removeSplash(); setTimeout(() => { playMovie(3); }, 300); }
-    function removeSplash() {
-        clearInterval(splashInterval); const splash = document.getElementById('splashScreen');
-        if(splash && splash.style.display !== 'none') {
-            splash.style.opacity = '0'; splash.style.pointerEvents = 'none'; setTimeout(() => { splash.style.display = 'none'; }, 400); 
-        }
-    }
-</script>
-
-<script type="module">
-    import { initializeApp } from "[https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js](https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js)";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "[https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js](https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js)";
-    import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, where, onSnapshot } from "[https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js](https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js)";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDFHIr_2W-jRr97x1HVY9tpyWaI2QqtY9E",
@@ -2102,4 +1018,4 @@ Acode mein jaake purana sab Delete maar aur ye Ultimate code paste kar. Tumhari 
     });
 </script>
 </body>
-                    </html>
+    </html>
