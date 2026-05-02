@@ -40,11 +40,9 @@
         
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 15px; }
         
-        /* Fixed width for scrollable cards */
         .scroll-row .movie-card { flex: 0 0 120px; } 
         .grid .movie-card { flex: auto; width: 100%;}
 
-        /* 🛠️ CSS FIX: NAME CUT NAHI HOGA 🛠️ */
         .movie-card { background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid #252525; cursor: pointer; position: relative; aspect-ratio: 2 / 3.3; display: flex; flex-direction: column;}
         .movie-card img { width: 100%; height: calc(100% - 35px); object-fit: cover; border-bottom: 1px solid #222; background: #000; }
         .movie-info { padding: 8px 4px; text-align: center; height: 35px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3);}
@@ -147,6 +145,10 @@
         .comment-input-area button { padding: 12px 20px; background: var(--primary); color: black; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
         .live-comment { background: #111; padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #222; display: flex; gap: 12px; }
         .c-avatar { width: 35px; height: 35px; background: linear-gradient(45deg, var(--gold), #ff8800); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 16px; flex-shrink: 0; background-size: cover; background-position: center;}
+    
+        /* 🛠️ SERVER BUTTON CSS 🛠️ */
+        .server-btn { flex: 1 1 30%; padding: 10px; background: #222; color: white; border: 1px solid #444; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s;}
+        .server-btn:hover, .server-btn.active-server { border-color: var(--primary); background: rgba(0, 210, 255, 0.1); color: var(--primary); }
     </style>
 </head>
 <body>
@@ -240,7 +242,7 @@
         <div class="settings-group">
             <div class="settings-title">App Info</div>
             <div class="settings-box">
-                <div class="set-item">App Version <span>v13.3 CSS Fix</span></div>
+                <div class="set-item">App Version <span>v13.4 Smart Engine</span></div>
                 <div class="set-item" style="color: #ff4444; font-weight:bold;" onclick="logoutUser()">🚪 Logout Account</div>
             </div>
         </div>
@@ -250,7 +252,7 @@
         <div class="page-header"><h2 style="margin:0; color:var(--primary);">My Profile</h2><div onclick="closeProfile()" style="font-size:30px; cursor:pointer;">✕</div></div>
         <div class="avatar-container">
             <div class="avatar" id="profileInitial">S</div>
-            <div class="edit-avatar-btn" onclick="openModal('avatarModal')">✏️</div>
+            <div class="edit-avatar-btn" onclick="openModal('avatarModal')">📷</div>
         </div>
         <div style="text-align:center; margin-bottom: 25px;">
             <h2 id="displayProfileName" style="margin:0;">Loading...</h2>
@@ -347,7 +349,17 @@
                 <div class="scroll-row" id="sim-grid" style="padding:0;"></div>
             </div>
 
-            <div id="tab-episodes" class="tab-content"><div id="ep-container"></div></div>
+            <div id="tab-episodes" class="tab-content">
+                <div id="tv-server-container" style="display:none; margin-bottom:15px; padding:10px; background:#111; border-radius:10px; border:1px solid #222;">
+                    <p style="color:#888; font-size:12px; margin:0 0 8px 0; text-align:center;">Select Episode Server</p>
+                    <div style="display:flex; gap:8px;">
+                        <button class="server-btn active-server" id="tv-srv-1" onclick="setTVServer(1)">Server 1 (Fast)</button>
+                        <button class="server-btn" id="tv-srv-2" onclick="setTVServer(2)">Server 2 (Auto)</button>
+                        <button class="server-btn" id="tv-srv-3" onclick="setTVServer(3)">Server 3 (HD)</button>
+                    </div>
+                </div>
+                <div id="ep-container"></div>
+            </div>
             
             <div id="tab-comments" class="tab-content">
                 <div class="comment-input-area">
@@ -383,6 +395,7 @@
     window.currentUserAvatar = ""; 
     window.currentOpenMovieId = null;
     window.currentTmdbShowId = null;
+    window.currentTVServer = 1; // Default TV Server
 
     function switchNav(pageId, el) {
         document.getElementById('home').style.display = 'none';
@@ -404,11 +417,10 @@
         { id: 103, title: "Aaj Tak News", type: "live", tag: "🔴 NEWS", screenTag: "News", screenTagColor: "#ff0000", img: "https://placehold.co/400x400/ff0000/ffffff?text=Aaj+Tak+News", liveLink: "https://feeds.intoday.in/aajtak/api/aajtakhd/master.m3u8", desc: "Aaj Tak Live News 24x7.", detailTag: "News • Hindi" }
     ];
 
-    /* 🛠️ DEMON SLAYER IMAGE SWAP & 3 EPISODES FIX 🛠️ */
     const movies = [
-        { id: 1, title: "Demon Slayer: Infinity Castle", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "https://i.postimg.cc/DwfGrBHM/kv-1.jpg", trailerLink: "https://www.dropbox.com/scl/fi/cmiemscnlidr0iszlal4z/Demon_Slayer__Kimetsu_no_Yaiba_Infinity_Castle___MAIN_TRAILER-1080p.mp4?rlkey=wy1z8i6bjh6janpqk2xaq5a32&raw=1", fullMovieLink: "https://steromax.4meplayer.com/#hn1h5", desc: "The final battle begins.", detailTag: "Official Trailer / Preview" },
+        { id: 1, title: "Demon Slayer: Infinity Castle", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg", trailerLink: "https://www.dropbox.com/scl/fi/cmiemscnlidr0iszlal4z/Demon_Slayer__Kimetsu_no_Yaiba_Infinity_Castle___MAIN_TRAILER-1080p.mp4?rlkey=wy1z8i6bjh6janpqk2xaq5a32&raw=1", fullMovieLink: "https://steromax.4meplayer.com/#hn1h5", desc: "The final battle begins.", detailTag: "Official Trailer / Preview" },
         { id: 2, title: "Pushpa 2: The Rule", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg", trailerLink: "https://www.dropbox.com/scl/fi/8ml1gt55dbwso60vgvrpg/Pushpa_2_-_The_Rule_Trailer__Hindi____Allu_Arjun___Sukumar___Rashmika_Mandanna___Fahadh_Faasil___DSP-1080p.mp4?rlkey=2b1euqnm0grgktur01br1lv1g&raw=1", desc: "Pushpa Raj returns.", detailTag: "Official Trailer / Preview" },
-        { id: 3, title: "Demon Slayer Season 1", type: "series", tag: "NEW SERIES", screenTag: "New Series", screenTagColor: "#ff0000", img: "https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg", trailerLink: "https://www.dropbox.com/scl/fi/i2fsl28a3p8r5do86bhwu/Demon_Slayer___OP____Gurenge__by_LiSA_HD-1080p.mp4?rlkey=pe9xi0ivfsg7fx6to2z30qtv9&raw=1", desc: "Tanjiro's journey begins.", detailTag: "New Series / Preview", 
+        { id: 3, title: "Demon Slayer Season 1", type: "series", tag: "NEW SERIES", screenTag: "New Series", screenTagColor: "#ff0000", img: "https://i.postimg.cc/DwfGrBHM/kv-1.jpg", trailerLink: "https://www.dropbox.com/scl/fi/i2fsl28a3p8r5do86bhwu/Demon_Slayer___OP____Gurenge__by_LiSA_HD-1080p.mp4?rlkey=pe9xi0ivfsg7fx6to2z30qtv9&raw=1", desc: "Tanjiro's journey begins.", detailTag: "New Series / Preview", 
           episodes: [
               { title: "Episode 1: Cruelty (Hindi)", embed: "https://steromax.4meplayer.com/#6rsmm", thumb: "https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png" },
               { title: "Episode 2: Trainer Sakonji Urokodaki (Hindi)", embed: "", thumb: "https://image.tmdb.org/t/p/w300/xI312B00J6tM1Zg4h1XG9kH0F1x.jpg" },
@@ -596,6 +608,7 @@
         fullBtn.style.color = "white";
         document.getElementById('ep-tab-head').style.display = "none";
         document.getElementById('server-container').style.display = 'none'; 
+        document.getElementById('tv-server-container').style.display = 'none';
         
         fullBtn.onclick = function() { openEpisodeFullscreen(channel.liveLink, true); };
         
@@ -603,11 +616,12 @@
         document.getElementById('sim-grid').innerHTML = '';
     }
 
+    // 🔥 SMART ENGINE: MULTI-SERVER FOR TMDB MOVIES & SERIES 🔥
     window.playTMDBMovie = async function(id, type = 'movie', autoPlay = false) {
         window.currentOpenMovieId = "tmdb_" + id; 
         const fullBtn = document.getElementById('fullMovieBtn');
-        fullBtn.innerText = "▶ WATCH FULL MOVIE";
-        fullBtn.style.background = "var(--gold)";
+        fullBtn.innerText = "▶ PLAY MOVIE (SERVER 1)";
+        fullBtn.style.background = "var(--primary)";
         fullBtn.style.color = "#000";
 
         const endpoint = type === 'tv' ? `tv/${id}` : `movie/${id}`;
@@ -642,19 +656,23 @@
         const serverContainer = document.getElementById('server-container');
         const epTabHead = document.getElementById('ep-tab-head');
         const epContainer = document.getElementById('ep-container');
+        const tvServerContainer = document.getElementById('tv-server-container');
 
         if (type === 'movie') {
             fullBtn.style.display = "block"; 
             epTabHead.style.display = "none";
-            fullBtn.onclick = function() { openEpisodeFullscreen(`https://autoembed.to/movie/tmdb/${id}`); };
+            tvServerContainer.style.display = "none";
+            fullBtn.onclick = function() { openEpisodeFullscreen(`https://vidsrc.me/embed/movie?tmdb=${id}`); };
 
+            // 🎬 MOVIE MULTI-SERVER SWITCHER
             serverContainer.style.display = 'block';
             serverContainer.innerHTML = `
-                <div style="margin-top:15px; padding-top:15px; border-top:1px solid #222;">
-                    <h4 style="color:var(--gold); margin-bottom:10px; font-size:13px;">Server Switcher (VIP for Hindi)</h4>
+                <div style="margin-top:10px; padding:15px; background:#111; border-radius:12px; border:1px solid #222;">
+                    <h4 style="color:white; margin-top:0; margin-bottom:12px; font-size:14px; text-align:center;">⭐ Select Movie Server</h4>
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                        <button style="flex:1 1 45%; padding:10px; background:#222; color:white; border:1px solid var(--primary); border-radius:8px; font-weight:bold; cursor:pointer;" onclick="openEpisodeFullscreen('https://autoembed.to/movie/tmdb/${id}')">Server 1 (VIP)</button>
-                        <button style="flex:1 1 45%; padding:10px; background:#222; color:white; border:1px solid #444; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="openEpisodeFullscreen('https://vidsrc.me/embed/movie?tmdb=${id}')">Server 2</button>
+                        <button class="server-btn" onclick="openEpisodeFullscreen('https://vidsrc.me/embed/movie?tmdb=${id}')">Server 1 (Fast)</button>
+                        <button class="server-btn" onclick="openEpisodeFullscreen('https://autoembed.to/movie/tmdb/${id}')">Server 2 (Auto)</button>
+                        <button class="server-btn" onclick="openEpisodeFullscreen('https://multiembed.mov/?video_id=${id}&tmdb=1')">Server 3 (HD)</button>
                     </div>
                 </div>
             `;
@@ -663,6 +681,7 @@
             fullBtn.style.display = "none"; 
             serverContainer.style.display = "none";
             epTabHead.style.display = "block";
+            tvServerContainer.style.display = "block"; // Show TV server selector
             window.currentTmdbShowId = id; 
             
             let seasonOptions = '';
@@ -673,11 +692,11 @@
             }
             epContainer.innerHTML = `
                 <div style="margin-bottom: 15px;">
-                    <select id="season-select" style="background:#222; color:var(--gold); padding:10px; border:1px solid #444; border-radius:8px; width:100%; font-weight:bold; outline:none;" onchange="loadTMDBSeason(this.value)">
+                    <select id="season-select" style="background:#222; color:var(--primary); padding:12px; border:1px solid #444; border-radius:8px; width:100%; font-weight:bold; outline:none;" onchange="loadTMDBSeason(this.value)">
                         ${seasonOptions}
                     </select>
                 </div>
-                <div id="tmdb-episodes-list"><p style="color:#888;">Loading episodes...</p></div>
+                <div id="tmdb-episodes-list"><p style="color:#888; text-align:center;">Fetching episodes...</p></div>
             `;
             loadTMDBSeason(1);
             if(autoPlay) switchTab(1);
@@ -691,30 +710,47 @@
         } catch(e) {}
     };
 
+    window.setTVServer = function(num) {
+        window.currentTVServer = num;
+        document.getElementById('tv-srv-1').classList.remove('active-server');
+        document.getElementById('tv-srv-2').classList.remove('active-server');
+        document.getElementById('tv-srv-3').classList.remove('active-server');
+        document.getElementById('tv-srv-' + num).classList.add('active-server');
+    };
+
+    window.openTMDBEpisode = function(season, episode) {
+        let link = "";
+        let id = window.currentTmdbShowId;
+        if(window.currentTVServer === 1) link = `https://vidsrc.me/embed/tv?tmdb=${id}&season=${season}&episode=${episode}`;
+        else if(window.currentTVServer === 2) link = `https://autoembed.to/tv/tmdb/${id}-${season}-${episode}`;
+        else link = `https://multiembed.mov/?video_id=${id}&tmdb=1&s=${season}&e=${episode}`;
+        openEpisodeFullscreen(link);
+    };
+
     window.loadTMDBSeason = async function(seasonNumber) {
         const listDiv = document.getElementById('tmdb-episodes-list');
-        listDiv.innerHTML = '<p style="color:#888;">Fetching episodes...</p>';
+        listDiv.innerHTML = '<p style="color:#888; text-align:center;">Fetching episodes...</p>';
         try {
             const sRes = await fetch(`https://api.themoviedb.org/3/tv/${window.currentTmdbShowId}/season/${seasonNumber}?api_key=${TMDB_API_KEY}&language=en-US`);
             const sData = await sRes.json();
             listDiv.innerHTML = '';
             if(sData.episodes && sData.episodes.length > 0) {
                 sData.episodes.forEach(ep => {
-                    let epImg = ep.still_path ? 'https://image.tmdb.org/t/p/w300' + ep.still_path : '';
-                    let epLink = `https://vidsrc.me/embed/tv?tmdb=${window.currentTmdbShowId}&season=${seasonNumber}&episode=${ep.episode_number}`;
+                    let epImg = ep.still_path ? 'https://image.tmdb.org/t/p/w300' + ep.still_path : `https://placehold.co/300x170/111/444?text=S${seasonNumber}E${ep.episode_number}`;
                     listDiv.innerHTML += `
-                        <div style="display:flex; align-items:center; gap:12px; background:#111; padding:12px; border-radius:10px; margin-bottom:8px; border:1px solid #222; cursor:pointer;" onclick="openEpisodeFullscreen('${epLink}')">
-                            <div style="width:80px; height:45px; border-radius:5px; overflow:hidden; flex-shrink:0; background:#222; display:flex; justify-content:center; align-items:center;">
-                                ${epImg ? `<img src="${epImg}" style="width:100%;height:100%;object-fit:cover">` : `<span style="color:#555; font-size:10px;">Play</span>`}
+                        <div style="display:flex; align-items:center; gap:12px; background:#111; padding:12px; border-radius:10px; margin-bottom:8px; border:1px solid #222; cursor:pointer; transition:0.2s;" onclick="openTMDBEpisode(${seasonNumber}, ${ep.episode_number})" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='#222'">
+                            <div style="width:100px; height:55px; border-radius:6px; overflow:hidden; flex-shrink:0; background:#000; position:relative;">
+                                <img src="${epImg}" style="width:100%;height:100%;object-fit:cover; opacity:0.8;">
+                                <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:white; font-size:20px; font-weight:bold; text-shadow:0 2px 5px black;">▶</div>
                             </div>
                             <div>
-                                <b style="color:var(--gold); font-size:12px;">S${seasonNumber} E${ep.episode_number}</b>
-                                <div style="font-size:13px; color:white;">${ep.name}</div>
+                                <b style="color:var(--primary); font-size:12px; text-transform:uppercase;">Episode ${ep.episode_number}</b>
+                                <div style="font-size:13px; color:white; margin-top:2px; font-weight:bold; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">${ep.name}</div>
                             </div>
                         </div>`;
                 });
-            } else { listDiv.innerHTML = '<p style="color:#888;">Episodes not found.</p>'; }
-        } catch(e) { listDiv.innerHTML = '<p style="color:red;">Error loading.</p>'; }
+            } else { listDiv.innerHTML = '<p style="color:#888; text-align:center;">Episodes not found.</p>'; }
+        } catch(e) { listDiv.innerHTML = '<p style="color:red; text-align:center;">Error loading episodes.</p>'; }
     }
 
     window.playMovie = function(id, autoPlay = false) {
@@ -730,6 +766,7 @@
         document.getElementById('introVideo').style.display = 'block';
         document.getElementById('screen-tag').style.display = 'block';
         document.getElementById('server-container').style.display = 'none'; 
+        document.getElementById('tv-server-container').style.display = 'none';
         
         document.getElementById('p-title').innerText = currentMovie.title;
         document.getElementById('dynamic-tag').innerText = currentMovie.detailTag;
@@ -760,7 +797,14 @@
             fullBtn.style.display = "none"; document.getElementById('ep-tab-head').style.display = "block";
             const epList = document.getElementById('ep-container'); epList.innerHTML = '';
             currentMovie.episodes.forEach((e) => {
-                epList.innerHTML += `<div style="display:flex; align-items:center; gap:12px; background:#111; padding:12px; border-radius:10px; margin-bottom:8px; border:1px solid #222;" onclick="openEpisodeFullscreen('${e.embed}')"><div style="width:80px; height:45px; border-radius:5px; overflow:hidden;"><img src="${e.thumb}" style="width:100%;height:100%;object-fit:cover"></div><b style="color:white; font-size:13px;">${e.title}</b></div>`;
+                epList.innerHTML += `
+                    <div style="display:flex; align-items:center; gap:12px; background:#111; padding:12px; border-radius:10px; margin-bottom:8px; border:1px solid #222; cursor:pointer;" onclick="openEpisodeFullscreen('${e.embed}')">
+                        <div style="width:100px; height:55px; border-radius:6px; overflow:hidden; position:relative;">
+                            <img src="${e.thumb}" style="width:100%;height:100%;object-fit:cover;">
+                            <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:white; font-size:20px; font-weight:bold; background:rgba(0,0,0,0.3);">▶</div>
+                        </div>
+                        <b style="color:white; font-size:13px;">${e.title}</b>
+                    </div>`;
             });
             if(autoPlay) switchTab(1);
         }
@@ -771,6 +815,7 @@
     }
 
     function openEpisodeFullscreen(link, isLiveStream = false) {
+        if(!link || link === "") { alert("Server abhi link process kar raha hai. Kripya doosra server try karein!"); return; }
         document.getElementById('introVideo').pause(); 
         const fsModal = document.getElementById("fsPlayerModal");
         const iframePlayer = document.getElementById('episodeFrame');
@@ -1011,4 +1056,4 @@
     });
 </script>
 </body>
-                </html>
+    </html>
