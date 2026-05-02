@@ -63,7 +63,7 @@
         .nav-item.live-btn.active { color: #ff4444; }
         .nav-item span { display: block; font-size: 12px; margin-top: 4px; font-weight: 700; }
 
-        /* --- FULL SCREEN PAGES (Profile & Settings) --- */
+        /* --- FULL SCREEN PAGES --- */
         .full-page { display: none; position: fixed; inset: 0; background: #000; z-index: 4000; flex-direction: column; padding: 20px; overflow-y: auto; padding-bottom: 100px;}
         .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; margin-top: 10px; border-bottom: 1px solid #222; padding-bottom: 15px; }
         
@@ -129,7 +129,9 @@
         .auth-box h2 span { color: #ffcc00; }
         .auth-box input, .action-modal input { width: 100%; padding: 14px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; color: white; outline: none; }
         input[type="date"] { color-scheme: dark; } 
-        .auth-box button, .action-modal button { width: 100%; padding: 14px; background: #00d2ff; color: black; font-weight: bold; border: none; border-radius: 12px; margin-top: 20px; cursor: pointer; }
+        .auth-box button, .action-modal button { width: 100%; padding: 14px; font-weight: bold; border: none; border-radius: 12px; margin-top: 15px; cursor: pointer; }
+        .btn-primary { background: #00d2ff; color: black; }
+        .btn-google { background: white; color: black; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; border: 1px solid #ddd; }
         .toggle-text { color: #ccc; font-size: 13px; cursor: pointer; }
         .toggle-text span { color: #00d2ff; text-decoration: underline; }
 
@@ -146,7 +148,6 @@
         .live-comment { background: #111; padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #222; display: flex; gap: 12px; }
         .c-avatar { width: 35px; height: 35px; background: linear-gradient(45deg, var(--gold), #ff8800); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 16px; flex-shrink: 0; background-size: cover; background-position: center;}
     
-        /* 🛠️ SERVER BUTTON CSS 🛠️ */
         .server-btn { flex: 1 1 30%; padding: 10px; background: #222; color: white; border: 1px solid #444; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s;}
         .server-btn:hover, .server-btn.active-server { border-color: var(--primary); background: rgba(0, 210, 255, 0.1); color: var(--primary); }
     </style>
@@ -162,7 +163,16 @@
                 <h3 id="authTitle" style="color:white; margin-bottom:15px;">Login</h3>
                 <input type="email" id="email" placeholder="Email Address">
                 <input type="password" id="password" placeholder="Password">
-                <button id="mainAuthBtn" onclick="handleAuth()">Login</button>
+                <button id="mainAuthBtn" class="btn-primary" onclick="handleAuth()">Login</button>
+                
+                <div style="margin: 15px 0; color: #888; font-size: 12px; display:flex; align-items:center; gap:10px;">
+                    <hr style="flex:1; border:none; border-top:1px solid #333;"> OR <hr style="flex:1; border:none; border-top:1px solid #333;">
+                </div>
+                
+                <button class="btn-google" onclick="handleGoogleLogin()">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" width="20" alt="Google"> Continue with Google
+                </button>
+
                 <div style="display: flex; justify-content: space-between; margin-top: 20px;">
                     <p class="toggle-text" style="margin:0;" onclick="toggleAuth()">Naya account? <span>Signup</span></p>
                     <p class="toggle-text" style="margin:0; color:#ff4444;" onclick="resetPassword()">Forgot Password?</p>
@@ -180,7 +190,7 @@
                 <label for="userDob" style="color: #bbb; font-size: 13px; margin-left: 5px;">Date of Birth 👇</label>
                 <input type="date" id="userDob">
             </div>
-            <button onclick="saveUserProfile()">Start Streaming</button>
+            <button class="btn-primary" onclick="saveUserProfile()">Start Streaming</button>
         </div>
     </div>
 
@@ -191,7 +201,7 @@
             <p style="color:#888; font-size:12px;">Pehle apna purana password daalein.</p>
             <input type="password" id="oldPass" placeholder="Purana Password">
             <input type="password" id="newPass" placeholder="Naya Password">
-            <button onclick="updateUserPassword()">Update Password</button>
+            <button class="btn-primary" onclick="updateUserPassword()">Update Password</button>
         </div>
     </div>
 
@@ -242,7 +252,7 @@
         <div class="settings-group">
             <div class="settings-title">App Info</div>
             <div class="settings-box">
-                <div class="set-item">App Version <span>v13.4 Smart Engine</span></div>
+                <div class="set-item">App Version <span>v13.5 (OAuth Secure)</span></div>
                 <div class="set-item" style="color: #ff4444; font-weight:bold;" onclick="logoutUser()">🚪 Logout Account</div>
             </div>
         </div>
@@ -395,7 +405,7 @@
     window.currentUserAvatar = ""; 
     window.currentOpenMovieId = null;
     window.currentTmdbShowId = null;
-    window.currentTVServer = 1; // Default TV Server
+    window.currentTVServer = 1;
 
     function switchNav(pageId, el) {
         document.getElementById('home').style.display = 'none';
@@ -616,7 +626,6 @@
         document.getElementById('sim-grid').innerHTML = '';
     }
 
-    // 🔥 SMART ENGINE: MULTI-SERVER FOR TMDB MOVIES & SERIES 🔥
     window.playTMDBMovie = async function(id, type = 'movie', autoPlay = false) {
         window.currentOpenMovieId = "tmdb_" + id; 
         const fullBtn = document.getElementById('fullMovieBtn');
@@ -664,7 +673,6 @@
             tvServerContainer.style.display = "none";
             fullBtn.onclick = function() { openEpisodeFullscreen(`https://vidsrc.me/embed/movie?tmdb=${id}`); };
 
-            // 🎬 MOVIE MULTI-SERVER SWITCHER
             serverContainer.style.display = 'block';
             serverContainer.innerHTML = `
                 <div style="margin-top:10px; padding:15px; background:#111; border-radius:12px; border:1px solid #222;">
@@ -681,7 +689,7 @@
             fullBtn.style.display = "none"; 
             serverContainer.style.display = "none";
             epTabHead.style.display = "block";
-            tvServerContainer.style.display = "block"; // Show TV server selector
+            tvServerContainer.style.display = "block"; 
             window.currentTmdbShowId = id; 
             
             let seasonOptions = '';
@@ -879,7 +887,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, EmailAuthProvider, reauthenticateWithCredential, updatePassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -895,6 +903,7 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const googleProvider = new GoogleAuthProvider();
     let isLoginMode = true;
 
     window.toggleAuth = () => {
@@ -911,6 +920,13 @@
             if (isLoginMode) await signInWithEmailAndPassword(auth, email, password);
             else await createUserWithEmailAndPassword(auth, email, password);
         } catch (err) { alert("Error: " + err.message); }
+    };
+
+    // 🔥 GOOGLE LOGIN FUNCTION 🔥
+    window.handleGoogleLogin = async () => {
+        try {
+            await signInWithPopup(auth, googleProvider);
+        } catch(e) { alert("Google Login Error: " + e.message); }
     };
 
     window.resetPassword = async () => {
@@ -1038,7 +1054,8 @@
     onAuthStateChanged(auth, async (user) => {
         const authOverlay = document.getElementById('authOverlay'); const onboardingOverlay = document.getElementById('onboardingOverlay');
         if (user) {
-            authOverlay.style.display = 'none'; const docSnap = await getDoc(doc(db, "users", user.uid));
+            authOverlay.style.display = 'none'; 
+            const docSnap = await getDoc(doc(db, "users", user.uid));
             if (docSnap.exists()) {
                 const data = docSnap.data(); window.currentUserName = data.name; 
                 document.getElementById('valName').innerText = data.name; document.getElementById('displayProfileName').innerText = data.name;
@@ -1051,9 +1068,13 @@
                     }
                 }
                 window.runSplashTimer(); 
-            } else { onboardingOverlay.style.display = 'flex'; }
+            } else { 
+                onboardingOverlay.style.display = 'flex'; 
+                // Agar google se login kiya hai toh naam apne aap form me aa jayega
+                if(user.displayName) { document.getElementById('userName').value = user.displayName; }
+            }
         } else { authOverlay.style.display = 'flex'; document.getElementById('splashScreen').style.display = 'none'; }
     });
 </script>
 </body>
-    </html>
+                    </html>
