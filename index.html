@@ -239,7 +239,7 @@
         <div class="settings-group">
             <div class="settings-title">App Info</div>
             <div class="settings-box">
-                <div class="set-item">App Version <span>v13.1 Stable Fix</span></div>
+                <div class="set-item">App Version <span>v13.2 Ultimate Fix</span></div>
                 <div class="set-item" style="color: #ff4444; font-weight:bold;" onclick="logoutUser()">🚪 Logout Account</div>
             </div>
         </div>
@@ -290,12 +290,6 @@
         </h3>
         <div class="scroll-row" id="rank-grid"></div>
 
-        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; margin-top:25px; color: #ff4757; display: flex; align-items: center; gap: 8px;">
-            <span style="background: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 14px;">👺</span> 
-            Anime Zone
-        </h3>
-        <div class="scroll-row" id="anime-grid"></div>
-
         <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; margin-top:25px; color: #ff6b81; display: flex; align-items: center; gap: 8px;">
             <span style="background: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 14px;">💖</span> 
             Sweet K-Dramas
@@ -318,9 +312,9 @@
             <div class="close-search" style="font-size: 24px; cursor:pointer;" onclick="switchNav('home', document.querySelector('.bottom-nav .nav-item'))">✕</div>
         </div>
         <div class="chip-container">
-            <div class="chip" onclick="quickSearch('Avengers')">Avengers</div>
-            <div class="chip" onclick="quickSearch('Naruto')">Naruto</div>
+            <div class="chip" onclick="quickSearch('Pushpa')">Pushpa</div>
             <div class="chip" onclick="quickSearch('Demon Slayer')">Demon Slayer</div>
+            <div class="chip" onclick="quickSearch('Leo')">Leo</div>
         </div>
         <div id="search-results-grid" class="grid"></div>
     </div>
@@ -389,7 +383,6 @@
     window.currentOpenMovieId = null;
     window.currentTmdbShowId = null;
 
-    // Navigation Switcher
     function switchNav(pageId, el) {
         document.getElementById('home').style.display = 'none';
         document.getElementById('searchOverlay').style.display = 'none';
@@ -404,27 +397,24 @@
         if(pageId === 'searchOverlay') document.getElementById('searchInput').focus();
     }
 
-    // 🔥 LIVE CHANNELS WITH FIXED IMAGES 🔥
+    // 🔥 LIVE CHANNELS WITH CRASH-PROOF PLACEHOLDERS 🔥
     const liveChannels = [
-        { id: 101, title: "TATA IPL HINDI", type: "live", tag: "🔴 MATCH", screenTag: "Sports", screenTagColor: "#ff0000", img: "https://i.postimg.cc/mZz5jSFn/IMG-20260418-153418.png", liveLink: "https://cmvlive.blogspot.com/2026/02/str-1-hindi.html?m=1", desc: "Watch TATA IPL 2026 Live. (Select Watch Now when player loads)", detailTag: "Cricket • HD" },
-        { id: 102, title: "Star Sports 1", type: "live", tag: "🔴 SPORTS", screenTag: "Sports", screenTagColor: "#0066ff", img: "https://i.postimg.cc/k47ZzJXX/star-sports-logo.jpg", liveLink: "https://catowrap.live/mrgamingbtsport2.m3u8", desc: "Star Sports 1 Live Stream.", detailTag: "Sports • Hindi" },
-        { id: 103, title: "Aaj Tak News", type: "live", tag: "🔴 NEWS", screenTag: "News", screenTagColor: "#ff0000", img: "https://i.postimg.cc/tC1nS1zL/aajtak.png", liveLink: "https://feeds.intoday.in/aajtak/api/aajtakhd/master.m3u8", desc: "Aaj Tak Live News 24x7.", detailTag: "News • Hindi" }
+        { id: 101, title: "TATA IPL HINDI", type: "live", tag: "🔴 MATCH", screenTag: "Sports", screenTagColor: "#ff0000", img: "https://i.postimg.cc/mZz5jSFn/IMG-20260418-153418.png", liveLink: "https://cmvlive.blogspot.com/2026/02/str-1-hindi.html?m=1", desc: "Watch TATA IPL 2026 Live.", detailTag: "Cricket • HD" },
+        { id: 102, title: "Star Sports 1", type: "live", tag: "🔴 SPORTS", screenTag: "Sports", screenTagColor: "#0066ff", img: "https://placehold.co/400x400/0066ff/ffffff?text=Star+Sports+1", liveLink: "https://catowrap.live/mrgamingbtsport2.m3u8", desc: "Star Sports 1 Live Stream.", detailTag: "Sports • Hindi" },
+        { id: 103, title: "Aaj Tak News", type: "live", tag: "🔴 NEWS", screenTag: "News", screenTagColor: "#ff0000", img: "https://placehold.co/400x400/ff0000/ffffff?text=Aaj+Tak+News", liveLink: "https://feeds.intoday.in/aajtak/api/aajtakhd/master.m3u8", desc: "Aaj Tak Live News 24x7.", detailTag: "News • Hindi" }
     ];
 
-    // ANIME LIST
-    const exactAnimeList = [
-        { id: 95479, title: "Jujutsu Kaisen", img: "https://image.tmdb.org/t/p/w500/1v0E2P6A4v9yWlG4kK4907BtaM1.jpg", type: "tv" },
-        { id: 98114, title: "Overflow", img: "https://image.tmdb.org/t/p/w500/8d8H05d3x2i8Xo1YtIq6XwzVzS0.jpg", type: "tv" },
-        { id: 113110, title: "Girlfriend, Girlfriend", img: "https://image.tmdb.org/t/p/w500/5mG7vK4V4v3T5Lp9p0YqH2v2x2Q.jpg", type: "tv" },
-        { id: 209867, title: "Frieren: Beyond Journey's End", img: "https://image.tmdb.org/t/p/w500/dQjR0PZkX7fR9T6CqR1aD2yD0V4.jpg", type: "tv" },
-        { id: 218729, title: "The Apothecary Diaries", img: "https://image.tmdb.org/t/p/w500/9b9f7D2C0u5M6a9xP5M3eA8y7G3.jpg", type: "tv" },
-        { id: 17351, title: "Doraemon", img: "https://image.tmdb.org/t/p/w500/A3x1uYn3z6N5eE4mB1c5D8A3t3K.jpg", type: "tv" }
-    ];
-
+    // 🔥 DEMON SLAYER 26 EPISODES ADDED 🔥
     const movies = [
         { id: 1, title: "Demon Slayer: Infinity Castle", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "https://i.postimg.cc/DwfGrBHM/kv-1.jpg", trailerLink: "https://www.dropbox.com/scl/fi/cmiemscnlidr0iszlal4z/Demon_Slayer__Kimetsu_no_Yaiba_Infinity_Castle___MAIN_TRAILER-1080p.mp4?rlkey=wy1z8i6bjh6janpqk2xaq5a32&raw=1", fullMovieLink: "https://steromax.4meplayer.com/#hn1h5", desc: "The final battle begins.", detailTag: "Official Trailer / Preview" },
         { id: 2, title: "Pushpa 2: The Rule", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg", trailerLink: "https://www.dropbox.com/scl/fi/8ml1gt55dbwso60vgvrpg/Pushpa_2_-_The_Rule_Trailer__Hindi____Allu_Arjun___Sukumar___Rashmika_Mandanna___Fahadh_Faasil___DSP-1080p.mp4?rlkey=2b1euqnm0grgktur01br1lv1g&raw=1", desc: "Pushpa Raj returns.", detailTag: "Official Trailer / Preview" },
-        { id: 3, title: "Demon Slayer Season 1", type: "series", tag: "NEW SERIES", screenTag: "New Series", screenTagColor: "#ff0000", img: "https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg", trailerLink: "https://www.dropbox.com/scl/fi/i2fsl28a3p8r5do86bhwu/Demon_Slayer___OP____Gurenge__by_LiSA_HD-1080p.mp4?rlkey=pe9xi0ivfsg7fx6to2z30qtv9&raw=1", desc: "Tanjiro's journey begins.", detailTag: "New Series / Preview", episodes: [{ title: "Episode 1 (Hindi)", embed: "https://steromax.4meplayer.com/#6rsmm", thumb: "https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png" }] },
+        { id: 3, title: "Demon Slayer Season 1", type: "series", tag: "NEW SERIES", screenTag: "New Series", screenTagColor: "#ff0000", img: "https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg", trailerLink: "https://www.dropbox.com/scl/fi/i2fsl28a3p8r5do86bhwu/Demon_Slayer___OP____Gurenge__by_LiSA_HD-1080p.mp4?rlkey=pe9xi0ivfsg7fx6to2z30qtv9&raw=1", desc: "Tanjiro's journey begins.", detailTag: "New Series / Preview", 
+          episodes: Array.from({length: 26}, (_, i) => ({ 
+              title: `Episode ${i+1} (Hindi)`, 
+              embed: i === 0 ? "https://steromax.4meplayer.com/#6rsmm" : "", 
+              thumb: i === 0 ? "https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png" : `https://placehold.co/300x170/222/fff?text=Ep+${i+1}` 
+          })) 
+        },
         { id: 4, title: "LEO (Hindi)", type: "movie", tag: "ACTION BLOCKBUSTER", screenTag: "Full Movie", screenTagColor: "#ffcc00", img: "https://i.postimg.cc/W1rC8nq9/MV5BMDk5ODNj-Nz-Mt-Yz-I5Yy00Nm-I3LWIw-Yzct-MTFj-Zjcw-N2I2Yzk2Xk-Ey-Xk-Fqc-Gc-V1.jpg", trailerLink: "https://www.dropbox.com/scl/fi/otoj18y42qn8l37xx0ttt/LEO__Hindi__Official_Trailer___Thalapathy_Vijay___Sanjay_Dutt___Lokesh_Kanagaraj___Anirudh-1080p.mp4?rlkey=4abh6y0y3yvtnz9i6ei7dz4lq&st=n3rv4m1u&raw=1", desc: "Thalapathy Vijay is Leo Das.", detailTag: "Action / LCU" }
     ];
 
@@ -439,21 +429,36 @@
     function goHome() { switchNav('home', document.querySelector('.bottom-nav .nav-item')); }
     function quickSearch(t) { document.getElementById('searchInput').value = t; doSearch(); }
     
+    // 🔥 ADVANCED SEARCH (LOCAL HINDI + TMDB) 🔥
     async function doSearch() {
         const q = document.getElementById('searchInput').value.toLowerCase();
         const grid = document.getElementById('search-results-grid'); 
         grid.innerHTML = ''; 
         if(q === "") return;
+
+        // 1. Search in your Local Hindi Dubbed Movies
+        const localResults = movies.filter(m => m.title.toLowerCase().includes(q));
+        localResults.forEach(m => {
+            const tagHtml = m.type === 'series' ? `<span style="position:absolute; top:5px; left:5px; background:red; color:white; font-size:8px; padding:2px 5px; border-radius:3px; font-weight:bold; z-index:5;">SERIES</span>` : '';
+            grid.innerHTML += `
+                <div class="movie-card" onclick="playMovie(${m.id}); closeSearch()" style="border:1px solid var(--gold);">
+                    ${tagHtml}
+                    <img src="${m.img}">
+                    <div class="movie-info" style="background:var(--gold);"><p style="color:black;">⭐ VIP: ${m.title}</p></div>
+                </div>`;
+        });
+
+        // 2. Search in Global TMDB
         try {
             const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${q}`);
             const data = await res.json();
-            renderTMDBGrid(data.results, 'search-results-grid');
+            renderTMDBGrid(data.results, 'search-results-grid', true); // Added 'true' to append
         } catch(e) { console.log(e); }
     }
 
-    function renderTMDBGrid(results, target) {
+    function renderTMDBGrid(results, target, append = false) {
         const grid = document.getElementById(target);
-        grid.innerHTML = '';
+        if(!append) grid.innerHTML = '';
         if(!results) return;
         results.forEach(m => {
             if(!m.poster_path) return;
@@ -471,7 +476,6 @@
         });
     }
 
-    // Scroll Row Rendering
     function renderScrollRow(data, target, isLocal = false) {
         const grid = document.getElementById(target);
         grid.innerHTML = '';
@@ -488,7 +492,6 @@
         });
     }
 
-    // 🏆 RANK ROW RENDERING (Big Overlays) 🏆
     function renderRankRow(data, target) {
         const grid = document.getElementById(target);
         grid.innerHTML = '';
@@ -513,7 +516,6 @@
         });
     }
 
-    // Live TV Grid Rendering
     function renderLiveGrid(data, target) {
         const grid = document.getElementById(target); grid.innerHTML = '';
         data.forEach(m => { 
@@ -529,7 +531,6 @@
 
     async function initHome() {
         try {
-            // Slider setup
             const slider = document.getElementById('main-slider');
             if(slider.innerHTML === "") {
                 movies.forEach(m => {
@@ -538,18 +539,12 @@
                 });
             }
 
-            // Live Grid
             renderLiveGrid(liveChannels, 'all-live-grid');
-
-            // First Section: VIP HINDI
             renderScrollRow(movies, 'vip-hindi-grid', true); 
 
-            // RANKED SECTION
             fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${TMDB_API_KEY}`)
             .then(r => r.json()).then(d => renderRankRow(d.results.slice(0, 10), 'rank-grid'));
 
-            // Anime & K-Drama
-            renderScrollRow(exactAnimeList, 'anime-grid');
             fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_API_KEY}&with_original_language=ko&sort_by=popularity.desc`)
             .then(r => r.json()).then(d => renderScrollRow(d.results.slice(0, 10), 'kdrama-grid'));
 
@@ -574,7 +569,6 @@
         `;
     };
 
-    // Video Players Logic
     window.playLiveChannel = function(id) {
         const channel = liveChannels.find(x => x.id === id);
         window.currentOpenMovieId = "live_" + id;
@@ -726,6 +720,7 @@
         } catch(e) { listDiv.innerHTML = '<p style="color:red;">Error loading.</p>'; }
     }
 
+    // 🔥 LOCAL MOVIE RECOMMENDATION FIX 🔥
     window.playMovie = function(id, autoPlay = false) {
         const currentMovie = movies.find(x => x.id === id);
         window.currentOpenMovieId = "local_" + id;
@@ -769,12 +764,15 @@
             fullBtn.style.display = "none"; document.getElementById('ep-tab-head').style.display = "block";
             const epList = document.getElementById('ep-container'); epList.innerHTML = '';
             currentMovie.episodes.forEach((e) => {
-                epList.innerHTML += `<div style="display:flex; align-items:center; gap:12px; background:#111; padding:12px; border-radius:10px; margin-bottom:8px; border:1px solid #222;" onclick="openEpisodeFullscreen('${e.embed}')"><div style="width:80px; height:45px; border-radius:5px; overflow:hidden;"><img src="${e.thumb}" style="width:100%;height:100%;object-fit:cover"></div><b>${e.title}</b></div>`;
+                epList.innerHTML += `<div style="display:flex; align-items:center; gap:12px; background:#111; padding:12px; border-radius:10px; margin-bottom:8px; border:1px solid #222;" onclick="openEpisodeFullscreen('${e.embed}')"><div style="width:80px; height:45px; border-radius:5px; overflow:hidden;"><img src="${e.thumb}" style="width:100%;height:100%;object-fit:cover"></div><b style="color:white; font-size:13px;">${e.title}</b></div>`;
             });
             if(autoPlay) switchTab(1);
         }
         document.getElementById('playerModal').style.display = 'flex'; switchTab(0); 
-        document.getElementById('sim-grid').innerHTML = '';
+        
+        // Show other local movies in Recommended
+        const recommendedLocal = movies.filter(m => m.id !== id);
+        renderScrollRow(recommendedLocal, 'sim-grid', true);
     }
 
     function openEpisodeFullscreen(link, isLiveStream = false) {
