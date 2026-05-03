@@ -108,7 +108,7 @@
         .close-info { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); border-radius: 50%; width: 40px; height: 40px; text-align:center; line-height:40px; color:white; z-index: 6000; font-weight:bold; cursor:pointer; transition: 0.2s;}
         .close-info:hover { background: var(--primary); color: black; }
         
-        /* 🛠️ HARDWARE ACCELERATION FOR TABS (PREVENTS FREEZING) 🛠️ */
+        /* 🛠️ HARDWARE ACCELERATION FOR TABS 🛠️ */
         .p-content { padding-bottom: 50px; flex-grow: 1; display: flex; flex-direction: column; will-change: transform;}
         .watch-btn { width: 90%; margin: 0 auto 20px auto; padding: 15px; background: var(--gold); border: none; border-radius: 8px; font-weight: 900; font-size: 14px; color: #000; display: block; cursor: pointer; box-shadow: 0 4px 15px rgba(255,204,0,0.3);}
 
@@ -166,6 +166,10 @@
     
         .server-btn { flex: 1 1 30%; padding: 10px; background: #222; color: white; border: 1px solid #444; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s;}
         .server-btn:hover, .server-btn.active-server { border-color: var(--primary); background: rgba(0, 210, 255, 0.1); color: var(--primary); }
+
+        /* ISP Block Warning Box */
+        .isp-warning { padding: 20px; background: rgba(255, 68, 68, 0.1); color: #ff4444; font-size: 13px; font-weight: bold; width: 100%; text-align: center; border: 1px dashed #ff4444; border-radius: 12px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+        .isp-warning svg { width: 30px; height: 30px; stroke: #ff4444; fill: none; }
     </style>
 </head>
 <body>
@@ -297,7 +301,7 @@
             <div class="settings-box">
                 <div class="set-item">
                     <div class="left-part"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> App Version</div>
-                    <span class="value">v13.6 Ultra</span>
+                    <span class="value">v13.7 (ISP Bypass)</span>
                 </div>
                 <div class="set-item logout-btn" onclick="logoutUser()">
                     <div class="left-part"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> Sign Out Securely</div>
@@ -498,16 +502,15 @@
         { id: 103, title: "Aaj Tak News", type: "live", tag: "🔴 NEWS", screenTag: "News", screenTagColor: "#ff0000", img: "https://placehold.co/400x400/ff0000/ffffff?text=Aaj+Tak+News", liveLink: "https://feeds.intoday.in/aajtak/api/aajtakhd/master.m3u8", desc: "Aaj Tak Live News 24x7.", detailTag: "News • Hindi" }
     ];
 
-    /* 🛠️ DEMON SLAYER POSTER FIX & 26 EPISODES ADDED 🛠️ */
     const movies = [
         { id: 1, title: "Demon Slayer: Infinity Castle", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "https://i.postimg.cc/DwfGrBHM/kv-1.jpg", trailerLink: "https://www.dropbox.com/scl/fi/cmiemscnlidr0iszlal4z/Demon_Slayer__Kimetsu_no_Yaiba_Infinity_Castle___MAIN_TRAILER-1080p.mp4?rlkey=wy1z8i6bjh6janpqk2xaq5a32&raw=1", fullMovieLink: "https://steromax.4meplayer.com/#hn1h5", desc: "The final battle begins.", detailTag: "Official Trailer / Preview" },
         { id: 2, title: "Pushpa 2: The Rule", type: "movie", tag: "OFFICIAL TRAILER", screenTag: "Trailer", screenTagColor: "#0066ff", img: "https://i.postimg.cc/XN1cpNX1/Pushpa-2.jpg", trailerLink: "https://www.dropbox.com/scl/fi/8ml1gt55dbwso60vgvrpg/Pushpa_2_-_The_Rule_Trailer__Hindi____Allu_Arjun___Sukumar___Rashmika_Mandanna___Fahadh_Faasil___DSP-1080p.mp4?rlkey=2b1euqnm0grgktur01br1lv1g&raw=1", desc: "Pushpa Raj returns.", detailTag: "Official Trailer / Preview" },
         { id: 3, title: "Demon Slayer Season 1", type: "series", tag: "NEW SERIES", screenTag: "New Series", screenTagColor: "#ff0000", img: "https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg", trailerLink: "https://www.dropbox.com/scl/fi/i2fsl28a3p8r5do86bhwu/Demon_Slayer___OP____Gurenge__by_LiSA_HD-1080p.mp4?rlkey=pe9xi0ivfsg7fx6to2z30qtv9&raw=1", desc: "Tanjiro's journey begins. A story of unbreakable bonds.", detailTag: "New Series / Preview", 
-          episodes: Array.from({length: 26}, (_, i) => ({
-              title: `Episode ${i+1} (Hindi)`,
-              embed: i === 0 ? "https://steromax.4meplayer.com/#6rsmm" : "",
-              thumb: i === 0 ? "https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png" : `https://placehold.co/300x170/1a1a1a/444?text=Ep+${i+1}`
-          }))
+          episodes: [
+              { title: "Episode 1: Cruelty (Hindi)", embed: "https://steromax.4meplayer.com/#6rsmm", thumb: "https://i.postimg.cc/fbyKLwcv/IMG-20260418-153450.png" },
+              { title: "Episode 2: Trainer Sakonji Urokodaki (Hindi)", embed: "", thumb: "https://image.tmdb.org/t/p/w300/xI312B00J6tM1Zg4h1XG9kH0F1x.jpg" },
+              { title: "Episode 3: Sabito and Makomo (Hindi)", embed: "", thumb: "https://image.tmdb.org/t/p/w300/q2Z1x0L7v0M0J9c3P3K8L4Y1b2D.jpg" }
+          ] 
         },
         { id: 4, title: "LEO (Hindi)", type: "movie", tag: "ACTION BLOCKBUSTER", screenTag: "Full Movie", screenTagColor: "#ffcc00", img: "https://i.postimg.cc/W1rC8nq9/MV5BMDk5ODNj-Nz-Mt-Yz-I5Yy00Nm-I3LWIw-Yzct-MTFj-Zjcw-N2I2Yzk2Xk-Ey-Xk-Fqc-Gc-V1.jpg", trailerLink: "https://www.dropbox.com/scl/fi/otoj18y42qn8l37xx0ttt/LEO__Hindi__Official_Trailer___Thalapathy_Vijay___Sanjay_Dutt___Lokesh_Kanagaraj___Anirudh-1080p.mp4?rlkey=4abh6y0y3yvtnz9i6ei7dz4lq&st=n3rv4m1u&raw=1", desc: "Thalapathy Vijay is Leo Das.", detailTag: "Action / LCU" }
     ];
@@ -620,6 +623,7 @@
         });
     }
 
+    // 🔥 ISP BLOCK DETECTOR FIX 🔥
     async function initHome() {
         try {
             const slider = document.getElementById('main-slider');
@@ -633,11 +637,31 @@
             renderLiveGrid(liveChannels, 'all-live-grid');
             renderScrollRow(movies, 'vip-hindi-grid', true); 
 
-            fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${TMDB_API_KEY}`)
-            .then(r => r.json()).then(d => renderRankRow(d.results.slice(0, 10), 'rank-grid'));
+            // Ranking Fetch with Fallback
+            try {
+                const rankRes = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${TMDB_API_KEY}`);
+                const rankData = await rankRes.json();
+                renderRankRow(rankData.results.slice(0, 10), 'rank-grid');
+            } catch(e) {
+                document.getElementById('rank-grid').innerHTML = `
+                    <div class="isp-warning">
+                        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        Global Servers Blocked by your ISP (Jio/Airtel). Turn on VPN to unlock TMDB Data!
+                    </div>`;
+            }
 
-            fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_API_KEY}&with_original_language=ko&sort_by=popularity.desc`)
-            .then(r => r.json()).then(d => renderScrollRow(d.results.slice(0, 10), 'kdrama-grid'));
+            // K-Drama Fetch with Fallback
+            try {
+                const kdramaRes = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_API_KEY}&with_original_language=ko&sort_by=popularity.desc`);
+                const kdramaData = await kdramaRes.json();
+                renderScrollRow(kdramaData.results.slice(0, 10), 'kdrama-grid');
+            } catch(e) {
+                document.getElementById('kdrama-grid').innerHTML = `
+                    <div class="isp-warning">
+                        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        Global API Blocked. Use a VPN or Cloudflare (1.1.1.1) to view global dramas.
+                    </div>`;
+            }
 
             let slideIndex = 0;
             setInterval(() => {
@@ -698,7 +722,6 @@
         document.getElementById('sim-grid').innerHTML = '';
     }
 
-    // 🔥 SMART ENGINE: MULTI-SERVER FOR TMDB MOVIES & SERIES 🔥
     window.playTMDBMovie = async function(id, type = 'movie', autoPlay = false) {
         window.currentOpenMovieId = "tmdb_" + id; 
         const fullBtn = document.getElementById('fullMovieBtn');
@@ -708,7 +731,7 @@
 
         document.getElementById('comments-list').innerHTML = '<p style="color:#666; font-size:13px; text-align:center;">Loading live comments...</p>';
         document.getElementById('playerModal').style.display = 'flex'; 
-        switchTab(0); // Instantly switch to details to avoid UI freeze
+        switchTab(0); 
 
         try {
             const endpoint = type === 'tv' ? `tv/${id}` : `movie/${id}`;
@@ -786,12 +809,10 @@
                     </div>
                     <div id="tmdb-episodes-list"><p style="color:#888; text-align:center;">Fetching episodes...</p></div>
                 `;
-                // Wrap in setTimeout so it doesn't freeze the tab switch UI
                 setTimeout(() => { loadTMDBSeason(1); }, 100);
                 if(autoPlay) switchTab(1);
             }
 
-            // Fetch similarities
             fetch(`https://api.themoviedb.org/3/${endpoint}/${id}/similar?api_key=${TMDB_API_KEY}&language=en-US&page=1`)
                 .then(r => r.json())
                 .then(simData => renderScrollRow(simData.results.slice(0,10), 'sim-grid'))
@@ -799,7 +820,7 @@
 
         } catch (err) {
             console.error(err);
-            document.getElementById('movie-desc').innerText = "Failed to load details. Please try again.";
+            document.getElementById('movie-desc').innerHTML = `<div class="isp-warning" style="margin-top:10px;">⚠️ TMDB API Blocked by ISP. Use VPN.</div>`;
         }
     };
 
@@ -828,7 +849,6 @@
             const sData = await sRes.json();
             listDiv.innerHTML = '';
             if(sData.episodes && sData.episodes.length > 0) {
-                // To avoid freezing, generate HTML string then append once
                 let epHTML = '';
                 sData.episodes.forEach(ep => {
                     let epImg = ep.still_path ? 'https://image.tmdb.org/t/p/w300' + ep.still_path : `https://placehold.co/300x170/111/444?text=S${seasonNumber}E${ep.episode_number}`;
@@ -846,10 +866,9 @@
                 });
                 listDiv.innerHTML = epHTML;
             } else { listDiv.innerHTML = '<p style="color:#888; text-align:center;">Episodes not found.</p>'; }
-        } catch(e) { listDiv.innerHTML = '<p style="color:red; text-align:center;">Error loading episodes.</p>'; }
+        } catch(e) { listDiv.innerHTML = `<div class="isp-warning">⚠️ ISP Blocked Episode Fetch. Turn on VPN.</div>`; }
     }
 
-    /* 🛠️ INFINITE RECOMMENDATION FIX 🛠️ */
     window.playMovie = async function(id, autoPlay = false) {
         const currentMovie = movies.find(x => x.id === id);
         window.currentOpenMovieId = "local_" + id;
@@ -894,7 +913,6 @@
             fullBtn.style.display = "none"; document.getElementById('ep-tab-head').style.display = "block";
             const epList = document.getElementById('ep-container'); epList.innerHTML = '';
             
-            // Fixed aspect ratio sizes for episodes so they don't break outside
             let epHTML = '';
             currentMovie.episodes.forEach((e) => {
                 epHTML += `
@@ -913,7 +931,6 @@
         }
         document.getElementById('playerModal').style.display = 'flex'; switchTab(0); 
         
-        // 🛠️ INFINITE RECOMMENDATION: Combine Local + TMDB Trending 🛠️
         const recommendedLocal = movies.filter(m => m.id !== id);
         renderScrollRow(recommendedLocal, 'sim-grid', true);
         
@@ -963,7 +980,6 @@
     }
 
     function switchTab(idx) { 
-        // 🛠️ HARDWARE ACCELERATED TAB SWITCHING TO PREVENT FREEZE 🛠️
         try {
             document.querySelectorAll('.tab').forEach((t, i) => {
                 if(i === idx) t.classList.add('active');
@@ -1040,7 +1056,6 @@
         } catch (err) { alert("Error: " + err.message); }
     };
 
-    // 🔥 GOOGLE LOGIN FUNCTION 🔥
     window.handleGoogleLogin = async () => {
         try {
             await signInWithPopup(auth, googleProvider);
