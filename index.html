@@ -17,6 +17,10 @@
         header { background: rgba(17, 17, 17, 0.9); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); }
         .logo { color: var(--primary); font-size: 22px; font-weight: 900; letter-spacing: 1px; }
 
+        /* 🛠️ PREMIUM TOAST (CUSTOM ALERT) 🛠️ */
+        #customToast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: #111; color: white; padding: 14px 24px; border-radius: 30px; font-size: 14px; font-weight: bold; border: 1px solid var(--primary); z-index: 1000000; box-shadow: 0 4px 20px rgba(0, 210, 255, 0.3); transition: bottom 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); white-space: nowrap; pointer-events: none; }
+        #customToast.show { bottom: 90px; }
+
         /* --- SEARCH OVERLAY CSS --- */
         #searchOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 6000; padding: 20px; flex-direction: column; overflow-y: auto; }
         .search-bar-container { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
@@ -24,7 +28,7 @@
         .chip-container { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0 20px 0; }
         .chip { background: #111; padding: 6px 15px; border-radius: 20px; font-size: 12px; border: 1px solid #333; color: #bbb; cursor: pointer; }
 
-        /* --- SLIDER CSS --- */
+        /* --- SLIDER & CATEGORIES CSS --- */
         .slider-wrapper { position: relative; width: 95%; height: 210px; overflow-x: auto; display: flex; scroll-snap-type: x mandatory; gap: 10px; margin: 15px auto; border-radius: 15px; scrollbar-width: none; scroll-behavior: smooth; }
         .slider-wrapper::-webkit-scrollbar { display: none; }
         .hero-slide { min-width: 100%; height: 100%; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 20px; position: relative; scroll-snap-align: start; border-radius: 15px; }
@@ -33,6 +37,10 @@
         
         .tag-red { background: #ff0000; color: white; font-size: 10px; font-weight: bold; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
         .tag-blue { background: #0066ff; color: white; font-size: 10px; font-weight: bold; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+
+        /* 🛠️ CATEGORY CARDS 🛠️ */
+        .cat-card { background: #1a1a1a; border: 1px solid #333; padding: 10px 20px; border-radius: 12px; font-weight: bold; font-size: 14px; color: #eee; flex-shrink: 0; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px;}
+        .cat-card:active { transform: scale(0.95); border-color: var(--primary); color: var(--primary); background: rgba(0, 210, 255, 0.1);}
 
         /* 🔥 HORIZONTAL SCROLL CSS 🔥 */
         .scroll-row { display: flex; overflow-x: auto; gap: 12px; padding: 0 15px; scrollbar-width: none; scroll-behavior: smooth; }
@@ -43,7 +51,8 @@
         .scroll-row .movie-card { flex: 0 0 120px; } 
         .grid .movie-card { flex: auto; width: 100%;}
 
-        .movie-card { background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid #252525; cursor: pointer; position: relative; aspect-ratio: 2 / 3.3; display: flex; flex-direction: column;}
+        .movie-card { background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid #252525; cursor: pointer; position: relative; aspect-ratio: 2 / 3.3; display: flex; flex-direction: column; transition: 0.2s;}
+        .movie-card:active { transform: scale(0.96); border-color: var(--gold); }
         .movie-card img { width: 100%; height: calc(100% - 35px); object-fit: cover; border-bottom: 1px solid #222; background: #000; }
         .movie-info { padding: 8px 4px; text-align: center; height: 35px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3);}
         .movie-info p { margin: 0; font-size: 10px; color: #eee; font-weight: bold; white-space: wrap; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -69,8 +78,6 @@
         
         .avatar-container { position: relative; width: 110px; height: 110px; margin: 0 auto 15px auto; }
         .avatar { width: 100%; height: 100%; background: linear-gradient(45deg, var(--primary), #bc4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 45px; border: 4px solid #222; background-size: cover; background-position: center; }
-        
-        /* 🛠️ PREMIUM EDIT ICON FIX 🛠️ */
         .edit-avatar-btn { position: absolute; bottom: 0; right: 0; background: var(--gold); color: black; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; border: 3px solid #050505; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: 0.2s;}
         .edit-avatar-btn:hover { transform: scale(1.1); }
         .edit-avatar-btn svg { width: 18px; height: 18px; stroke: #000; }
@@ -86,7 +93,6 @@
         .action-btn svg { width: 20px; height: 20px; margin-right: 15px; stroke: var(--primary); }
         .save-btn { display: none; width: 100%; padding: 15px; background: var(--primary); color: black; border: none; border-radius: 12px; font-weight: bold; margin-bottom: 15px; cursor: pointer; }
 
-        /* 🛠️ PREMIUM SETTINGS UI FIX 🛠️ */
         .settings-group { margin-bottom: 25px; }
         .settings-title { color: var(--gold); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; padding-left: 10px; font-weight: bold; }
         .settings-box { background: #111; border-radius: 16px; border: 1px solid #222; overflow: hidden; }
@@ -108,7 +114,6 @@
         .close-info { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); border-radius: 50%; width: 40px; height: 40px; text-align:center; line-height:40px; color:white; z-index: 6000; font-weight:bold; cursor:pointer; transition: 0.2s;}
         .close-info:hover { background: var(--primary); color: black; }
         
-        /* 🛠️ HARDWARE ACCELERATION FOR TABS 🛠️ */
         .p-content { padding-bottom: 50px; flex-grow: 1; display: flex; flex-direction: column; will-change: transform;}
         .watch-btn { width: 90%; margin: 0 auto 20px auto; padding: 15px; background: var(--gold); border: none; border-radius: 8px; font-weight: 900; font-size: 14px; color: #000; display: block; cursor: pointer; box-shadow: 0 4px 15px rgba(255,204,0,0.3);}
 
@@ -145,7 +150,8 @@
         .auth-box h2 span { color: #ffcc00; }
         .auth-box input, .action-modal input { width: 100%; padding: 14px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; color: white; outline: none; }
         input[type="date"] { color-scheme: dark; } 
-        .auth-box button, .action-modal button { width: 100%; padding: 14px; font-weight: bold; border: none; border-radius: 12px; margin-top: 15px; cursor: pointer; }
+        .auth-box button, .action-modal button { width: 100%; padding: 14px; font-weight: bold; border: none; border-radius: 12px; margin-top: 15px; cursor: pointer; transition: 0.2s;}
+        .auth-box button:active { transform: scale(0.95); }
         .btn-primary { background: #00d2ff; color: black; }
         .btn-google { background: white; color: black; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; border: 1px solid #ddd; }
         .toggle-text { color: #ccc; font-size: 13px; cursor: pointer; }
@@ -155,8 +161,8 @@
         .modal-content { background: #111; padding: 25px; border-radius: 20px; width: 85%; border: 1px solid #333; text-align: center;}
         .close-modal { text-align: right; font-size: 24px; color: #888; cursor: pointer; margin-bottom: 10px; }
         .avatar-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 20px; margin-bottom: 20px;}
-        .avatar-option { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #333; cursor: pointer; object-fit: cover; }
-        .avatar-option:hover { border-color: var(--primary); }
+        .avatar-option { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #333; cursor: pointer; object-fit: cover; transition: 0.2s;}
+        .avatar-option:hover { border-color: var(--primary); transform: scale(1.1);}
 
         .comment-input-area { display: flex; gap: 10px; margin-bottom: 20px; }
         .comment-input-area input { flex: 1; padding: 12px 15px; border-radius: 12px; border: 1px solid #333; background: #111; color: white; outline: none; }
@@ -167,12 +173,15 @@
         .server-btn { flex: 1 1 30%; padding: 10px; background: #222; color: white; border: 1px solid #444; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s;}
         .server-btn:hover, .server-btn.active-server { border-color: var(--primary); background: rgba(0, 210, 255, 0.1); color: var(--primary); }
 
-        /* ISP Block Warning Box */
         .isp-warning { padding: 20px; background: rgba(255, 68, 68, 0.1); color: #ff4444; font-size: 13px; font-weight: bold; width: 100%; text-align: center; border: 1px dashed #ff4444; border-radius: 12px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
-        .isp-warning svg { width: 30px; height: 30px; stroke: #ff4444; fill: none; }
+        
+        .loading-spinner { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--primary); border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 20px auto;}
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
+
+<div id="customToast">Message here</div>
 
 <div class="main-wrapper">
 
@@ -289,7 +298,7 @@
                     <div class="left-part"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Video Quality</div>
                     <span class="value">Auto (4K/HD)</span>
                 </div>
-                <div class="set-item" onclick="alert('Cache Cleared Successfully! 🚀')">
+                <div class="set-item" onclick="showToast('Cache Cleared Successfully! 🚀')">
                     <div class="left-part"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Clear Cache</div>
                     <span class="value">24 MB</span>
                 </div>
@@ -301,7 +310,7 @@
             <div class="settings-box">
                 <div class="set-item">
                     <div class="left-part"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> App Version</div>
-                    <span class="value">v13.7 (ISP Bypass)</span>
+                    <span class="value">v13.8 (Infinite)</span>
                 </div>
                 <div class="set-item logout-btn" onclick="logoutUser()">
                     <div class="left-part"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> Sign Out Securely</div>
@@ -350,6 +359,16 @@
     <div id="home">
         <div class="slider-wrapper" id="main-slider"></div>
         
+        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; color: #fff;">🎯 Categories</h3>
+        <div class="scroll-row" id="categories-grid" style="margin-bottom: 20px;">
+            <div class="cat-card" onclick="quickSearch('Anime')">👺 Anime</div>
+            <div class="cat-card" onclick="quickSearch('Action')">💥 Action</div>
+            <div class="cat-card" onclick="quickSearch('Comedy')">😂 Comedy</div>
+            <div class="cat-card" onclick="quickSearch('Horror')">👻 Horror</div>
+            <div class="cat-card" onclick="quickSearch('Sci-Fi')">👽 Sci-Fi</div>
+            <div class="cat-card" onclick="quickSearch('Romance')">💖 Romance</div>
+        </div>
+
         <div id="continue-watching-section" style="display: none; margin-top: 10px; margin-bottom: 20px;">
             <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; color: var(--gold);">▶ Continue Watching</h3>
             <div class="scroll-row" id="continue-grid"></div>
@@ -371,6 +390,10 @@
             Sweet K-Dramas
         </h3>
         <div class="scroll-row" id="kdrama-grid" style="margin-bottom: 20px;"></div>
+
+        <h3 style="margin-left: 20px; font-size: 18px; margin-bottom: 10px; margin-top:25px; color: #fff;">🌍 Global Discover</h3>
+        <div class="grid" id="infinite-grid" style="margin-bottom: 40px;"></div>
+        <div id="loading-spinner" class="loading-spinner" style="display:none;"></div>
     </div>
 
     <div id="livePage" style="display: none; padding-top: 10px; padding-bottom: 100px;">
@@ -449,7 +472,7 @@
     <div id="fsPlayerModal" class="fs-player-overlay">
         <div class="close-fs" onclick="closeEpisode()">✕</div>
         <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#000;">
-            <iframe id="episodeFrame" src="" allowfullscreen allow="autoplay; fullscreen" style="display:none;"></iframe>
+            <iframe id="episodeFrame" src="" allowfullscreen allow="autoplay; fullscreen; encrypted-media; picture-in-picture" style="display:none;"></iframe>
             <video id="liveVideoPlayer" controls autoplay style="width:100%; max-height:100vh; display:none;"></video>
         </div>
     </div>
@@ -481,6 +504,30 @@
     window.currentOpenMovieId = null;
     window.currentTmdbShowId = null;
     window.currentTVServer = 1;
+
+    // 🛠️ CUSTOM TOAST NOTIFICATION 🛠️
+    window.showToast = function(msg) {
+        const toast = document.getElementById('customToast');
+        toast.innerText = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    };
+
+    // 🛠️ SMART PROXY BYPASS FOR ISP BLOCKS 🛠️
+    async function smartFetchTMDB(url) {
+        try {
+            let response = await fetch(url);
+            if (!response.ok) throw new Error("Network response was not ok");
+            return await response.json();
+        } catch (error) {
+            // Agar direct block hai toh bypass proxy use karega
+            console.log("ISP Blocked TMDB, using Proxy...");
+            let proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+            let proxyResponse = await fetch(proxyUrl);
+            let data = await proxyResponse.json();
+            return JSON.parse(data.contents);
+        }
+    }
 
     function switchNav(pageId, el) {
         document.getElementById('home').style.display = 'none';
@@ -524,7 +571,13 @@
     function openSearch() { switchNav('searchOverlay', document.querySelectorAll('.bottom-nav .nav-item')[1]); }
     function closeSearch() { switchNav('home', document.querySelector('.bottom-nav .nav-item')); }
     function goHome() { switchNav('home', document.querySelector('.bottom-nav .nav-item')); }
-    function quickSearch(t) { document.getElementById('searchInput').value = t; doSearch(); }
+    
+    // Quick search from Categories & Chips
+    function quickSearch(t) { 
+        openSearch();
+        document.getElementById('searchInput').value = t; 
+        doSearch(); 
+    }
     
     async function doSearch() {
         const q = document.getElementById('searchInput').value.toLowerCase();
@@ -544,8 +597,7 @@
         });
 
         try {
-            const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${q}`);
-            const data = await res.json();
+            const data = await smartFetchTMDB(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${q}`);
             renderTMDBGrid(data.results, 'search-results-grid', true); 
         } catch(e) { console.log(e); }
     }
@@ -623,7 +675,32 @@
         });
     }
 
-    // 🔥 ISP BLOCK DETECTOR FIX 🔥
+    // 🛠️ INFINITE SCROLL LOGIC 🛠️
+    let currentInfinitePage = 1;
+    let isFetchingInfinite = false;
+
+    async function loadInfiniteMovies() {
+        if(isFetchingInfinite) return;
+        isFetchingInfinite = true;
+        document.getElementById('loading-spinner').style.display = 'block';
+        try {
+            const data = await smartFetchTMDB(`https://api.themoviedb.org/3/trending/all/week?api_key=${TMDB_API_KEY}&page=${currentInfinitePage}`);
+            renderTMDBGrid(data.results, 'infinite-grid', true);
+            currentInfinitePage++;
+        } catch(e) {}
+        document.getElementById('loading-spinner').style.display = 'none';
+        isFetchingInfinite = false;
+    }
+
+    // Attach scroll listener for infinite feed
+    window.addEventListener('scroll', () => {
+        if(document.getElementById('home').style.display !== 'none') {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+                loadInfiniteMovies();
+            }
+        }
+    });
+
     async function initHome() {
         try {
             const slider = document.getElementById('main-slider');
@@ -637,31 +714,19 @@
             renderLiveGrid(liveChannels, 'all-live-grid');
             renderScrollRow(movies, 'vip-hindi-grid', true); 
 
-            // Ranking Fetch with Fallback
+            // Using smartFetchTMDB to bypass Jio/Airtel block
             try {
-                const rankRes = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${TMDB_API_KEY}`);
-                const rankData = await rankRes.json();
+                const rankData = await smartFetchTMDB(`https://api.themoviedb.org/3/trending/all/day?api_key=${TMDB_API_KEY}`);
                 renderRankRow(rankData.results.slice(0, 10), 'rank-grid');
-            } catch(e) {
-                document.getElementById('rank-grid').innerHTML = `
-                    <div class="isp-warning">
-                        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                        Global Servers Blocked by your ISP (Jio/Airtel). Turn on VPN to unlock TMDB Data!
-                    </div>`;
-            }
+            } catch(e) { console.log(e); }
 
-            // K-Drama Fetch with Fallback
             try {
-                const kdramaRes = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_API_KEY}&with_original_language=ko&sort_by=popularity.desc`);
-                const kdramaData = await kdramaRes.json();
+                const kdramaData = await smartFetchTMDB(`https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_API_KEY}&with_original_language=ko&sort_by=popularity.desc`);
                 renderScrollRow(kdramaData.results.slice(0, 10), 'kdrama-grid');
-            } catch(e) {
-                document.getElementById('kdrama-grid').innerHTML = `
-                    <div class="isp-warning">
-                        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                        Global API Blocked. Use a VPN or Cloudflare (1.1.1.1) to view global dramas.
-                    </div>`;
-            }
+            } catch(e) { console.log(e); }
+
+            // Load first page of Infinite
+            loadInfiniteMovies();
 
             let slideIndex = 0;
             setInterval(() => {
@@ -735,8 +800,7 @@
 
         try {
             const endpoint = type === 'tv' ? `tv/${id}` : `movie/${id}`;
-            const res = await fetch(`https://api.themoviedb.org/3/${endpoint}?api_key=${TMDB_API_KEY}&language=en-US`);
-            const media = await res.json();
+            const media = await smartFetchTMDB(`https://api.themoviedb.org/3/${endpoint}?api_key=${TMDB_API_KEY}&language=en-US`);
             
             const title = type === 'tv' ? media.name : media.title;
             const releaseDate = type === 'tv' ? media.first_air_date : media.release_date;
@@ -813,14 +877,15 @@
                 if(autoPlay) switchTab(1);
             }
 
-            fetch(`https://api.themoviedb.org/3/${endpoint}/${id}/similar?api_key=${TMDB_API_KEY}&language=en-US&page=1`)
-                .then(r => r.json())
-                .then(simData => renderScrollRow(simData.results.slice(0,10), 'sim-grid'))
-                .catch(e => {});
+            // fetch similarities
+            try{
+               const simData = await smartFetchTMDB(`https://api.themoviedb.org/3/${endpoint}/${id}/similar?api_key=${TMDB_API_KEY}&language=en-US&page=1`);
+               renderScrollRow(simData.results.slice(0,10), 'sim-grid');
+            } catch(e){}
 
         } catch (err) {
             console.error(err);
-            document.getElementById('movie-desc').innerHTML = `<div class="isp-warning" style="margin-top:10px;">⚠️ TMDB API Blocked by ISP. Use VPN.</div>`;
+            document.getElementById('movie-desc').innerHTML = `<div class="isp-warning" style="margin-top:10px;">⚠️ Movie data blocked. Check connection.</div>`;
         }
     };
 
@@ -845,8 +910,7 @@
         const listDiv = document.getElementById('tmdb-episodes-list');
         listDiv.innerHTML = '<p style="color:#888; text-align:center;">Fetching episodes...</p>';
         try {
-            const sRes = await fetch(`https://api.themoviedb.org/3/tv/${window.currentTmdbShowId}/season/${seasonNumber}?api_key=${TMDB_API_KEY}&language=en-US`);
-            const sData = await sRes.json();
+            const sData = await smartFetchTMDB(`https://api.themoviedb.org/3/tv/${window.currentTmdbShowId}/season/${seasonNumber}?api_key=${TMDB_API_KEY}&language=en-US`);
             listDiv.innerHTML = '';
             if(sData.episodes && sData.episodes.length > 0) {
                 let epHTML = '';
@@ -866,7 +930,7 @@
                 });
                 listDiv.innerHTML = epHTML;
             } else { listDiv.innerHTML = '<p style="color:#888; text-align:center;">Episodes not found.</p>'; }
-        } catch(e) { listDiv.innerHTML = `<div class="isp-warning">⚠️ ISP Blocked Episode Fetch. Turn on VPN.</div>`; }
+        } catch(e) { listDiv.innerHTML = `<div class="isp-warning">⚠️ Request Failed. Try changing Server.</div>`; }
     }
 
     window.playMovie = async function(id, autoPlay = false) {
@@ -906,7 +970,7 @@
             fullBtn.style.display = "block"; document.getElementById('ep-tab-head').style.display = "none";
             fullBtn.onclick = function() {
                 if(currentMovie.fullMovieLink) { openEpisodeFullscreen(currentMovie.fullMovieLink); } 
-                else { alert("Movie link update hona baaki hai! 🔥"); }
+                else { showToast("Movie link update hona baaki hai! 🔥"); }
             };
             if(autoPlay) fullBtn.click();
         } else {
@@ -933,27 +997,17 @@
         
         const recommendedLocal = movies.filter(m => m.id !== id);
         renderScrollRow(recommendedLocal, 'sim-grid', true);
-        
-        try {
-            const res = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${TMDB_API_KEY}`);
-            const data = await res.json();
-            const grid = document.getElementById('sim-grid');
-            data.results.forEach(m => {
-                const title = m.title || m.name;
-                const img = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : '';
-                if(img) {
-                     grid.innerHTML += `<div class="movie-card" onclick="playTMDBMovie(${m.id}, '${m.media_type || 'tv'}')"><img src="${img}" onerror="this.src='https://placehold.co/300x450/111/fff?text=Poster'"><div class="movie-info"><p>${title}</p></div></div>`;
-                }
-            });
-        } catch(e){}
     }
 
-    function openEpisodeFullscreen(link, isLiveStream = false) {
-        if(!link || link === "") { alert("Server abhi link process kar raha hai. Kripya doosra server try karein!"); return; }
+    // 🛠️ ROTATION BUG & BUFFERING FIX 🛠️
+    async function openEpisodeFullscreen(link, isLiveStream = false) {
+        if(!link || link === "") { showToast("Server abhi link process kar raha hai. Kripya doosra server try karein!"); return; }
         document.getElementById('introVideo').pause(); 
+        
         const fsModal = document.getElementById("fsPlayerModal");
         const iframePlayer = document.getElementById('episodeFrame');
         const videoPlayer = document.getElementById('liveVideoPlayer');
+        
         fsModal.style.display = 'block';
 
         if (isLiveStream && link.includes('.m3u8')) {
@@ -967,16 +1021,31 @@
         } else {
             videoPlayer.style.display = 'none'; iframePlayer.style.display = 'block'; iframePlayer.src = link;
         }
-        if (fsModal.requestFullscreen) fsModal.requestFullscreen();
-        if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(e => {});
+
+        // Force Fullscreen & Lock Orientation robustly
+        try {
+            if (fsModal.requestFullscreen) {
+                await fsModal.requestFullscreen();
+            }
+            if (screen.orientation && screen.orientation.lock) {
+                await screen.orientation.lock("landscape");
+            }
+        } catch(e) { console.log("Rotation/Fullscreen handled gracefully."); }
     }
 
     function closeEpisode() { 
         document.getElementById('episodeFrame').src = ""; 
         document.getElementById('liveVideoPlayer').pause(); document.getElementById('liveVideoPlayer').src = "";
         document.getElementById('fsPlayerModal').style.display = 'none'; 
-        if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(e => {});
-        if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+        
+        try {
+            if (document.fullscreenElement && document.exitFullscreen) {
+                document.exitFullscreen().catch(e => {});
+            }
+            if (screen.orientation && screen.orientation.unlock) {
+                screen.orientation.unlock();
+            }
+        } catch(e) { console.log("Exit Fullscreen error caught"); }
     }
 
     function switchTab(idx) { 
@@ -1049,25 +1118,25 @@
 
     window.handleAuth = async () => {
         const email = document.getElementById('email').value; const password = document.getElementById('password').value;
-        if(!email || !password) return alert("Bhai, email aur password toh daal de!");
+        if(!email || !password) return showToast("Bhai, email aur password toh daal de!");
         try {
             if (isLoginMode) await signInWithEmailAndPassword(auth, email, password);
             else await createUserWithEmailAndPassword(auth, email, password);
-        } catch (err) { alert("Error: " + err.message); }
+        } catch (err) { showToast("Error: " + err.message); }
     };
 
     window.handleGoogleLogin = async () => {
         try {
             await signInWithPopup(auth, googleProvider);
-        } catch(e) { alert("Google Login Error: " + e.message); }
+        } catch(e) { showToast("Google Login Error: " + e.message); }
     };
 
     window.resetPassword = async () => {
         const email = document.getElementById('email').value;
-        if(!email) return alert("Pehle apna Email box mein daal, phir Forgot Password daba!");
+        if(!email) return showToast("Pehle apna Email box mein daal, phir Forgot Password daba!");
         try {
-            await sendPasswordResetEmail(auth, email); alert("✅ Password reset link bhej diya gaya hai!");
-        } catch(err) { alert("Error: " + err.message); }
+            await sendPasswordResetEmail(auth, email); showToast("✅ Password reset link bhej diya gaya hai!");
+        } catch(err) { showToast("Error: " + err.message); }
     };
 
     let isEditingProfile = false;
@@ -1086,7 +1155,7 @@
 
     window.saveEditedProfile = async () => {
         const newName = document.getElementById('editName').value; const newDob = document.getElementById('editDob').value;
-        if(!newName || !newDob) return alert("Details khali nahi chhod sakte!");
+        if(!newName || !newDob) return showToast("Details khali nahi chhod sakte!");
         try {
             const user = auth.currentUser;
             await updateDoc(doc(db, "users", user.uid), { name: newName, dob: newDob });
@@ -1097,8 +1166,8 @@
             document.getElementById('editName').style.display = 'none'; document.getElementById('editDob').style.display = 'none';
             document.getElementById('valName').style.display = 'block'; document.getElementById('valDob').style.display = 'block';
             document.getElementById('editProfileBtn').style.display = 'flex'; document.getElementById('saveProfileBtn').style.display = 'none';
-            isEditingProfile = false; alert("Profile updated! ✅");
-        } catch(e) { alert("Error: " + e.message); }
+            isEditingProfile = false; showToast("Profile updated! ✅");
+        } catch(e) { showToast("Error: " + e.message); }
     };
 
     window.handleGalleryUpload = function(event) {
@@ -1122,7 +1191,7 @@
         try {
             const user = auth.currentUser; await updateDoc(doc(db, "users", user.uid), { avatarUrl: url });
             updateAvatarUI(url, window.currentUserName); closeModal('avatarModal');
-        } catch(e) { alert("Error: " + e.message); }
+        } catch(e) { showToast("Error: " + e.message); }
     };
 
     function updateAvatarUI(url, name) {
@@ -1134,22 +1203,22 @@
 
     window.updateUserPassword = async () => {
         const oldP = document.getElementById('oldPass').value; const newP = document.getElementById('newPass').value;
-        if(!oldP || !newP) return alert("Dono password daal bhai!");
+        if(!oldP || !newP) return showToast("Dono password daal bhai!");
         try {
             const user = auth.currentUser; const credential = EmailAuthProvider.credential(user.email, oldP);
             await reauthenticateWithCredential(user, credential); await updatePassword(user, newP);
-            alert("Password updated! ✅"); closeModal('passwordModal');
-        } catch(e) { alert("Error: " + e.message); }
+            showToast("Password updated! ✅"); closeModal('passwordModal');
+        } catch(e) { showToast("Error: " + e.message); }
     }
 
     window.saveUserProfile = async () => {
         const name = document.getElementById('userName').value; const dob = document.getElementById('userDob').value;
-        if(!name || !dob) return alert("Details required!");
+        if(!name || !dob) return showToast("Details required!");
         try {
             const user = auth.currentUser;
             await setDoc(doc(db, "users", user.uid), { name, dob, email: user.email, joinedAt: new Date().toISOString(), avatarUrl: "", lastWatched: null });
             document.getElementById('onboardingOverlay').style.display = 'none'; window.runSplashTimer(); 
-        } catch(err) { alert("Error: " + err.message); }
+        } catch(err) { showToast("Error: " + err.message); }
     };
 
     window.logoutUser = async () => { await signOut(auth); window.location.reload(); }
@@ -1177,11 +1246,11 @@
 
     window.postLiveComment = async () => {
         const textObj = document.getElementById('newCommentText'); const text = textObj.value;
-        if(!text.trim()) return alert("Khali comment nahi!"); if(!window.currentOpenMovieId) return;
+        if(!text.trim()) return showToast("Khali comment nahi!"); if(!window.currentOpenMovieId) return;
         try {
             await addDoc(collection(db, "comments"), { movieId: window.currentOpenMovieId, userName: window.currentUserName, avatarUrl: window.currentUserAvatar || "", text: text, timestamp: Date.now() });
             textObj.value = ''; 
-        } catch(e) { alert("Error: " + e.message); }
+        } catch(e) { showToast("Error: " + e.message); }
     };
 
     onAuthStateChanged(auth, async (user) => {
