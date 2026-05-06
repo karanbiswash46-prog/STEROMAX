@@ -3,14 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <title>Stero Max Pro - Elite Streaming</title>
+    <meta name="description" content="SteroMax Elite is a premium streaming platform for movies, anime, and live TV. Enjoy 4K UHD streaming, VIP Hindi Dubbed, and global discover.">
+    <meta name="keywords" content="SteroMax, streaming, movies, anime, live tv, Hindi dubbed, K-Dramas, watch online">
+    <meta name="author" content="Karan Biswash">
+    <meta property="og:title" content="Stero Max Pro - Elite Streaming">
+    <meta property="og:description" content="Experience Elite streaming with thousands of movies and live channels.">
+    
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
     <style>
-        /* 🛠️ PREMIUM FONTS & COLORS 🛠️ */
+        /* 🛠️ PREMIUM FONTS & SMOOTH ANIMATIONS 🛠️ */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap');
-        :root { --primary: #00d2ff; --bg: #030303; --card: #0a0a0a; --text: #ffffff; --gold: #ffcc00; --transition: all 0.3s ease-in-out;}
+        :root { --primary: #00d2ff; --bg: #030303; --card: #0a0a0a; --text: #ffffff; --gold: #ffcc00; --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);}
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none !important;}
         
         body { background: var(--bg); color: var(--text); font-family: 'Montserrat', sans-serif; margin: 0; padding-bottom: 90px; -webkit-user-select: none; user-select: none;}
@@ -19,23 +26,11 @@
         header { background: rgba(3, 3, 3, 0.95); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a1a1a; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(15px); }
         .logo { color: var(--primary); font-size: 22px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;}
 
-        /* 🛠️ PREMIUM SECTION HEADINGS (GRADIENT FIX) 🛠️ */
-        .section-title {
-            margin: 25px 0 15px 20px; 
-            font-size: 16px; 
-            font-weight: 900; 
-            text-transform: uppercase; 
-            letter-spacing: 1.5px;
-            background: linear-gradient(90deg, var(--primary), #bc4ed8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-        }
+        .section-title { margin: 25px 0 15px 20px; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; background: linear-gradient(90deg, var(--primary), #bc4ed8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
 
-        #customToast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: #111; color: white; padding: 14px 24px; border-radius: 30px; font-size: 14px; font-weight: bold; border: 1px solid var(--primary); z-index: 1000000; box-shadow: 0 4px 20px rgba(0, 210, 255, 0.3); transition: var(--transition); transition-property: bottom; white-space: nowrap; pointer-events: none; opacity: 0;}
+        #customToast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: #111; color: white; padding: 14px 24px; border-radius: 30px; font-size: 14px; font-weight: bold; border: 1px solid var(--primary); z-index: 1000000; box-shadow: 0 4px 20px rgba(0, 210, 255, 0.3); transition: bottom 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); white-space: nowrap; pointer-events: none; opacity: 0;}
         #customToast.show { bottom: 90px; opacity: 1;}
 
-        /* --- SEARCH OVERLAY CSS --- */
         #searchOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 6000; padding: 20px; flex-direction: column; overflow-y: auto; opacity: 0; transform: translateY(10px); transition: var(--transition);}
         #searchOverlay.active { display: flex; opacity: 1; transform: translateY(0); }
         .search-bar-container { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
@@ -43,7 +38,6 @@
         .chip-container { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0 20px 0; }
         .chip { background: #1a1a1a; padding: 8px 18px; border-radius: 8px; font-size: 12px; border: 1px solid #333; color: #bbb; cursor: pointer; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
 
-        /* --- SLIDER CSS --- */
         .slider-wrapper { position: relative; width: 95%; height: 210px; overflow-x: auto; display: flex; scroll-snap-type: x mandatory; gap: 10px; margin: 15px auto; border-radius: 12px; scrollbar-width: none; scroll-behavior: smooth; }
         .slider-wrapper::-webkit-scrollbar { display: none; }
         .hero-slide { min-width: 100%; height: 100%; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 20px; position: relative; scroll-snap-align: start; border-radius: 12px; border: 1px solid #222; cursor:pointer;}
@@ -53,7 +47,6 @@
         .tag-red { background: #ff0000; color: white; font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 8px; letter-spacing: 1px;}
         .tag-blue { background: #0066ff; color: white; font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 8px; letter-spacing: 1px;}
 
-        /* 🛠️ CATEGORY UI 🛠️ */
         .cat-card { background: #0a0a0a; border: 1px solid #222; padding: 12px 24px; border-radius: 8px; font-weight: 800; font-size: 12px; color: #aaa; flex-shrink: 0; cursor: pointer; transition: var(--transition); text-transform: uppercase; letter-spacing: 1.5px;}
         .cat-card:active { transform: scale(0.95); }
         .cat-card.active-cat { border-color: var(--primary); color: var(--primary); background: rgba(0, 210, 255, 0.05); box-shadow: 0 0 15px rgba(0,210,255,0.1);}
@@ -85,28 +78,34 @@
         .full-page.active { display: flex; opacity: 1; transform: scale(1); }
         .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; margin-top: 10px; border-bottom: 1px solid #1a1a1a; padding-bottom: 15px; }
         
-        /* Profile CSS */
         .avatar-container { position: relative; width: 110px; height: 110px; margin: 0 auto 15px auto; }
         .avatar { width: 100%; height: 100%; background: linear-gradient(45deg, var(--primary), #bc4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 45px; border: 4px solid #111; background-size: cover; background-position: center; font-weight: 900;}
         .edit-avatar-btn { position: absolute; bottom: 0; right: 0; background: var(--gold); color: black; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; border: 3px solid #050505; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: 0.2s;}
+        .edit-avatar-btn:active { transform: scale(0.9); }
         .edit-avatar-btn svg { width: 16px; height: 16px; stroke: #000; stroke-width: 2.5;}
 
         .profile-details-box { background: #0a0a0a; border-radius: 16px; padding: 20px; border: 1px solid #1a1a1a; margin-bottom: 20px; }
         .detail-item { margin-bottom: 20px; border-bottom: 1px solid #1a1a1a; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;}
         .detail-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .detail-label { color: #666; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .detail-value { color: white; font-size: 15px; font-weight: 800; margin-top: 6px; }
-        .detail-input { background: #111; border: 1px solid #333; color: white; padding: 10px; border-radius: 8px; width: 100%; display: none; margin-top: 8px; font-size: 15px; font-family: 'Montserrat'; font-weight:600; color-scheme: dark;}
         
-        .action-btn { width: 100%; padding: 18px 20px; background: #0a0a0a; color: white; border: 1px solid #1a1a1a; border-radius: 12px; font-weight: 800; margin-bottom: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;}
+        /* 🛠️ PROFILE INPUT ANIMATIONS 🛠️ */
+        .detail-value { color: white; font-size: 15px; font-weight: 800; margin-top: 6px; transition: var(--transition); opacity: 1; display:block;}
+        .detail-input { background: #111; border: 1px solid #333; color: white; padding: 10px; border-radius: 8px; width: 100%; margin-top: 8px; font-size: 15px; font-family: 'Montserrat'; font-weight:600; color-scheme: dark; display: none; opacity: 0; transition: opacity 0.3s;}
+        .editing .detail-value { display: none; opacity: 0;}
+        .editing .detail-input { display: block; opacity: 1;}
+
+        .action-btn { width: 100%; padding: 18px 20px; background: #0a0a0a; color: white; border: 1px solid #1a1a1a; border-radius: 12px; font-weight: 800; margin-bottom: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; transition: var(--transition);}
+        .action-btn:active { transform: scale(0.98); background: #111;}
         .action-btn svg { width: 18px; height: 18px; margin-right: 15px; stroke: var(--primary); }
-        .save-btn { display: none; width: 100%; padding: 15px; background: var(--primary); color: black; border: none; border-radius: 12px; font-weight: bold; margin-bottom: 15px; cursor: pointer; }
+        .save-btn { width: 100%; padding: 18px 20px; background: var(--primary); color: black; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: var(--transition);}
+        .save-btn:active { transform: scale(0.98); }
 
         .settings-group { margin-bottom: 25px; }
         .settings-title { color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; padding-left: 10px; font-weight: 900; }
         .settings-box { background: #0a0a0a; border-radius: 16px; border: 1px solid #1a1a1a; overflow: hidden; }
         .set-item { padding: 18px 20px; border-bottom: 1px solid #1a1a1a; color: #eee; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: 0.2s;}
-        .set-item:hover { background: #1a1a1a; }
+        .set-item:active { background: #1a1a1a; transform: scale(0.98);}
         .set-item:last-child { border-bottom: none; }
         .set-item .left-part { display: flex; align-items: center; gap: 15px; }
         .set-item svg { width: 18px; height: 18px; stroke: #666; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
@@ -116,11 +115,12 @@
         .logout-btn svg { stroke: #ff4b4b !important; }
 
         /* --- PLAYER CSS --- */
-        .player { display: none; position: fixed; inset: 0; background: #030303; z-index: 6000; flex-direction: column; overflow-y: auto; height: 100vh; }
+        .player { display: none; position: fixed; inset: 0; background: #030303; z-index: 6000; flex-direction: column; overflow-y: auto; height: 100vh; opacity: 0; transform: scale(0.95); transition: var(--transition);}
+        .player.active { display: flex; opacity: 1; transform: scale(1);}
+
         .video-box { width: 100%; aspect-ratio: 16 / 9; background: #000; position: relative; flex-shrink: 0; border-bottom: 1px solid #222; overflow: hidden;}
         video::-webkit-media-controls { display:none !important; }
         
-        /* 🛠️ YOUTUBE INTRO PLAYER FIX 🛠️ */
         #yt-trailer-container { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; background: #000; display: none; pointer-events: none;}
         #yt-overlay-gradient { position: absolute; inset: 0; background: linear-gradient(to top, rgba(3,3,3,1), transparent); z-index: 2; pointer-events: none; display: none;}
 
@@ -131,9 +131,9 @@
         #p-title { font-size: 20px; font-weight: 900; padding: 20px 20px 5px 20px; line-height: 1.3; margin:0;}
 
         .p-content { padding-bottom: 50px; flex-grow: 1; display: flex; flex-direction: column; will-change: transform; position: relative; z-index: 10;}
-        .watch-btn { width: 92%; margin: 0 auto 20px auto; padding: 18px; background: var(--primary); border: none; border-radius: 12px; font-weight: 900; font-size: 14px; color: #000; display: block; cursor: pointer; box-shadow: 0 4px 20px rgba(0,210,255,0.3); text-transform: uppercase; letter-spacing: 1px;}
+        .watch-btn { width: 92%; margin: 0 auto 20px auto; padding: 18px; background: var(--primary); border: none; border-radius: 12px; font-weight: 900; font-size: 14px; color: #000; display: block; cursor: pointer; box-shadow: 0 4px 20px rgba(0,210,255,0.3); text-transform: uppercase; letter-spacing: 1px; transition: var(--transition);}
+        .watch-btn:active { transform: scale(0.95); }
 
-        /* TABS */
         .tabs { display: flex; gap: 25px; border-bottom: 1px solid #1a1a1a; margin-bottom: 20px; padding: 0 20px; overflow-x: auto; scrollbar-width: none; }
         .tab { padding: 15px 0; font-weight: 800; font-size: 13px; color: #555; cursor: pointer; white-space: nowrap; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;}
         .tab.active { color: white; border-bottom: 3px solid var(--primary); }
@@ -143,27 +143,16 @@
 
         #trailer-poster { width: 100%; height: 250px; border-radius: 12px; background-size: contain; background-repeat: no-repeat; background-position: center; background-color: #050505; border: 1px solid #1a1a1a; }
 
-        /* 🛠️ PREMIUM SEASON SELECTOR 🛠️ */
-        #season-select {
-            background: #111 url('data:image/svg+xml;utf8,<svg fill="%2300d2ff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>') no-repeat right 15px center;
-            background-size: 20px;
-            color: var(--primary);
-            padding: 15px 45px 15px 15px;
-            border: 1px solid #333;
-            border-radius: 12px;
-            width: 100%;
-            font-weight: 900;
-            font-family: 'Montserrat', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            outline: none;
-            appearance: none; /* Removes native OS arrow */
-            -webkit-appearance: none;
-            color-scheme: dark; /* Forces dark mode native popup */
-            cursor: pointer;
-        }
+        #season-select { background: #111 url('data:image/svg+xml;utf8,<svg fill="%2300d2ff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>') no-repeat right 15px center; background-size: 20px; color: var(--primary); padding: 15px 45px 15px 15px; border: 1px solid #333; border-radius: 12px; width: 100%; font-weight: 900; font-family: 'Montserrat', sans-serif; text-transform: uppercase; letter-spacing: 1px; outline: none; appearance: none; -webkit-appearance: none; color-scheme: dark; cursor: pointer; }
 
-        /* FS Video Player Overlay */
+        /* 🛠️ MODAL SMOOTH ANIMATIONS 🛠️ */
+        .action-modal { display:none; position: fixed; inset:0; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s;}
+        .action-modal.show { display:flex; opacity: 1; }
+        .modal-content { background: #0a0a0a; padding: 30px; border-radius: 24px; width: 85%; border: 1px solid #222; text-align: center; position:relative; transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);}
+        .action-modal.show .modal-content { transform: scale(1); }
+        .close-modal { position: absolute; top: 15px; right: 20px; color: #666; font-size: 24px; cursor: pointer; font-weight: bold; transition: 0.2s;}
+        .close-modal:active { color: white; transform: scale(0.9);}
+
         .fs-player-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 9999; }
         .close-fs { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.5); border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; z-index: 10006; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); cursor:pointer;}
         
@@ -171,10 +160,7 @@
         .rotate-btn svg { width: 18px; height: 18px; stroke: #000; stroke-width: 2.5; }
         
         iframe { width: 100vw; height: 56.25vw; max-height: 100vh; border: none; }
-        @media (orientation: landscape) { 
-            iframe { width: 100vw; height: 100vh; } 
-            .rotate-btn { display: none; } 
-        }
+        @media (orientation: landscape) { iframe { width: 100vw; height: 100vh; } .rotate-btn { display: none; } }
 
         /* --- SPLASH & FORMS --- */
         #splashScreen { display: none; position: fixed; inset: 0; z-index: 99999; background-image: url('https://i.postimg.cc/BvnsfsJQ/filters-quality(95)format(webp).jpg'); background-size: cover; background-position: top center; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 60px; transition: opacity 0.4s ease-out; }
@@ -196,27 +182,21 @@
         .btn-primary { background: var(--primary); color: black; }
         .btn-google { background: white; color: black; display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px;}
         
-        .action-modal { display:none; position: fixed; inset:0; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; }
-        .modal-content { background: #0a0a0a; padding: 30px; border-radius: 24px; width: 85%; border: 1px solid #222; text-align: center;}
-        
         .server-btn { flex: 1 1 30%; padding: 12px; background: #050505; color: white; border: 1px solid #222; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 11px; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px;}
         .server-btn:hover, .server-btn.active-server { border-color: var(--primary); background: rgba(0, 210, 255, 0.1); color: var(--primary); }
 
         .loading-spinner { border: 3px solid rgba(255,255,255,0.05); border-top: 3px solid var(--primary); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 30px auto;}
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Comments CSS */
         .comment-input-area { display: flex; gap: 10px; margin-bottom: 20px; }
         .comment-input-area input { flex: 1; padding: 15px; border-radius: 12px; border: 1px solid #222; background: #0a0a0a; color: white; outline: none; font-family: 'Montserrat'; font-weight: 600;}
         .comment-input-area button { padding: 15px 25px; background: var(--primary); color: black; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase;}
         .live-comment { background: #0a0a0a; padding: 15px; border-radius: 12px; margin-bottom: 12px; border: 1px solid #1a1a1a; display: flex; gap: 15px; }
         .c-avatar { width: 40px; height: 40px; background: linear-gradient(45deg, var(--gold), #ff8800); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: black; font-weight: 900; font-size: 18px; flex-shrink: 0; background-size: cover; background-position: center;}
     
-        /* Avatar Grid */
         .avatar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; margin-bottom: 20px;}
         .avatar-option { width: 100%; aspect-ratio: 1/1; border-radius: 50%; border: 3px solid #1a1a1a; cursor: pointer; object-fit: cover; transition: var(--transition);}
         .avatar-option:active { transform: scale(0.9); border-color: var(--primary); }
-        .close-modal { position: absolute; top: 15px; right: 20px; color: #666; font-size: 24px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -259,7 +239,7 @@
     </div>
 
     <div id="passwordModal" class="action-modal">
-        <div class="modal-content" style="position:relative;">
+        <div class="modal-content">
             <div class="close-modal" onclick="closeModal('passwordModal')">✕</div>
             <h3 style="color:white; margin-top:0; font-weight:900; text-transform:uppercase;">Change Password</h3>
             <p style="color:#888; font-size:12px; font-weight:600; margin-bottom:20px;">Pehle apna purana password daalein.</p>
@@ -270,7 +250,7 @@
     </div>
 
     <div id="qualityModal" class="action-modal">
-        <div class="modal-content" style="position:relative;">
+        <div class="modal-content">
             <div class="close-modal" onclick="closeModal('qualityModal')">✕</div>
             <h3 style="color:white; margin-top:0; font-weight:900; text-transform:uppercase;">Video Quality</h3>
             <div class="settings-box" style="margin-top:20px; text-align:left;">
@@ -283,7 +263,7 @@
     </div>
 
     <div id="subscriptionModal" class="action-modal">
-        <div class="modal-content" style="position:relative;">
+        <div class="modal-content">
             <div class="close-modal" onclick="closeModal('subscriptionModal')">✕</div>
             <h3 style="color:white; margin-top:0; font-weight:900; text-transform:uppercase;">Subscriber Plans</h3>
             <div class="avatar-grid" style="grid-template-columns: 1fr; margin-top:20px;">
@@ -300,7 +280,7 @@
     </div>
 
     <div id="avatarModal" class="action-modal">
-        <div class="modal-content" style="position:relative;">
+        <div class="modal-content">
             <div class="close-modal" onclick="closeModal('avatarModal')">✕</div>
             <h3 style="color:white; margin-top:0; font-weight:900; text-transform:uppercase;">Select Avatar</h3>
             <div class="avatar-grid">
@@ -503,7 +483,7 @@
         <div class="settings-group">
             <div class="settings-title">App Info</div>
             <div class="settings-box">
-                <div class="set-item"><div class="left-part"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> App Version</div><span class="value">v19 Elite</span></div>
+                <div class="set-item"><div class="left-part"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> App Version</div><span class="value">v20 Ultimate</span></div>
                 <div class="set-item logout-btn" onclick="logoutUser()"><div class="left-part"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> Sign Out Securely</div></div>
             </div>
         </div>
@@ -516,13 +496,19 @@
             <div class="edit-avatar-btn" onclick="openModal('avatarModal')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></div>
         </div>
         <div style="text-align:center; margin-bottom: 25px;"><h2 id="displayProfileName" style="margin:0; font-weight:900;">Loading...</h2><p style="color:var(--gold); font-size:12px; margin-top:5px; font-weight:bold;">⭐ ELITE MEMBER</p></div>
-        <div class="profile-details-box">
+        
+        <div class="profile-details-box" id="profileDataBox">
             <div class="detail-item"><div style="width: 100%;"><div class="detail-label">Full Name</div><div class="detail-value" id="valName">Loading...</div><input type="text" id="editName" class="detail-input"></div></div>
             <div class="detail-item"><div style="width: 100%;"><div class="detail-label">Registered Email</div><div class="detail-value" id="valEmail">Loading...</div></div></div>
             <div class="detail-item"><div style="width: 100%;"><div class="detail-label">Date of Birth</div><div class="detail-value" id="valDob">Loading...</div><input type="date" id="editDob" class="detail-input"></div></div>
         </div>
+
         <button class="action-btn" id="editProfileBtn" onclick="toggleEditProfile()"><div style="display:flex; align-items:center;"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Edit Profile Information</div><span style="color:#666;">></span></button>
-        <button class="save-btn" id="saveProfileBtn" onclick="saveEditedProfile()">💾 Save Changes</button>
+        
+        <div id="editProfileActions" style="display:none; gap:10px;">
+            <button class="save-btn" style="display:block; flex:1;" id="saveProfileBtn" onclick="saveEditedProfile()">💾 Save</button>
+            <button class="action-btn" style="flex:1; justify-content:center; margin-bottom:15px;" onclick="cancelEditProfile()">❌ Cancel</button>
+        </div>
     </div>
 
     <div class="bottom-nav">
@@ -569,11 +555,13 @@
 
     function switchNav(pageId, el) {
         const allPages = document.querySelectorAll('.full-page, #home, #livePage, #searchOverlay');
-        allPages.forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+        allPages.forEach(p => { p.classList.remove('active'); setTimeout(()=> p.style.display = 'none', 300); });
 
         const targetPage = document.getElementById(pageId);
-        targetPage.style.display = (pageId === 'home' || pageId === 'livePage') ? 'block' : 'flex';
-        setTimeout(() => targetPage.classList.add('active'), 50);
+        setTimeout(()=> {
+            targetPage.style.display = (pageId === 'home' || pageId === 'livePage') ? 'block' : 'flex';
+            setTimeout(() => targetPage.classList.add('active'), 50);
+        }, 300);
 
         if(el) {
             document.querySelectorAll('.bottom-nav .nav-item').forEach(item => item.classList.remove('active'));
@@ -581,16 +569,24 @@
         }
         
         if(pageId === 'searchOverlay') {
-            document.getElementById('searchInput').focus();
-            document.getElementById('searchOverlay').style.display = 'flex';
-            setTimeout(() => document.getElementById('searchOverlay').classList.add('active'), 50);
+            setTimeout(() => { document.getElementById('searchInput').focus(); }, 400);
         }
     }
 
     function openSettings() { switchNav('settingsPage'); }
     function openProfile() { switchNav('profilePage', document.querySelectorAll('.bottom-nav .nav-item')[4]); }
-    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    
+    // Smooth Modals
+    function openModal(id) { 
+        const modal = document.getElementById(id);
+        modal.style.display = 'flex'; 
+        setTimeout(() => modal.classList.add('show'), 10);
+    }
+    function closeModal(id) { 
+        const modal = document.getElementById(id);
+        modal.classList.remove('show');
+        setTimeout(() => modal.style.display = 'none', 300);
+    }
 
     const liveChannels = [{ id: 101, title: "TATA IPL HINDI", type: "live", tag: "🔴 MATCH", screenTag: "Sports", screenTagColor: "#ff0000", img: "https://i.postimg.cc/mZz5jSFn/IMG-20260418-153418.png", liveLink: "https://cmvlive.blogspot.com/2026/02/str-1-hindi.html?m=1", desc: "Watch TATA IPL 2026 Live." }];
 
@@ -605,7 +601,6 @@
         { id: 4, title: "LEO (Hindi)", type: "movie", tag: "ACTION", screenTag: "Trailer", screenTagColor: "#ffcc00", img: "https://i.postimg.cc/W1rC8nq9/MV5BMDk5ODNj-Nz-Mt-Yz-I5Yy00Nm-I3LWIw-Yzct-MTFj-Zjcw-N2I2Yzk2Xk-Ey-Xk-Fqc-Gc-V1.jpg", trailerLink: "https://www.dropbox.com/scl/fi/otoj18y42qn8l37xx0ttt/LEO__Hindi__Official_Trailer___Thalapathy_Vijay___Sanjay_Dutt___Lokesh_Kanagaraj___Anirudh-1080p.mp4?rlkey=4abh6y0y3yvtnz9i6ei7dz4lq&st=n3rv4m1u&raw=1", desc: "Thalapathy Vijay is Leo Das.", detailTag: "Action / LCU" }
     ];
 
-    // 🛠️ CATEGORY TOGGLE & GRID FIX 🛠️
     window.loadCategory = async function(genreId, btnElement, genreName) {
         const container = document.getElementById('category-results-container');
         
@@ -628,7 +623,7 @@
         try {
             let type = genreId === 16 ? 'tv' : 'movie'; 
             const data = await smartFetchTMDB(`https://api.themoviedb.org/3/discover/${type}?api_key=${TMDB_API_KEY}&with_genres=${genreId}&sort_by=popularity.desc`);
-            renderTMDBGrid(data.results, 'category-results-grid', false); // USING GRID NOW
+            renderTMDBGrid(data.results, 'category-results-grid', false); 
         } catch(e) { grid.innerHTML = `<p style="color:#ff4b4b; font-size:12px; padding:20px;">ISP Blocked. VPN Required.</p>`; }
     };
 
@@ -777,7 +772,7 @@
         document.getElementById('continue-grid').innerHTML = `
             <div class="movie-card" onclick="${directPlayAction}" style="border: 1px solid var(--gold); flex: 0 0 120px;">
                 <img src="${data.img}" alt="${data.title}" onerror="this.src='https://placehold.co/300x450/111/fff?text=Poster'">
-                <div class="movie-info" style="background:var(--gold); color:black;"><p style="color:black; font-weight:900;">▶ PLAY: ${data.title}</p></div>
+                <div class="movie-info" style="background:var(--gold); color:black;"><p style="color:black; font-weight:900;">▶ PLAY</p></div>
             </div>
         `;
     };
@@ -798,14 +793,25 @@
         document.getElementById('sim-loading-spinner').style.display = 'block';
         try {
             const data = await smartFetchTMDB(`https://api.themoviedb.org/3/${simEndpoint}/similar?api_key=${TMDB_API_KEY}&language=en-US&page=${simPage}`);
-            renderTMDBGrid(data.results, 'sim-grid', true);
-            simPage++;
-        } catch(e) {}
-        document.getElementById('sim-loading-spinner').style.display = 'none';
-        isFetchingSim = false;
+            // Wait slightly for smooth UI
+            setTimeout(() => {
+                renderTMDBGrid(data.results, 'sim-grid', true);
+                simPage++;
+                document.getElementById('sim-loading-spinner').style.display = 'none';
+                isFetchingSim = false;
+            }, 300);
+        } catch(e) {
+            // Fallback logic for Local Movies -> Trendings
+            if (simEndpoint === 'trending/all/week') {
+                 const data = await smartFetchTMDB(`https://api.themoviedb.org/3/trending/all/week?api_key=${TMDB_API_KEY}&page=${simPage}`);
+                 renderTMDBGrid(data.results, 'sim-grid', true);
+                 simPage++;
+                 document.getElementById('sim-loading-spinner').style.display = 'none';
+                 isFetchingSim = false;
+            }
+        }
     }
 
-    // 🛠️ TMDB FETCH WITH TRAILER LOGIC 🛠️
     window.playTMDBMovie = async function(id, type = 'movie', directPlay = false, isVIPdubbed = false) {
         window.currentOpenMovieId = "tmdb_" + id; 
         
@@ -828,14 +834,12 @@
 
         try {
             const endpoint = type === 'tv' ? `tv/${id}` : `movie/${id}`;
-            // 🛠️ Appended videos to fetch trailer 🛠️
             const media = await smartFetchTMDB(`https://api.themoviedb.org/3/${endpoint}?api_key=${TMDB_API_KEY}&language=en-US&append_to_response=videos`);
             
             const title = type === 'tv' ? media.name : media.title;
             const imgUrl = tmdbImg(media.poster_path);
             const bgUrl = tmdbImg(media.backdrop_path, 'original');
 
-            // Trailer Extraction
             let trailerKey = null;
             if(media.videos && media.videos.results && media.videos.results.length > 0) {
                 const tr = media.videos.results.find(v => v.type === 'Trailer' && v.site === 'YouTube') || media.videos.results[0];
@@ -860,7 +864,6 @@
                 document.getElementById('introVideo').pause();
                 document.getElementById('introVideo').style.display = 'none';
                 
-                // 🛠️ SHOW YOUTUBE TRAILER IF EXISTS 🛠️
                 if(trailerKey) {
                     vBox.style.backgroundImage = 'none';
                     ytContainer.style.display = 'block';
@@ -883,6 +886,7 @@
                     if(isVIPdubbed) {
                         fullBtn.onclick = function() { openEmbedWithoutRotate(`https://vidsrc.me/embed/movie?tmdb=${id}`); };
                     } else {
+                        // 🛠️ AUTO-LANDSCAPE TRIGGERS DIRECTLY ON THIS CLICK 🛠️
                         fullBtn.onclick = function() { openEpisodeFullscreen(`https://vidsrc.me/embed/movie?tmdb=${id}`); };
                     }
                     
@@ -897,7 +901,6 @@
                         </div>`;
                 } else {
                     window.currentTmdbShowId = id; 
-                    // 🛠️ CUSTOM SELECTOR FOR SEASONS 🛠️
                     let seasonOptions = '';
                     if(media.seasons && media.seasons.length > 0) {
                         media.seasons.forEach(s => {
@@ -936,7 +939,8 @@
     window.openTMDBEpisode = function(season, episode) {
         let id = window.currentTmdbShowId;
         let link = window.currentTVServer === 1 ? `https://vidsrc.me/embed/tv?tmdb=${id}&season=${season}&episode=${episode}` : `https://autoembed.to/tv/tmdb/${id}-${season}-${episode}`;
-        openEmbedWithoutRotate(link);
+        // Series opens with auto-rotate handled globally now
+        openEpisodeFullscreen(link);
     };
 
     window.loadTMDBSeason = async function(seasonNumber) {
@@ -980,7 +984,6 @@
             setTimeout(() => modal.classList.add('active'), 50);
             switchTab(0); 
 
-            // Kill YT trailer if active
             document.getElementById('yt-trailer-container').innerHTML = '';
             document.getElementById('yt-overlay-gradient').style.display = 'none';
 
@@ -1023,12 +1026,47 @@
                 document.getElementById('ep-container').innerHTML = epHTML;
             }
             
-            simEndpoint = null; document.getElementById('sim-grid').innerHTML = '';
-            renderTMDBGrid(movies.filter(m => m.id !== id), 'sim-grid', true);
+            // 🛠️ VIP HINDI RECOMMENDED FIX 🛠️
+            simPage = 1; simEndpoint = 'trending/all/week'; document.getElementById('sim-grid').innerHTML = ''; loadMoreSimilar();
+
         } else {
             if(currentMovie.type === 'movie') { openEpisodeFullscreen(currentMovie.fullMovieLink); } 
             else { showToast("Loading..."); playMovie(id, false); setTimeout(() => openEpisodeFullscreen(currentMovie.episodes[0].embed), 500); }
         }
+    }
+
+    // 🛠️ AUTO-LANDSCAPE LOGIC 🛠️
+    function openEpisodeFullscreen(link) {
+        if(!link || link === "") { showToast("Link update hona baaki hai! 🔥"); return; }
+        document.getElementById('introVideo').pause(); 
+        document.getElementById('yt-trailer-container').innerHTML = ''; 
+        
+        const fsModal = document.getElementById("fsPlayerModal");
+        const iframePlayer = document.getElementById('episodeFrame');
+        
+        fsModal.style.display = 'block';
+        iframePlayer.style.display = 'block'; 
+        iframePlayer.src = link;
+
+        // Auto Request Fullscreen and Lock
+        if (fsModal.requestFullscreen) {
+            fsModal.requestFullscreen().then(() => {
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock("landscape").catch(e => console.log("Rotate blocked"));
+                }
+            }).catch(e => console.log("FS blocked"));
+        } else if (fsModal.webkitRequestFullscreen) {
+            fsModal.webkitRequestFullscreen();
+        }
+    }
+
+    function openEmbedWithoutRotate(link) {
+        if(!link || link === "") { showToast("EP Link broken! Contact Dev."); return; }
+        document.getElementById('introVideo').pause();
+        document.getElementById('yt-trailer-container').innerHTML = ''; 
+        const fsModal = document.getElementById("fsPlayerModal");
+        const iframePlayer = document.getElementById('episodeFrame');
+        fsModal.style.display = 'block'; iframePlayer.style.display = 'block'; iframePlayer.src = link;
     }
 
     window.forceRotate = function() {
@@ -1043,30 +1081,6 @@
             } else { showToast("Portrait Lock not supported by Browser. Please use Chrome."); }
         } catch(e) { showToast("Use Chrome for Auto-Rotation."); }
     };
-
-    function openEpisodeFullscreen(link) {
-        if(!link || link === "") { showToast("Link update hona baaki hai! 🔥"); return; }
-        document.getElementById('introVideo').pause(); 
-        document.getElementById('yt-trailer-container').innerHTML = ''; // Kill YT
-        
-        const fsModal = document.getElementById("fsPlayerModal");
-        const iframePlayer = document.getElementById('episodeFrame');
-        
-        fsModal.style.display = 'block';
-        iframePlayer.style.display = 'block'; 
-        iframePlayer.src = link;
-
-        showToast("Click 'ROTATE' button inside movie for Fullscreen! 🔄");
-    }
-
-    function openEmbedWithoutRotate(link) {
-        if(!link || link === "") { showToast("EP Link broken! Contact Dev."); return; }
-        document.getElementById('introVideo').pause();
-        document.getElementById('yt-trailer-container').innerHTML = ''; // Kill YT
-        const fsModal = document.getElementById("fsPlayerModal");
-        const iframePlayer = document.getElementById('episodeFrame');
-        fsModal.style.display = 'block'; iframePlayer.style.display = 'block'; iframePlayer.src = link;
-    }
 
     function closeEpisode() { 
         document.getElementById('episodeFrame').src = ""; 
@@ -1085,7 +1099,7 @@
 
     function closeInfoPage() { 
         document.getElementById('introVideo').pause(); 
-        document.getElementById('yt-trailer-container').innerHTML = ''; // Kill YT when modal closes
+        document.getElementById('yt-trailer-container').innerHTML = ''; 
         const modal = document.getElementById('playerModal');
         modal.classList.remove('active');
         setTimeout(() => modal.style.display = 'none', 300);
@@ -1149,8 +1163,7 @@
       projectId: "stero-max",
       storageBucket: "stero-max.firebasestorage.app",
       messagingSenderId: "101516996592",
-      appId: "1:101516996592:web:7f90b3f4b9805bf74ab735",
-      measurementId: "G-BGN26VB04V"
+      appId: "1:101516996592:web:7f90b3f4b9805bf74ab735"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -1182,23 +1195,23 @@
     window.resetPassword = async () => {
         const email = document.getElementById('email').value;
         if(!email) return showToast("Forgot wale box mein Gmail daal!");
-        try {
-            await sendPasswordResetEmail(auth, email); showToast("✅ Reset link sent to Gmail!");
-        } catch(err) { showToast("Error: " + err.message); }
+        try { await sendPasswordResetEmail(auth, email); showToast("✅ Reset link sent to Gmail!"); } catch(err) { showToast("Error: " + err.message); }
     };
 
-    let isEditingProfile = false;
+    // 🛠️ PROFILE EDIT ANIMATED LOGIC 🛠️
     window.toggleEditProfile = () => {
-        isEditingProfile = !isEditingProfile;
-        const vName = document.getElementById('valName'); const eName = document.getElementById('editName');
-        const vDob = document.getElementById('valDob'); const eDob = document.getElementById('editDob');
+        document.getElementById('profileDataBox').classList.add('editing');
+        document.getElementById('editProfileBtn').style.display = 'none'; 
+        document.getElementById('editProfileActions').style.display = 'flex';
         
-        if(isEditingProfile) {
-            eName.value = vName.innerText; eDob.value = vDob.innerText;
-            vName.style.display = 'none'; vDob.style.display = 'none';
-            eName.style.display = 'block'; eDob.style.display = 'block';
-            document.getElementById('editProfileBtn').style.display = 'none'; document.getElementById('saveProfileBtn').style.display = 'block';
-        }
+        document.getElementById('editName').value = document.getElementById('valName').innerText;
+        document.getElementById('editDob').value = document.getElementById('valDob').innerText;
+    };
+
+    window.cancelEditProfile = () => {
+        document.getElementById('profileDataBox').classList.remove('editing');
+        document.getElementById('editProfileBtn').style.display = 'flex'; 
+        document.getElementById('editProfileActions').style.display = 'none';
     };
 
     window.saveEditedProfile = async () => {
@@ -1211,10 +1224,8 @@
             if(!window.currentUserAvatar) document.getElementById('profileInitial').innerText = newName.charAt(0).toUpperCase();
             document.getElementById('valDob').innerText = newDob; window.currentUserName = newName;
 
-            document.getElementById('editName').style.display = 'none'; document.getElementById('editDob').style.display = 'none';
-            document.getElementById('valName').style.display = 'block'; document.getElementById('valDob').style.display = 'block';
-            document.getElementById('editProfileBtn').style.display = 'flex'; document.getElementById('saveProfileBtn').style.display = 'none';
-            isEditingProfile = false; showToast("Profile updated! ✅");
+            cancelEditProfile();
+            showToast("Profile updated! ✅");
         } catch(e) { showToast("Error: " + e.message); }
     };
 
@@ -1337,4 +1348,4 @@
     });
 </script>
 </body>
-    </html>
+                        </html>
