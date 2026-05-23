@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SteroMax Elite: Seamless Live Aura Intro</title>
+    <title>SteroMax Elite: Live Aura + Sound 🔊</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
         
@@ -21,23 +21,19 @@
             top: 0; left: 0;
             width: 100vw; height: 100vh;
             z-index: 0;
-            pointer-events: none; /* Anti-Tap Logic */
             background-color: #050505;
         }
         
-        /* Dono videos ek dusre ke upar overlap hongi */
         .video-container video {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
             object-fit: cover;
-            transition: opacity 0.3s ease; /* Smooth transition ke liye */
+            transition: opacity 0.3s ease;
+            pointer-events: none; /* Video ko pause hone se roke */
         }
 
-        /* Pehli video upar rahegi */
         #introVideo { z-index: 2; opacity: 1; }
-        
-        /* Doosri (Looping) video niche rahegi */
         #loopVideo { z-index: 1; opacity: 1; }
 
         .video-overlay {
@@ -56,7 +52,6 @@
             display: flex; align-items: center; justify-content: center; gap: 15px;
             padding: 0 20px;
             box-sizing: border-box;
-            
             opacity: 0;
             transform: translateY(60px);
             transition: all 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
@@ -79,7 +74,6 @@
             text-align: center; line-height: 1.2;
             box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
             flex-shrink: 0;
-            cursor: pointer;
         }
         .token-bubble span { font-size: 18px; color: #ffcc00; }
 
@@ -140,17 +134,27 @@
     </div>
 
     <script>
-        // 🔥 THE SEAMLESS VIDEO SWITCH HACK 🔥
         const introVid = document.getElementById('introVideo');
+        const loopVid = document.getElementById('loopVideo');
         
-        // Jaise hi Intro video khatam hogi (ended event), ye function chalega
+        // 🔥 MAGIC HACK: Tap anywhere on screen to unmute sound! 🔥
+        document.body.addEventListener('touchstart', () => {
+            introVid.muted = false;
+            loopVid.muted = false;
+        }, { once: true }); // Sirf pehle tap par kaam karega
+
+        // Desktop walo ke liye mouse click se bhi unmute hoga
+        document.body.addEventListener('click', () => {
+            introVid.muted = false;
+            loopVid.muted = false;
+        }, { once: true });
+
+        // Seamless video transition
         introVid.addEventListener('ended', () => {
-            // Intro video ko gayab kar do, jisse piche chal rahi loop video saamne aa jaye
             introVid.style.opacity = '0';
         });
 
-        // ⏱️ THE 12-SECOND POPUP LOGIC ⏱️
-        // Tune bola 12 seconds, toh 12000 milliseconds lagaya hai taaki buffering ka time mil jaye
+        // 12-Second UI Popup Logic
         setTimeout(() => {
             document.getElementById('mainUI').classList.add('show-ui');
             
