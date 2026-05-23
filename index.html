@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SteroMax Elite: Muzan Ultimate Cinematic Intro</title>
+    <title>SteroMax Elite: Seamless Live Aura Intro</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
         
@@ -15,26 +15,36 @@
             user-select: none;
         }
 
-        /* 🎬 FULL SCREEN VIDEO BACKGROUND (UN-TOUCHABLE) 🎬 */
+        /* 🎬 FULL SCREEN VIDEO BACKGROUNDS 🎬 */
         .video-container {
             position: absolute;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
             z-index: 0;
-            pointer-events: none; /* User isko touch/pause nahi kar payega */
+            pointer-events: none; /* Anti-Tap Logic */
+            background-color: #050505;
         }
         
+        /* Dono videos ek dusre ke upar overlap hongi */
         .video-container video {
+            position: absolute;
+            top: 0; left: 0;
             width: 100%; height: 100%;
-            object-fit: cover; /* Mobile screen ko perfectly cover karega */
+            object-fit: cover;
+            transition: opacity 0.3s ease; /* Smooth transition ke liye */
         }
 
-        /* Dark gradient overlay taaki UI clear dikhe aur video ka bottom fade ho jaye */
+        /* Pehli video upar rahegi */
+        #introVideo { z-index: 2; opacity: 1; }
+        
+        /* Doosri (Looping) video niche rahegi */
+        #loopVideo { z-index: 1; opacity: 1; }
+
         .video-overlay {
             position: absolute;
             bottom: 0; left: 0; width: 100%; height: 45%;
             background: linear-gradient(to top, rgba(5,5,5,1) 0%, rgba(5,5,5,0.7) 40%, transparent 100%);
-            z-index: 1;
+            z-index: 3;
             pointer-events: none;
         }
 
@@ -47,13 +57,11 @@
             padding: 0 20px;
             box-sizing: border-box;
             
-            /* Hidden initially */
             opacity: 0;
             transform: translateY(60px);
-            transition: all 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy slide-up */
+            transition: all 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
 
-        /* Class added after 8 seconds */
         .event-ui-dashboard.show-ui {
             opacity: 1;
             transform: translateY(0);
@@ -83,12 +91,12 @@
             backdrop-filter: blur(5px);
         }
         .progress-fill {
-            width: 0%; /* Initial width 0 */
+            width: 0%; 
             height: 100%;
             background: linear-gradient(90deg, #ff0000, #ff8800);
             border-radius: 10px;
             box-shadow: 0 0 12px rgba(255, 0, 0, 0.8);
-            transition: width 1.2s ease 0.6s; /* Fills smoothly after UI appears */
+            transition: width 1.2s ease 0.6s; 
         }
 
         /* Markers */
@@ -108,8 +116,12 @@
 <body>
 
     <div class="video-container">
-        <video id="eventVideo" autoplay muted playsinline loop>
+        <video id="introVideo" autoplay muted playsinline>
             <source src="https://www.dropbox.com/scl/fi/3we2xdb80tp8s25w1t3mh/lv_0_20260523230710.mp4?rlkey=prldnkfbupi04d5pydpq3twwt&st=fzwv216k&raw=1" type="video/mp4">
+        </video>
+
+        <video id="loopVideo" autoplay muted playsinline loop>
+            <source src="https://www.dropbox.com/scl/fi/y7l251qpyy6yme5v6l739/Anime_villain_standing_beneath_e-_202605232301.mp4?rlkey=vtk680qpi405xt67ym77keuah&st=45ldnycn&raw=1" type="video/mp4">
         </video>
     </div>
     
@@ -128,21 +140,27 @@
     </div>
 
     <script>
-        // Exact 8 seconds (8000 milliseconds) timer
+        // 🔥 THE SEAMLESS VIDEO SWITCH HACK 🔥
+        const introVid = document.getElementById('introVideo');
+        
+        // Jaise hi Intro video khatam hogi (ended event), ye function chalega
+        introVid.addEventListener('ended', () => {
+            // Intro video ko gayab kar do, jisse piche chal rahi loop video saamne aa jaye
+            introVid.style.opacity = '0';
+        });
+
+        // ⏱️ THE 12-SECOND POPUP LOGIC ⏱️
+        // Tune bola 12 seconds, toh 12000 milliseconds lagaya hai taaki buffering ka time mil jaye
         setTimeout(() => {
-            // UI dashboard ko upar slide karao
             document.getElementById('mainUI').classList.add('show-ui');
             
-            // UI aane ke turant baad progress bar aur tokens update honge (Example: 30% hit)
             setTimeout(() => {
                 document.getElementById('pBar').style.width = '30%';
                 document.querySelector('.marker-30').classList.add('active');
-                
-                // Token number update effect
                 document.getElementById('tokenCount').innerText = '12';
-            }, 600); // 0.6 second ka delay UI set hone ke baad
+            }, 600); 
 
-        }, 8000); 
+        }, 12000); 
     </script>
 
 </body>
