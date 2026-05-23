@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SteroMax Elite: Live Aura + Sound 🔊</title>
+    <title>SteroMax Elite: FF Style Start Screen 🔊</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
         
@@ -30,7 +30,7 @@
             width: 100%; height: 100%;
             object-fit: cover;
             transition: opacity 0.3s ease;
-            pointer-events: none; /* Video ko pause hone se roke */
+            pointer-events: none; 
         }
 
         #introVideo { z-index: 2; opacity: 1; }
@@ -42,6 +42,40 @@
             background: linear-gradient(to top, rgba(5,5,5,1) 0%, rgba(5,5,5,0.7) 40%, transparent 100%);
             z-index: 3;
             pointer-events: none;
+        }
+
+        /* 🔘 THE FF STYLE START SCREEN 🔘 */
+        .start-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); /* Thoda dark overlay taaki button highlight ho */
+            backdrop-filter: blur(8px);
+            z-index: 50; /* Sabse upar */
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        /* Premium Pulsing Button */
+        .start-btn {
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(138,3,3,0.8), rgba(20,0,0,0.9));
+            border: 2px solid #ff3333;
+            color: #ffcc00;
+            font-size: 16px; font-weight: 900; letter-spacing: 1px;
+            text-align: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.6), inset 0 0 15px rgba(255, 0, 0, 0.4);
+            cursor: pointer;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .start-btn span { font-size: 10px; color: #fff; margin-top: 5px; opacity: 0.8;}
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 35px rgba(255, 0, 0, 0.9); }
+            100% { transform: scale(0.95); box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); }
         }
 
         /* ⏳ THE UI DASHBOARD ⏳ */
@@ -110,16 +144,22 @@
 <body>
 
     <div class="video-container">
-        <video id="introVideo" autoplay muted playsinline>
+        <video id="introVideo" playsinline preload="auto">
             <source src="https://www.dropbox.com/scl/fi/3we2xdb80tp8s25w1t3mh/lv_0_20260523230710.mp4?rlkey=prldnkfbupi04d5pydpq3twwt&st=fzwv216k&raw=1" type="video/mp4">
         </video>
-
-        <video id="loopVideo" autoplay muted playsinline loop>
+        <video id="loopVideo" playsinline loop preload="auto">
             <source src="https://www.dropbox.com/scl/fi/y7l251qpyy6yme5v6l739/Anime_villain_standing_beneath_e-_202605232301.mp4?rlkey=vtk680qpi405xt67ym77keuah&st=45ldnycn&raw=1" type="video/mp4">
         </video>
     </div>
     
     <div class="video-overlay"></div>
+
+    <div class="start-screen" id="startScreen">
+        <div class="start-btn" id="startBtn">
+            START EVENT
+            <span>TAP TO ENTER</span>
+        </div>
+    </div>
 
     <div class="event-ui-dashboard" id="mainUI">
         <div class="token-bubble">
@@ -134,37 +174,42 @@
     </div>
 
     <script>
+        const startBtn = document.getElementById('startBtn');
+        const startScreen = document.getElementById('startScreen');
         const introVid = document.getElementById('introVideo');
         const loopVid = document.getElementById('loopVideo');
         
-        // 🔥 MAGIC HACK: Tap anywhere on screen to unmute sound! 🔥
-        document.body.addEventListener('touchstart', () => {
-            introVid.muted = false;
-            loopVid.muted = false;
-        }, { once: true }); // Sirf pehle tap par kaam karega
+        // 🔥 Jab Start Button par click hoga, tab sab kuch shuru hoga 🔥
+        startBtn.addEventListener('click', () => {
+            
+            // 1. Start screen aur button ko hide karo
+            startScreen.style.opacity = '0';
+            setTimeout(() => { startScreen.style.display = 'none'; }, 500);
 
-        // Desktop walo ke liye mouse click se bhi unmute hoga
-        document.body.addEventListener('click', () => {
+            // 2. Videos ko sound ke sath Play karo!
             introVid.muted = false;
             loopVid.muted = false;
-        }, { once: true });
+            introVid.play();
+            loopVid.play();
+
+            // 3. 12-Second UI Timer AB start hoga
+            setTimeout(() => {
+                document.getElementById('mainUI').classList.add('show-ui');
+                
+                setTimeout(() => {
+                    document.getElementById('pBar').style.width = '30%';
+                    document.querySelector('.marker-30').classList.add('active');
+                    document.getElementById('tokenCount').innerText = '12';
+                }, 600); 
+
+            }, 12000); 
+        });
 
         // Seamless video transition
         introVid.addEventListener('ended', () => {
             introVid.style.opacity = '0';
         });
 
-        // 12-Second UI Popup Logic
-        setTimeout(() => {
-            document.getElementById('mainUI').classList.add('show-ui');
-            
-            setTimeout(() => {
-                document.getElementById('pBar').style.width = '30%';
-                document.querySelector('.marker-30').classList.add('active');
-                document.getElementById('tokenCount').innerText = '12';
-            }, 600); 
-
-        }, 12000); 
     </script>
 
 </body>
