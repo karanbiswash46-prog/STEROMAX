@@ -1,41 +1,48 @@
 const express = require('express');
 const app = express();
 
-// Render ke liye dynamic port aur local ke liye fallback 3000
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Basic route check karne ke liye
+// Basic check route
 app.get('/', (req, res) => {
     res.send('SteroStream Backend is Live and Running!');
 });
 
-// Route for movies or single ID requests
+// 1. Movies ke liye Route (TMDB ID ke sath)
 app.get('/:id', (req, res) => {
     const { id } = req.params;
+    
+    // Official VidSrc embed format using TMDB ID for movies
+    const streamingUrl = `https://vidsrc.xyz/embed/movie?tmdb=${id}`;
+    
     res.json({ 
         success: true, 
-        message: 'Backend received ID request successfully!', 
-        id 
+        type: 'movie',
+        id, 
+        url: streamingUrl 
     });
 });
 
-// Route for series/anime with ID, Season, and Episode
+// 2. Anime / Series ke liye Route (ID, Season, Episode ke sath)
 app.get('/:id/:season/:episode', (req, res) => {
     const { id, season, episode } = req.params;
+    
+    // Official VidSrc embed format using TMDB ID for TV Shows / Anime
+    const streamingUrl = `https://vidsrc.xyz/embed/tv?tmdb=${id}&season=${season}&episode=${episode}`;
+    
     res.json({ 
         success: true, 
-        message: 'Backend received streaming request successfully!', 
+        type: 'tv/anime',
         id, 
         season, 
-        episode 
+        episode, 
+        url: streamingUrl 
     });
 });
 
-// Server listen on dynamic PORT
 app.listen(PORT, () => {
     console.log(`SteroStream Backend Engine PORT ${PORT} par ZINDA hai!`);
 });
