@@ -10,53 +10,67 @@ app.use(express.json());
 
 // Health Check
 app.get('/', (req, res) => {
-    res.send('SteroMax Advanced Anime Scraper is LIVE! 🚀');
+    res.send('SteroMax Master Scraper is LIVE! 🚀 (Bypassing 451 Errors)');
 });
 
-// 🔥 Main Scraping API
+// 🔥 SECRET API CLONES (Agar ek block hua, toh doosra chalega)
+const API_INSTANCES = [
+    "https://api.consumet.app",                 // Clone 1
+    "https://consumet-api-clone.vercel.app",    // Clone 2
+    "https://c.delusionz.xyz",                  // Clone 3
+    "https://api-consumet.vercel.app"           // Clone 4
+];
+
 app.get('/api/get-video', async (req, res) => {
     try {
         const { title, ep } = req.query;
-        console.log(`[SCRAPER ACTIVE] Target: ${title}, Episode: ${ep}`);
+        console.log(`\n[MASTER SCRAPER ACTIVE] Target: ${title}, Episode: ${ep}`);
 
-        // Default test link
-        let streamLink = "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"; 
+        // Default Fallback
+        let streamLink = "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8"; 
+        let success = false;
 
         if (title) {
-            // Title ko clean karna
             const cleanTitle = title.split(':')[0].trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
             
-            try {
-                console.log(`Searching API for: ${cleanTitle}`);
-                // Consumet API se anime dhoondhna
-                const searchRes = await axios.get(`https://api.consumet.org/anime/gogoanime/${cleanTitle}`);
-                
-                if (searchRes.data.results && searchRes.data.results.length > 0) {
-                    const animeId = searchRes.data.results[0].id;
-                    console.log(`Anime ID Found: ${animeId}`);
+            // 🔥 LOOP START: Ek fail hoga toh doosra try karega
+            for (let baseUrl of API_INSTANCES) {
+                if (success) break; // Agar link mil gaya toh loop rok do
 
-                    const epId = `${animeId}-episode-${ep}`;
-                    const streamRes = await axios.get(`https://api.consumet.org/anime/gogoanime/watch/${epId}`);
+                try {
+                    console.log(`➡️ Try kar rahe hain Server: ${baseUrl}`);
+                    
+                    // Search (timeout 8 seconds taaki server hang na ho)
+                    const searchRes = await axios.get(`${baseUrl}/anime/gogoanime/${cleanTitle}`, { timeout: 8000 });
+                    
+                    if (searchRes.data.results && searchRes.data.results.length > 0) {
+                        const animeId = searchRes.data.results[0].id;
+                        const epId = `${animeId}-episode-${ep}`;
+                        
+                        console.log(`✅ ID Mil Gayi (${animeId}), Ab link nikal rahe hain...`);
 
-                    if (streamRes.data.sources) {
-                        const bestSource = streamRes.data.sources.find(s => s.quality === '1080p' || s.quality === 'default') || streamRes.data.sources[0];
-                        streamLink = bestSource.url;
-                        console.log("🔥 CHURAYA HUA ASLI LINK:", streamLink);
+                        // Extract Link
+                        const streamRes = await axios.get(`${baseUrl}/anime/gogoanime/watch/${epId}`, { timeout: 8000 });
+
+                        if (streamRes.data.sources) {
+                            const bestSource = streamRes.data.sources.find(s => s.quality === '1080p' || s.quality === 'default') || streamRes.data.sources[0];
+                            streamLink = bestSource.url;
+                            console.log(`🔥 SUCCESS! ASLI LINK MIL GAYA: ${streamLink}`);
+                            success = true; // Flag true kar do taaki aur API check na kare
+                        }
                     }
+                } catch (scrapeError) {
+                    console.error(`❌ Server Fail (${baseUrl}):`, scrapeError.message);
+                    console.log("🔄 Koi baat nahi, next server try kar rahe hain...");
                 }
-            } catch (scrapeError) {
-                // 🔥 Yahan hum ab ASLI error message print karwayenge
-                console.error("❌ API ERROR AAYI:", scrapeError.message);
-                
-                // 🛠️ BACKUP JUGAD: Agar API fail ho, toh title ke hisab se apna khud ka link chalao
-                if (cleanTitle.includes('demon-slayer')) {
-                    // Agar Demon Slayer hai aur API fail hui, toh ab khargosh ki jagah ye doosra test video chalega
-                    streamLink = "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8";
-                }
+            }
+
+            if (!success) {
+                console.log("⚠️ Saare secret servers fail ho gaye. Fallback video load ho rahi hai.");
             }
         }
 
-        // Player ko JSON format me link return kar do
+        // Return Data to VIP Player
         return res.json({
             success: true,
             title: title || "SteroMax Anime",
@@ -71,5 +85,5 @@ app.get('/api/get-video', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`SteroStream Scraper Engine is RUNNING on PORT ${PORT}`);
+    console.log(`SteroStream Master Engine RUNNING on PORT ${PORT}`);
 });
