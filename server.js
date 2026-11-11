@@ -1,37 +1,38 @@
-// 🔥 MASTER HACK: SSL Bypass (Certificate errors ko ignore karne ke liye)
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
-const https = require('https'); // Bypass ke liye naya module
+const https = require('https');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
 app.use(cors());
 app.use(express.json());
-
-// 🔥 Agent jo expired SSL certificate ko bypass karega
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
-// Health Check
-app.get('/', (req, res) => {
-    res.send('SteroMax SSL Bypass Scraper is LIVE! 🚀');
-});
+// 🔥 JADUI RADAR FUNCTION: API ke JSON me ghus kar sirf .m3u8 link ko dhoondh nikalna
+function findM3u8(obj) {
+    let foundLink = null;
+    function search(item) {
+        if (foundLink) return; // Agar mil gaya toh baaki mat dhoondho
+        if (typeof item === 'string' && item.includes('.m3u8') && item.startsWith('http')) {
+            foundLink = item;
+            return;
+        }
+        if (typeof item === 'object' && item !== null) {
+            Object.values(item).forEach(search);
+        }
+    }
+    search(obj);
+    return foundLink;
+}
 
-// SECRET API CLONES (Delusionz ko No. 1 pe rakha hai kyunki wo zinda hai)
-const API_INSTANCES = [
-    "https://c.delusionz.xyz",                  
-    "https://api.consumet.app",                 
-    "https://consumet-api-clone.vercel.app",    
-    "https://api-consumet.vercel.app"           
-];
+app.get('/', (req, res) => res.send('SteroMax Ultimate M3U8 Hunter is LIVE! 🚀'));
 
 app.get('/api/get-video', async (req, res) => {
     try {
         const { title, ep } = req.query;
-        console.log(`\n[SCRAPER] Target: ${title}, Episode: ${ep}`);
+        console.log(`\n[HUNTER ACTIVE] Target: ${title}, Episode: ${ep}`);
 
         let streamLink = "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8"; 
         let success = false;
@@ -39,55 +40,59 @@ app.get('/api/get-video', async (req, res) => {
         if (title) {
             const cleanTitle = title.split(':')[0].trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
             
-            for (let baseUrl of API_INSTANCES) {
-                if (success) break;
-
+            // RASTA 1: AMVSTR API (Dedicated Anime Scraper)
+            if (!success) {
                 try {
-                    console.log(`➡️ Trying Server: ${baseUrl}`);
+                    console.log(`➡️ Try 1: AMVSTR Anime API...`);
+                    const search = await axios.get(`https://api.amvstr.me/api/v2/search?q=${cleanTitle}`, { timeout: 8000, httpsAgent });
                     
-                    // 🛡️ Yahan humne bypass wala httpsAgent laga diya
-                    const searchRes = await axios.get(`${baseUrl}/anime/gogoanime/${cleanTitle}`, { 
-                        timeout: 10000, 
-                        httpsAgent 
-                    });
-                    
-                    if (searchRes.data.results && searchRes.data.results.length > 0) {
-                        const animeId = searchRes.data.results[0].id;
-                        const epId = `${animeId}-episode-${ep}`;
+                    if (search.data.results && search.data.results.length > 0) {
+                        const animeId = search.data.results[0].id;
+                        const streamRes = await axios.get(`https://api.amvstr.me/api/v1/episode/${animeId}-episode-${ep}`, { timeout: 8000, httpsAgent });
                         
-                        console.log(`✅ ID Mil Gayi: ${animeId}`);
-
-                        const streamRes = await axios.get(`${baseUrl}/anime/gogoanime/watch/${epId}`, { 
-                            timeout: 10000, 
-                            httpsAgent 
-                        });
-
-                        if (streamRes.data.sources) {
-                            const bestSource = streamRes.data.sources.find(s => s.quality === '1080p' || s.quality === 'default') || streamRes.data.sources[0];
-                            streamLink = bestSource.url;
-                            console.log(`🔥 ASLI LINK HACKED: ${streamLink}`);
+                        // Jadui radar se link nikalo
+                        const magicLink = findM3u8(streamRes.data);
+                        if (magicLink) {
+                            streamLink = magicLink;
+                            console.log(`🔥 AMVSTR SUCCESS (Link Chura Liya): ${streamLink}`);
                             success = true;
                         }
                     }
-                } catch (scrapeError) {
-                    console.error(`❌ Server Fail (${baseUrl}):`, scrapeError.message);
-                }
+                } catch (e) { console.error(`❌ AMVSTR Fail:`, e.message); }
+            }
+
+            // RASTA 2: Zoro (AniWatch) API via Delusionz
+            if (!success) {
+                try {
+                    console.log(`➡️ Try 2: Zoro (AniWatch) API...`);
+                    const search = await axios.get(`https://c.delusionz.xyz/anime/zoro/${cleanTitle}`, { timeout: 8000, httpsAgent });
+                    
+                    if (search.data.results && search.data.results.length > 0) {
+                        const animeId = search.data.results[0].id;
+                        const infoRes = await axios.get(`https://c.delusionz.xyz/anime/zoro/info?id=${animeId}`, { timeout: 8000, httpsAgent });
+                        
+                        if (infoRes.data.episodes) {
+                            const epData = infoRes.data.episodes.find(e => e.number === parseInt(ep));
+                            if (epData) {
+                                const streamRes = await axios.get(`https://c.delusionz.xyz/anime/zoro/watch?episodeId=${epData.id}`, { timeout: 8000, httpsAgent });
+                                const magicLink = findM3u8(streamRes.data);
+                                if (magicLink) {
+                                    streamLink = magicLink;
+                                    console.log(`🔥 ZORO SUCCESS (Link Chura Liya): ${streamLink}`);
+                                    success = true;
+                                }
+                            }
+                        }
+                    }
+                } catch (e) { console.error(`❌ Zoro Fail:`, e.message); }
             }
         }
 
-        return res.json({
-            success: true,
-            title: title || "SteroMax Anime",
-            episode: ep || "1",
-            videoLink: streamLink
-        });
-
+        return res.json({ success: true, title, episode: ep, videoLink: streamLink });
     } catch (error) {
-        console.error("Backend Error:", error);
-        return res.status(500).json({ success: false, error: "Server Crash" });
+        console.error("Backend Crash:", error);
+        return res.status(500).json({ success: false });
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`SteroStream Bypass Engine RUNNING on PORT ${PORT}`);
-});
+app.listen(PORT, () => console.log(`SteroStream Hunter Engine RUNNING on PORT ${PORT}`));
